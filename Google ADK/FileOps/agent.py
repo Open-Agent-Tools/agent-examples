@@ -11,9 +11,7 @@ import logging
 import warnings
 
 from google.adk.agents import Agent
-from google.adk.models.lite_llm import LiteLlm
 
-from configs.model_configs import Models, default_model
 from .prompts import agent_instruction
 import basic_open_agent_tools as boat
 
@@ -32,7 +30,7 @@ agent_tools = boat.merge_tool_lists(fs_tools, text_tools)
 
 # Configure specialized file operations agent
 root_agent = Agent(
-    model=default_model(),
+    model="gemini-2.0-flash",
     name="FileOps",
     instruction=agent_instruction,
     description="Specialized file and directory operations agent that can enumerate directories and files, write to files, and perform basic text processing.",
