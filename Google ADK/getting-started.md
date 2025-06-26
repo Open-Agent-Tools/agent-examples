@@ -1,6 +1,6 @@
 # Getting Started with Agent Examples
 
-This repository contains specialized AI agent examples, including the **FileOps** agent - a file and directory operations specialist designed for efficient local processing.
+This repository contains specialized AI agent examples, including the **FileOps_Freddy** agent - a file and directory operations specialist designed for efficient local processing, and the **Butler_Basil** agent - a generic task and facilitation agent.
 
 ## Prerequisites
 
@@ -91,12 +91,14 @@ For more information about the ADK web interface, visit:
 - [ADK Web documentation](https://github.com/google/adk-web)
 - [ADK Quickstart Guide](https://google.github.io/adk-docs/get-started/quickstart/#run-your-agent)
 
-### Alternate approach: Using the FileOps Agent Programmatically
+### Alternate approach: Using the Agents Programmatically
+
+#### Using FileOps_Freddy Agent
 
 ```python
-from FileOps.agent import root_agent
+from FileOps_Freddy.agent import root_agent
 
-# Initialize the FileOps agent
+# Initialize the FileOps_Freddy agent
 agent = root_agent
 
 # Example: List directory contents
@@ -105,6 +107,19 @@ print(response)
 
 # Example: Create a new file
 response = agent.run("Create a new file called 'test.txt' with the content 'Hello World'")
+print(response)
+```
+
+#### Using Butler_Basil Agent
+
+```python
+from Butler_Basil.agent import root_agent
+
+# Initialize the Butler_Basil agent
+agent = root_agent
+
+# Example: Get help with a task
+response = agent.run("I need help organizing my project files")
 print(response)
 ```
 

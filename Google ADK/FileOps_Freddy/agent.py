@@ -1,6 +1,6 @@
 """File Operations Sub-Agent Configuration.
 
-This module configures FileOps, a specialized sub-agent for handling
+This module configures FileOps_Freddy, a specialized sub-agent for handling
 file and directory operations delegated from the main Python developer agent.
 
 It uses a local CLAUDE_HAIKU or GEMMA_4B model for file and directory operations to reduce
@@ -30,7 +30,7 @@ agent_tools = boat.merge_tool_lists(fs_tools, text_tools)
 # Configure specialized file operations agent
 root_agent = Agent(
     model="gemini-2.0-flash",
-    name="FileOps",
+    name="FileOps_Freddy",
     instruction=agent_instruction,
     description="Specialized file and directory operations agent that can enumerate directories and files, write to files, and perform basic text processing.",
     tools=agent_tools,
