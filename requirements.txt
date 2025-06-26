@@ -41,6 +41,7 @@ ast-decompiler
 black
 flake8
 mypy
+ruff
 
 # Testing framework
 pytest

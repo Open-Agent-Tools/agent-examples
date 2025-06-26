@@ -13,9 +13,8 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
-import basic_open_agent_tools as boat
+import basic_open_agent_tools as boat  # type: ignore
 
-from pathlib import Path
 from dotenv import load_dotenv
 
 # Initialize environment and logging
