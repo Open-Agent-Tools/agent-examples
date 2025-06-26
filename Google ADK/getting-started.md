@@ -102,11 +102,11 @@ from FileOps_Freddy.agent import root_agent
 agent = root_agent
 
 # Example: List directory contents
-response = agent.run("List all files in the current directory")
+response = agent.run_live("List all files in the current directory")
 print(response)
 
 # Example: Create a new file
-response = agent.run("Create a new file called 'test.txt' with the content 'Hello World'")
+response = agent.run_live("Create a new file called 'test.txt' with the content 'Hello World'")
 print(response)
 ```
 
@@ -119,7 +119,7 @@ from Butler_Basil.agent import root_agent
 agent = root_agent
 
 # Example: Get help with a task
-response = agent.run("I need help organizing my project files")
+response = agent.run_live("I need help organizing my project files")
 print(response)
 ```
 
