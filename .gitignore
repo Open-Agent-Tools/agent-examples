@@ -160,12 +160,17 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# PyCharm
+# PyCharm and other JetBrains IDEs
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+.idea/
+*.iml
+*.iws
+*.ipr
+*.iws
+.idea_modules/
+out/
+atlassian-ide-plugin.xml
 
 # Abstra
 # Abstra is an AI-powered process automation framework.
@@ -176,9 +181,10 @@ cython_debug/
 # Visual Studio Code
 #  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the enitre vscode folder
-# .vscode/
+.vscode/
+*.code-workspace
+.history/
+.ionide/
 
 # Ruff stuff:
 .ruff_cache/
@@ -192,3 +198,80 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Additional AI-related files
+# Model caches, vector stores, embeddings, etc.
+.models/
+.vectorstore/
+.embeddings/
+.llm_cache/
+.langchain.db
+.langchain/
+.chroma/
+.faiss/
+.qdrant/
+.weaviate/
+.pinecone/
+.openai_api_key
+.anthropic_api_key
+.huggingface/
+.cache/huggingface/
+.cache/torch/
+.cache/transformers/
+
+# OS specific files
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+## Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+## Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Additional IDE/Editor files
+## Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+## Eclipse
+.classpath
+.project
+.settings/
+
+## Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+
+## Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
