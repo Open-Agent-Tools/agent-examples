@@ -77,11 +77,11 @@ ollama pull gemma3:27b
 
 ### Web Interface (Recommended)
 
-CD into the  Google ADK directory and start the web interface for an interactive experience. 
+CD into the  GoogleADK directory and start the web interface for an interactive experience. 
 (** running this command at the root folders will cause errors because of the other agent framework folders)
 
 ```bash
-cd Google ADK
+cd GoogleADK
 adk web
 ```
 

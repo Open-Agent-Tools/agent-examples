@@ -8,7 +8,7 @@ This repository provides practical examples and comparisons of different AI agen
 
 ## Supported Frameworks
 
-- **[Google ADK](Google%20ADK/)** - Google's Agent Development Kit for specialized agents
+- **[GoogleADK](GoogleADK/)** - Google's Agent Development Kit for specialized agents
 - **[CrewAI](CrewAI/)** - Multi-agent collaboration framework
 - **[LangChain LangGraph](LangChain%20LangGraph/)** - Graph-based agent workflows
 - **[MS AutoGen](MS%20AutoGen/)** - Microsoft's multi-agent conversation framework
@@ -29,7 +29,7 @@ See [getting-started.md](getting-started.md) for framework selection guidance an
 ## Framework Comparison
 
 Each framework offers unique strengths:
-- **Google ADK**: Efficient local processing and specialized operations
+- **GoogleADK**: Efficient local processing and specialized operations
 - **CrewAI**: Team-based multi-agent collaboration
 - **LangGraph**: Complex workflow orchestration with graph structures
 - **AutoGen**: Conversational multi-agent interactions

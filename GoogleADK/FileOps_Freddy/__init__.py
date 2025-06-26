@@ -10,3 +10,5 @@ It provides tools for file operations, directory management, and text processing
 
 # Expose the root agent at the package level for easier imports
 from .agent import root_agent
+
+__all__ = ["root_agent"]

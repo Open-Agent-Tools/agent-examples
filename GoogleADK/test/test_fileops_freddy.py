@@ -5,11 +5,7 @@ This script demonstrates that the FileOps_Freddy agent can be loaded
 and responds to messages.
 """
 
-import sys
-import os
-import pytest
-
-from FileOps_Freddy.agent import root_agent
+from GoogleADK.FileOps_Freddy.agent import root_agent
 
 def test_fileops_freddy():
     """Test that FileOps_Freddy agent can be loaded and responds to messages."""

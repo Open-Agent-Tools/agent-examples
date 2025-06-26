@@ -7,7 +7,7 @@ This repository contains examples from multiple AI agent frameworks. Choose the 
 ### 🔍 Which Framework Should I Choose?
 
 **For specialized single-purpose agents:**
-- **[Google ADK](Google%20ADK/)** - Best for cost-effective, focused agents with local model support
+- **[GoogleADK](GoogleADK/)** - Best for cost-effective, focused agents with local model support
 
 **For team-based collaboration:**
 - **[CrewAI](CrewAI/)** - Ideal for multi-agent teams working together on complex tasks
@@ -40,7 +40,7 @@ cd agent-examples
 
 Navigate to your chosen framework directory and follow the specific setup instructions:
 
-- **[Google ADK Setup](Google%20ADK/getting-started.md)** - FileOps agent and local model integration
+- **[GoogleADK Setup](GoogleADK/getting-started.md)** - FileOps agent and local model integration
 - **[CrewAI Setup](CrewAI/getting-started.md)** - Multi-agent team examples *(coming soon)*
 - **[LangGraph Setup](LangChain%20LangGraph/getting-started.md)** - Graph workflow examples *(coming soon)*
 - **[AutoGen Setup](MS%20AutoGen/getting-started.md)** - Conversational agent examples *(coming soon)*
@@ -50,7 +50,7 @@ Navigate to your chosen framework directory and follow the specific setup instru
 
 | Framework | Best For | Complexity | Local Models | Multi-Agent |
 |-----------|----------|------------|--------------|-------------|
-| Google ADK | Specialized tasks | Low-Medium | ✅ Yes | Limited |
+| GoogleADK | Specialized tasks | Low-Medium | ✅ Yes | Limited |
 | CrewAI | Team collaboration | Medium | ✅ Yes | ✅ Yes |
 | LangGraph | Complex workflows | High | ✅ Yes | ✅ Yes |
 | AutoGen | Conversations | Medium | ✅ Yes | ✅ Yes |

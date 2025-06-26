@@ -5,12 +5,7 @@ This script demonstrates that the Butler_Basil agent can be loaded
 and responds to messages.
 """
 
-import sys
-import os
-import pytest
-
-
-from Butler_Basil.agent import root_agent
+from GoogleADK.Butler_Basil.agent import root_agent
 
 def test_butler_basil():
     """Test that Butler_Basil agent can be loaded and responds to messages."""
