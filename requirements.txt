@@ -1,0 +1,76 @@
+# Google ADK and Gemma LLM Integration Requirements
+# Core ADK framework and LLM integration
+google-adk
+litellm
+ollama
+a2a-sdk
+basic-open-agent-tools
+
+# LLM and AI libraries
+openai
+transformers
+torch
+huggingface-hub
+
+# Web scraping and API tools
+requests
+beautifulsoup4
+selenium
+aiohttp
+httpx
+
+# Data processing and analysis
+pandas
+numpy
+python-dotenv
+pandas-stubs
+
+# File and document processing
+python-docx
+openpyxl
+markdown
+
+# Development and project management tools
+click
+typer
+rich
+pydantic
+
+# Code analysis and generation
+ast-decompiler
+black
+flake8
+mypy
+
+# Testing framework
+pytest
+pytest-asyncio
+pytest-mock
+
+# Logging and monitoring
+loguru
+structlog
+
+# Configuration management
+pyyaml
+toml
+configparser
+
+# Virtual environment and dependency management
+virtualenv
+pip-tools
+
+# Optional: Jupyter for experimentation and learning
+jupyter
+ipykernel
+notebook
+
+# Optional: FastAPI for web interfaces (if using adk web)
+fastapi
+uvicorn
+
+# Optional: Database support for advanced examples
+sqlalchemy
+
+# Optional: Vector databases for RAG examples
+faiss-cpu

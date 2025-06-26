@@ -14,7 +14,7 @@ from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
 
 from configs.model_configs import Models, default_model
-from agents.personalities.senior_python_developer.subagents.basic_dir_file_operations.prompt import agent_instruction
+from .prompts import agent_instruction
 import basic_open_agent_tools as boat
 
 from pathlib import Path
@@ -31,11 +31,11 @@ agent_tools = boat.merge_tool_lists(fs_tools, text_tools)
 
 
 # Configure specialized file operations agent
-file_ops_agent = Agent(
+root_agent = Agent(
     model=default_model(),
     name="FileOps",
     instruction=agent_instruction,
-    description="Specialized file and directory operations agent.",
+    description="Specialized file and directory operations agent that can enumerate directories and files, write to files, and perform basic text processing.",
     tools=agent_tools,
 )
 
