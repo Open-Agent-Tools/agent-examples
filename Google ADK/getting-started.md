@@ -77,9 +77,11 @@ ollama pull gemma3:27b
 
 ### Web Interface (Recommended)
 
-Start the ADK web interface for an interactive experience:
+CD into the  Google ADK directory and start the web interface for an interactive experience. 
+(** running this command at the root folders will cause errors because of the other agent framework folders)
 
 ```bash
+cd Google ADK
 adk web
 ```
 
@@ -89,7 +91,7 @@ For more information about the ADK web interface, visit:
 - [ADK Web documentation](https://github.com/google/adk-web)
 - [ADK Quickstart Guide](https://google.github.io/adk-docs/get-started/quickstart/#run-your-agent)
 
-### Using the FileOps Agent Programmatically
+### Alternate approach: Using the FileOps Agent Programmatically
 
 ```python
 from FileOps.agent import root_agent
@@ -106,32 +108,12 @@ response = agent.run("Create a new file called 'test.txt' with the content 'Hell
 print(response)
 ```
 
-### Available Models
-
-The system supports multiple AI models configured in `configs/model_configs.py`:
-
-- **Gemini 2.0 Flash** (default) - Fast and cost-effective
-- **Claude Sonnet 4** - High-quality reasoning
-- **Claude Haiku** - Fast and efficient
-- **Local Gemma models** - Privacy-focused local processing
-
-## Next Steps
-
-1. **Test the Installation**: Run a simple FileOps command to verify everything works
-2. **Explore Examples**: Check the `FileOps/` directory for more usage examples
-3. **Customize Models**: Modify `configs/model_configs.py` to use your preferred AI model
-4. **Build Your Own Agent**: Use the FileOps agent as a template for creating specialized agents
-
 ## Troubleshooting
 
 ### Common Issues
 
-**Missing API Keys**: Ensure your `.env` file contains the required API keys for your chosen model provider.
+**Missing API Keys**: Ensure your `.env` file exists and contains the required API keys for your chosen model provider.
 
-**Ollama Connection Issues**: If using local models, verify Ollama is running:
-```bash
-ollama serve
-```
 
 **Package Installation Errors**: Try upgrading pip and installing dependencies individually:
 ```bash
