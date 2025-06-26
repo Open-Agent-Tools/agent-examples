@@ -14,11 +14,13 @@ The FileOps agent specializes in:
 - Read, write, append, delete files
 - Move and copy files
 - Get file information and check existence
+- Get file size
 - Validate file content
 
 **Directory Operations:**
 - Create and delete directories
 - List directory contents
+- List all directory contents (recursive)
 - Generate directory trees
 - Check if directories exist or are empty
 
