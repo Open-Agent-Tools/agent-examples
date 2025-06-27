@@ -20,7 +20,10 @@ logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
 
-agent_tools = boat.load_all_read_only_tools()
+fs_tools = boat.load_all_filesystem_tools()
+
+agent_tools = boat.merge_tool_lists(fs_tools)
+
 
 # Configure agent with comprehensive file system tools
 root_agent = Agent(
