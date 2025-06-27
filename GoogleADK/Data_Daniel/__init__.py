@@ -1,0 +1,14 @@
+"""
+Data_Daniel Agent Package.
+
+This package contains the Data_Daniel agent, a specialized file and directory operations agent
+designed to handle file system tasks efficiently.
+
+The agent is built using Google's Agent Development Kit (ADK) and uses the Gemini model.
+It provides tools for file operations, directory management, and text processing.
+"""
+
+# Expose the root agent at the package level for easier imports
+from .agent import root_agent
+
+__all__ = ["root_agent"]
