@@ -91,37 +91,7 @@ For more information about the ADK web interface, visit:
 - [ADK Web documentation](https://github.com/google/adk-web)
 - [ADK Quickstart Guide](https://google.github.io/adk-docs/get-started/quickstart/#run-your-agent)
 
-### Alternate approach: Using the Agents Programmatically
 
-#### Using FileOps_Freddy Agent
-
-```python
-from FileOps_Freddy.agent import root_agent
-
-# Initialize the FileOps_Freddy agent
-agent = root_agent
-
-# Example: List directory contents
-response = agent.run_live("List all files in the current directory")
-print(response)
-
-# Example: Create a new file
-response = agent.run_live("Create a new file called 'test.txt' with the content 'Hello World'")
-print(response)
-```
-
-#### Using Butler_Basil Agent
-
-```python
-from Butler_Basil.agent import root_agent
-
-# Initialize the Butler_Basil agent
-agent = root_agent
-
-# Example: Get help with a task
-response = agent.run_live("I need help organizing my project files")
-print(response)
-```
 
 ## Troubleshooting
 
