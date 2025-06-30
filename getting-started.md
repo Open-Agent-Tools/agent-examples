@@ -24,7 +24,7 @@ This repository contains examples from multiple AI agent frameworks. Choose the 
 ## Prerequisites
 
 - Python 3.8 or higher
-- pip (Python package installer)
+- pip (Python package installer) or UV (faster Python package installer)
 - Git for cloning the repository
 
 ## Installation
@@ -40,7 +40,7 @@ cd agent-examples
 
 Navigate to your chosen framework directory and follow the specific setup instructions:
 
-- **[GoogleADK Setup](GoogleADK/getting-started.md)** - FileOps agent and local model integration
+- **[GoogleADK Setup](GoogleADK/ADK-getting-started.md)** - FileOps agent and local model integration
 - **[CrewAI Setup](CrewAI/getting-started.md)** - Multi-agent team examples *(coming soon)*
 - **[LangGraph Setup](LangChain%20LangGraph/getting-started.md)** - Graph workflow examples *(coming soon)*
 - **[AutoGen Setup](MS%20AutoGen/getting-started.md)** - Conversational agent examples *(coming soon)*
@@ -58,10 +58,43 @@ Navigate to your chosen framework directory and follow the specific setup instru
 
 ## General Setup Steps
 
+### Using pip (Standard)
+
 1. **Install Framework Dependencies**: Each framework has its own requirements.txt
-2. **Configure Environment**: Set up API keys and environment variables
-3. **Choose Your Model**: Local models for cost-effectiveness or cloud models for performance
-4. **Run Examples**: Start with the provided examples in each framework directory
+   ```bash
+   pip install -r requirements.txt  # For all dependencies
+   # OR
+   pip install -r GoogleADK/requirements.txt  # For specific framework
+   ```
+
+### Using UV (Faster Alternative)
+
+1. **Install UV**:
+   ```bash
+   pip install uv
+   ```
+
+2. **Install Dependencies with UV**:
+   ```bash
+   uv pip install -r requirements.txt  # For all dependencies
+   # OR
+   uv pip install -r GoogleADK/requirements.txt  # For specific framework
+   ```
+
+3. **Create Virtual Environment with UV** (optional):
+   ```bash
+   uv venv .venv
+   # Activate on Windows
+   .venv\Scripts\activate
+   # Activate on Unix/MacOS
+   source .venv/bin/activate
+   ```
+
+For both methods:
+
+1. **Configure Environment**: Set up API keys and environment variables
+2. **Choose Your Model**: Local models for cost-effectiveness or cloud models for performance
+3. **Run Examples**: Start with the provided examples in each framework directory
 
 ## Common Environment Variables
 
@@ -70,8 +103,12 @@ Most frameworks will require similar environment setup:
 ```env
 # Choose your preferred model provider
 ANTHROPIC_API_KEY=your_key_here
+
 OPENAI_API_KEY=your_key_here
+
 GOOGLE_API_KEY=your_key_here
+GOOGLE_MODEL="gemini-2.0-flash"
+GOOGLE_GENAI_USE_VERTEXAI=0
 
 # Optional: Local model settings
 OLLAMA_BASE_URL=http://localhost:11434

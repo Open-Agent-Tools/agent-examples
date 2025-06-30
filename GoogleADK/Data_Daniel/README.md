@@ -4,7 +4,7 @@ A specialized data editor and manipulator focused on text-based file content, de
 
 ## Usage
 
-See the main [getting-started.md](../getting-started.md) for installation and setup instructions.
+See the main [getting-started.md](../ADK-getting-started.md) for installation and setup instructions.
 
 ## Agent Capabilities
 

@@ -1,0 +1,29 @@
+# Google ADK Core Requirements
+google-adk
+basic-open-agent-tools
+python-dotenv
+
+# LLM Integration
+litellm
+ollama
+
+# Agent Communication
+a2a-sdk
+
+# Utilities
+pydantic
+rich
+loguru
+
+# Testing
+pytest
+pytest-asyncio
+pytest-mock
+
+# Optional: Web Interface
+fastapi
+uvicorn
+
+# Optional: Data Processing (for Data_Daniel)
+pandas
+numpy

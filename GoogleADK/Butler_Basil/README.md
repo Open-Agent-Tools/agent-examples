@@ -4,7 +4,7 @@ A classic English Butler agent designed to be polite, efficient, and focused on 
 
 ## Usage
 
-See the Google ADK [getting-started.md](../getting-started.md) for installation and setup instructions.
+See the Google ADK [getting-started.md](../ADK-getting-started.md) for installation and setup instructions.
 
 ## Agent Capabilities
 

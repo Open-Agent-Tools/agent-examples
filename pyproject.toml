@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-examples"
+version = "0.1.0"
+description = "Google ADK Agent Examples"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = []
+
+[tool.uv]
+# UV configuration
+pip = { isolated = true }
+# Use requirements.txt as the source of dependencies
+requirements-file = "requirements.txt"

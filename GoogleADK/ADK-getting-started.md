@@ -5,7 +5,7 @@ This repository contains specialized AI agent examples, including the **FileOps_
 ## Prerequisites
 
 - Python 3.8 or higher
-- pip (Python package installer)
+- pip (Python package installer) or UV (faster Python package installer)
 - Optional: Ollama (for local models like Gemma)
 
 ## Installation
@@ -19,15 +19,39 @@ cd agent-examples
 
 ### 2. Create Virtual Environment (Recommended)
 
+#### Using standard venv:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
+#### Using UV (faster alternative):
+```bash
+# Install UV if you haven't already
+pip install uv
+
+# Create virtual environment with UV
+uv venv .venv
+# Activate on Windows
+.venv\Scripts\activate
+# Activate on Unix/MacOS
+source .venv/bin/activate
+```
+
 ### 3. Install Dependencies
 
+#### Using pip:
 ```bash
-pip install -r requirements.txt
+pip install -r GoogleADK/requirements.txt
+```
+
+#### Using UV (faster alternative):
+```bash
+# If you haven't installed UV yet
+pip install uv
+
+# Install dependencies with UV
+uv pip install -r GoogleADK/requirements.txt
 ```
 
 ## Environment Configuration
@@ -69,8 +93,8 @@ For cost-effective local processing, install Ollama and download models:
 ```bash
 # Install Ollama (visit https://ollama.ai for installation instructions)
 # Then download the Gemma models
-ollama pull gemma3:4b
-ollama pull gemma3:27b
+ollama pull gemma:2b
+ollama pull gemma:7b
 ```
 
 ## Quick Start
@@ -100,16 +124,24 @@ For more information about the ADK web interface, visit:
 **Missing API Keys**: Ensure your `.env` file exists and contains the required API keys for your chosen model provider.
 
 
-**Package Installation Errors**: Try upgrading pip and installing dependencies individually:
+**Package Installation Errors**: 
+
+With pip:
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt --no-cache-dir
 ```
 
+With UV:
+```bash
+pip install --upgrade uv
+uv pip install -r requirements.txt --no-deps-check
+```
+
 ### Getting Help
 
 - Check the individual agent README files for specific documentation
-- Review the model configurations in `configs/model_configs.py`
+- Review the model configurations in each agent's `agent.py` file
 - Ensure all environment variables are properly set in your `.env` file
 
 ## Security Notes
