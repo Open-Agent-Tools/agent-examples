@@ -22,10 +22,10 @@ load_dotenv() # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
-fs_tools = boat.load_all_filesystem_tools()
-text_tools = boat.load_all_text_tools()
+# fs_tools = boat.load_all_filesystem_tools()
+# text_tools = boat.load_all_text_tools()
 data_tools = boat.load_all_data_tools()
-agent_tools = boat.merge_tool_lists(fs_tools, text_tools, data_tools)
+agent_tools = boat.merge_tool_lists( data_tools)
 
 
 # Configure specialized file operations agent
