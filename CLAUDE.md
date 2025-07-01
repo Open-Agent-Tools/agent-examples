@@ -5,9 +5,9 @@
 When user says **"cleanup"**: 
 1. **Run Quality Tools**: Execute all quality checks and fix issues
    ```bash
-   python3 -m ruff check ./ --fix
-   python3 -m ruff format ./
-   python3 -m mypy ./
+   python3 -m ruff check GoogleADK/ tests/ --fix
+   python3 -m ruff format GoogleADK/ tests/
+   python3 -m mypy GoogleADK/
    python3 -m pytest
    ```
 2. **Review TODO Files**: Check all TODO.md files for outdated information
