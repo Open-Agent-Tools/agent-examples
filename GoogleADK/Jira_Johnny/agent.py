@@ -14,18 +14,15 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
-import basic_open_agent_tools as boat  # type: ignore
 from basic_open_agent_tools.file_system.tree import generate_directory_tree
 from basic_open_agent_tools.file_system.operations import read_file_to_string
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
-from typing import Any
 from dotenv import load_dotenv
 
 # Initialize environment and logging
-load_dotenv() # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
-
 
 
 def create_agent() -> Agent:
@@ -39,7 +36,9 @@ def create_agent() -> Agent:
         Agent: Configured Jira agent with appropriate tools and settings.
     """
 
-    agent_tools = [generate_directory_tree, read_file_to_string,
+    agent_tools = [
+        generate_directory_tree,
+        read_file_to_string,
         MCPToolset(
             connection_params=StdioServerParameters(
                 command="docker",
@@ -63,7 +62,7 @@ def create_agent() -> Agent:
                     "JIRA_API_TOKEN",
                     "-e",
                     "JIRA_PERSONAL_TOKEN",
-                    "mcp/atlassian"
+                    "mcp/atlassian",
                 ],
                 env={
                     "CONFLUENCE_URL": os.environ.get("CONFLUENCE_URL") or "",
@@ -76,7 +75,7 @@ def create_agent() -> Agent:
             ),
             # Optional: Filter which tools from the MCP server are exposed
             # tool_filter=['list_directory', 'read_file']
-        )
+        ),
     ]
 
     return Agent(
@@ -86,6 +85,7 @@ def create_agent() -> Agent:
         description="Specialized Jira agent that can perform basic jira functions from the available tools.",
         tools=agent_tools,
     )
+
 
 # Configure specialized Jira operations agent
 root_agent = create_agent()
