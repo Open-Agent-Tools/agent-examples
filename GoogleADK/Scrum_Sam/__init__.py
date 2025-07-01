@@ -1,11 +1,11 @@
 """
-FileOps_Freddy Agent Package.
+Scrum_Sam Agent Package.
 
-This package contains the FileOps_Freddy agent, a specialized file and directory operations agent
-designed to handle file system tasks efficiently.
+This package contains the Scrum_Sam agent, a specialized Scrum Master agent
+designed to coach teams and interact with Jira for Scrum-related tasks.
 
 The agent is built using Google's Agent Development Kit (ADK) and uses the Gemini model.
-It provides tools for file operations, directory management, and text processing.
+It provides tools for Scrum coaching, Jira integration, and team facilitation.
 """
 
 # Expose the root agent and create_agent function at the package level for easier imports

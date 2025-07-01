@@ -1,13 +1,14 @@
-"""File Operations Sub-Agent Configuration.
+"""Data Processing Sub-Agent Configuration.
 
 This module configures Data_Daniel, a specialized sub-agent for handling
-file and directory operations delegated from the main Python developer agent.
+data processing operations delegated from the main Python developer agent.
 
-It uses a local CLAUDE_HAIKU or GEMMA_4B model for file and directory operations to reduce
-the latency of the agent's response time and token cost for online models like  Claude.
+It uses a local CLAUDE_HAIKU or GEMMA_4B model for data processing operations to reduce
+the latency of the agent's response time and token cost for online models like Claude.
 """
 
 import logging
+import os
 import warnings
 
 from google.adk.agents import Agent
@@ -22,20 +23,30 @@ load_dotenv() # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
-# fs_tools = boat.load_all_filesystem_tools()
-# text_tools = boat.load_all_text_tools()
-data_tools = boat.load_all_data_tools()
-agent_tools = boat.merge_tool_lists( data_tools)
 
+def create_agent() -> Agent:
+    """
+    Creates and returns a configured Data Processing agent instance.
 
-# Configure specialized file operations agent
-root_agent = Agent(
-    model="gemini-2.0-flash",
-    name="Data_Daniel",
-    instruction=agent_instruction,
-    description="Specialized file and directory operations agent that can enumerate directories and files, write to files, and perform basic text processing.",
-    tools=agent_tools,
-)
+    Returns:
+        Agent: Configured Data Processing agent with appropriate tools and settings.
+    """
+
+    # fs_tools = boat.load_all_filesystem_tools()
+    # text_tools = boat.load_all_text_tools()
+    data_tools = boat.load_all_data_tools()
+    agent_tools = boat.merge_tool_lists(data_tools)
+
+    return Agent(
+        model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
+        name="Data_Daniel",
+        instruction=agent_instruction,
+        description="Specialized data processing agent that can analyze, transform, and visualize data.",
+        tools=agent_tools,
+    )
+
+# Configure specialized data processing agent
+root_agent = create_agent()
 
 """
 The above would load all of the below.
@@ -59,7 +70,7 @@ File and Directory Operations:
     generate_directory_tree
     validate_path
     validate_file_content
-    
+
 Text Processing Tools:
     clean_whitespace
     normalize_line_endings

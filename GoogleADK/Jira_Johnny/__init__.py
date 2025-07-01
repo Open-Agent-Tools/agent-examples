@@ -1,11 +1,11 @@
 """
-FileOps_Freddy Agent Package.
+Jira_Johnny Agent Package.
 
-This package contains the FileOps_Freddy agent, a specialized file and directory operations agent
-designed to handle file system tasks efficiently.
+This package contains the Jira_Johnny agent, a specialized Jira operations agent
+designed to interact with Jira and perform Jira-related tasks efficiently.
 
 The agent is built using Google's Agent Development Kit (ADK) and uses the Gemini model.
-It provides tools for file operations, directory management, and text processing.
+It provides tools for Jira issue management, querying, and other Jira operations.
 """
 
 # Expose the root agent and create_agent function at the package level for easier imports
