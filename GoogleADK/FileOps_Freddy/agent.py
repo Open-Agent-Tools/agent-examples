@@ -19,7 +19,7 @@ import basic_open_agent_tools as boat  # type: ignore
 from dotenv import load_dotenv
 
 # Initialize environment and logging
-load_dotenv() # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -43,6 +43,7 @@ def create_agent() -> Agent:
         description="Specialized file and directory operations agent that can enumerate directories and files, write to files, and perform basic text processing.",
         tools=agent_tools,
     )
+
 
 # Configure specialized file operations agent
 root_agent = create_agent()

@@ -15,11 +15,10 @@ from google.adk.agents import Agent
 
 from .prompts import agent_instruction
 import basic_open_agent_tools as boat  # type: ignore
-
 from dotenv import load_dotenv
 
 # Initialize environment and logging
-load_dotenv() # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -44,6 +43,7 @@ def create_agent() -> Agent:
         description="Specialized data processing agent that can analyze, transform, and visualize data.",
         tools=agent_tools,
     )
+
 
 # Configure specialized data processing agent
 root_agent = create_agent()

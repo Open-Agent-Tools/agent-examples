@@ -11,13 +11,14 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
+
 # import basic_open_agent_tools as boat  # type: ignore
 from basic_open_agent_tools.file_system.tree import generate_directory_tree
 
 from dotenv import load_dotenv
 
 # Initialize environment and logging
-load_dotenv() # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -42,6 +43,7 @@ def create_agent() -> Agent:
         description="A generic task and facilitation agent.",
         tools=[generate_directory_tree],
     )
+
 
 # Configure agent with comprehensive file system tools
 root_agent = create_agent()
