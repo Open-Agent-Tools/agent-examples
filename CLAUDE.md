@@ -5,8 +5,8 @@
 When user says **"cleanup"**: 
 1. **Run Quality Tools**: Execute all quality checks and fix issues
    ```bash
-   python3 -m ruff check GoogleADK/ tests/ --fix
-   python3 -m ruff format GoogleADK/ tests/
+   python3 -m ruff check GoogleADK/ evals/ --fix
+   python3 -m ruff format GoogleADK/ evals/
    python3 -m mypy GoogleADK/
    python3 -m pytest
    ```
