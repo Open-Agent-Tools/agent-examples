@@ -77,7 +77,7 @@ def create_agent() -> Agent:
     ]
 
     return Agent(
-        model=os.environ.get("GOOGLE_MODEL") or "gemini-pro",
+        model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
         name="Scrum_Sam",
         instruction=agent_instruction,
         description="Specialized Scrum Master agent that can coach the team and perform basic jira functions from the available tools.",

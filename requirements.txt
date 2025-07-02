@@ -24,6 +24,7 @@ pandas
 numpy
 python-dotenv
 pandas-stubs
+scikit-learn
 
 # File and document processing
 python-docx
@@ -47,6 +48,8 @@ ruff
 pytest
 pytest-asyncio
 pytest-mock
+tabulate
+rouge_score
 
 # Logging and monitoring
 loguru

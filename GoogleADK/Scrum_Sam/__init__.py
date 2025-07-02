@@ -10,5 +10,6 @@ It provides tools for Scrum coaching, Jira integration, and team facilitation.
 
 # Expose the root agent and create_agent function at the package level for easier imports
 from .agent import root_agent, create_agent
+from . import agent
 
-__all__ = ["root_agent", "create_agent"]
+__all__ = ["root_agent", "create_agent", "agent"]

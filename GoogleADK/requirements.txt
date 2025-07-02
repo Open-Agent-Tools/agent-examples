@@ -15,10 +15,12 @@ pydantic
 rich
 loguru
 
-# Testing
+# Testing framework
 pytest
 pytest-asyncio
 pytest-mock
+tabulate
+rouge_score
 
 # Optional: Web Interface
 fastapi

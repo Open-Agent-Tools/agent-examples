@@ -10,5 +10,6 @@ It provides tools for data analysis, transformation, and visualization.
 
 # Expose the root agent and create_agent function at the package level for easier imports
 from .agent import root_agent, create_agent
+from . import agent
 
-__all__ = ["root_agent", "create_agent"]
+__all__ = ["root_agent", "create_agent", "agent"]

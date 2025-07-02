@@ -1,0 +1,40 @@
+{
+  "eval_set_id": "list_available_tools_test_set",
+  "name": "List Available Tools Test",
+  "description": "Test case for listing available tools through agent interaction",
+  "eval_cases": [
+    {
+      "eval_id": "list_available_tools_test",
+      "conversation": [
+        {
+          "invocation_id": "list-tools-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "List all available tools alphabetically. Do not try to run them though. Just list the names."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Okay, here is an alphabetized list of the available tools:\n\nappend_to_file\nclean_whitespace\ncopy_file\ncreate_directory\ndelete_directory\ndelete_file\ndirectory_exists\nextract_sentences\nfile_exists\ngenerate_directory_tree\nget_file_info\nget_file_size\ninsert_at_line\nis_empty_directory\njoin_with_oxford_comma\nlist_all_directory_contents\nlist_directory_contents\nmove_file\nnormalize_line_endings\nnormalize_unicode\nread_file_to_string\nreplace_in_file\nsmart_split_lines\nstrip_html_tags\nto_camel_case\nto_snake_case\nto_title_case\nvalidate_file_content\nvalidate_path\nwrite_file_from_string"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "fileops_freddy_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

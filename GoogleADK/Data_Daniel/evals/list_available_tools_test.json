@@ -1,0 +1,40 @@
+{
+  "eval_set_id": "list_available_tools_test_set",
+  "name": "List Available Tools Test",
+  "description": "Test case for listing available tools through agent interaction",
+  "eval_cases": [
+    {
+      "eval_id": "list_available_tools_test",
+      "conversation": [
+        {
+          "invocation_id": "list-tools-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "List all available tools alphabetically. Do not try to run them, just list them."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Okay, here are the available tools, listed alphabetically:\n\ncheck_required_fields(data, required)\nclean_csv_data(data, rules)\ncreate_validation_report(data, rules)\ncsv_to_dict_list(csv_data, delimiter)\ndetect_csv_delimiter(file_path, sample_size)\ndict_list_to_csv(data, delimiter)\nmerge_config_files(config_paths, format_type)\nread_csv_simple(file_path, delimiter, headers)\nread_ini_file(file_path)\nread_toml_file(file_path)\nread_yaml_file(file_path)\nsafe_json_deserialize(json_str)\nsafe_json_serialize(data, indent)\nvalidate_config_schema(config_data, schema)\nvalidate_csv_structure(file_path, expected_columns)\nvalidate_data_types_simple(data, type_map)\nvalidate_json_string(json_str)\nvalidate_range_simple(value, min_val, max_val)\nvalidate_schema_simple(data, schema)\nwrite_csv_simple(data, file_path, delimiter, headers)\nwrite_ini_file(data, file_path)\nwrite_toml_file(data, file_path)\nwrite_yaml_file(data, file_path)"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "data_daniel_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}
