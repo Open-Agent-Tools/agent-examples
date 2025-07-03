@@ -22,7 +22,7 @@ services:
     pull_policy: always
     container_name: ollama-init
     volumes:
-      - ./init-models.sh:/init-models.sh
+      - ./scripts/init-models.sh:/init-models.sh
     entrypoint: ["/bin/sh", "/init-models.sh"]
     depends_on:
       - ollama
