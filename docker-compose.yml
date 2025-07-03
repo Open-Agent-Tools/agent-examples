@@ -1,0 +1,68 @@
+name: "AI_tools"
+services:
+  ollama:
+    image: ollama/ollama:latest
+    pull_policy: always
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  ollama-init:
+    image: curlimages/curl:latest
+    pull_policy: always
+    container_name: ollama-init
+    volumes:
+      - ./init-models.sh:/init-models.sh
+    entrypoint: ["/bin/sh", "/init-models.sh"]
+    depends_on:
+      - ollama
+    restart: "no"
+
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    pull_policy: always
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - open-webui_data:/app/backend/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  n8n:
+    container_name: n8n-web-client
+    image: n8nio/n8n:latest
+    pull_policy: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - type: volume
+        source: n8n_data
+        target: /home/node/.n8n
+        read_only: false
+        volume:
+          nocopy: true
+      - type: bind
+        source: /d/Code/
+        target: /code
+        read_only: false
+    restart: unless-stopped
+
+volumes:
+  ollama:
+  open-webui_data:
+  n8n_data:
+    name: n8n_data
