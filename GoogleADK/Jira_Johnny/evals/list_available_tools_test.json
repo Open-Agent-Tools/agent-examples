@@ -11,7 +11,7 @@
           "user_content": {
             "parts": [
               {
-                "text": "List all available tools alphabetically. Do not try to run them though. Just list the names."
+                "text": "List all available tools alphabetically as a bulleted list only.\n\n"
               }
             ],
             "role": "user"
@@ -19,7 +19,7 @@
           "final_response": {
             "parts": [
               {
-                "text": "PLACEHOLDER_RESPONSE_FOR_JIRA_JOHNNY_TOOLS"
+                "text": "confluence_add_comment\nconfluence_add_label\nconfluence_create_page\nconfluence_delete_page\nconfluence_get_comment\nconfluence_get_comments\nconfluence_get_labels\nconfluence_get_page\nconfluence_get_page_children\nconfluence_search\nconfluence_update_page\njira_add_comment\njira_add_worklog\njira_batch_create_issues\njira_batch_get_changelogs\njira_create_issue\njira_create_issue_link\njira_create_sprint\njira_delete_issue\njira_download_attachments\njira_get_agile_boards\njira_get_board_issues\njira_get_issue\njira_get_link_types\njira_get_project_issues\njira_get_project_versions\njira_get_sprint_issues\njira_get_sprints_from_board\njira_get_transitions\njira_get_user_profile\njira_get_worklog\njira_link_to_epic\njira_remove_issue_link\njira_search\njira_search_fields\njira_transition_issue\njira_update_issue\njira_update_sprint"
               }
             ],
             "role": "model"

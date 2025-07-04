@@ -14,9 +14,26 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
-from basic_open_agent_tools.file_system.tree import generate_directory_tree
-from basic_open_agent_tools.file_system.operations import read_file_to_string
-from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
+import basic_open_agent_tools as boat
+
+
+# Import Jira_Johnny with fallback for different execution contexts
+try:
+    from ..Jira_Johnny import create_agent as create_jira_agent
+except ImportError:
+    # Fallback for when running via ADK eval or other contexts
+    import sys
+    from pathlib import Path
+
+    # Add parent directory to Python path
+    current_file = Path(__file__)
+    project_root = current_file.parent.parent.parent  # Go up to agent-examples
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
+    import GoogleADK.Jira_Johnny
+
+    create_jira_agent = GoogleADK.Jira_Johnny.create_agent
 
 from dotenv import load_dotenv
 
@@ -24,6 +41,8 @@ from dotenv import load_dotenv
 load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
+
+Jira_Johnny_agent = create_jira_agent()
 
 
 def create_agent() -> Agent:
@@ -34,47 +53,9 @@ def create_agent() -> Agent:
         Agent: Configured Scrum Master agent with appropriate tools and settings.
     """
 
-    agent_tools = [
-        generate_directory_tree,
-        read_file_to_string,
-        MCPToolset(
-            connection_params=StdioServerParameters(
-                command="docker",
-                args=[
-                    "run",
-                    "-i",
-                    "--rm",
-                    "-e",
-                    "CONFLUENCE_URL",
-                    "-e",
-                    "CONFLUENCE_USERNAME",
-                    "-e",
-                    "JIRA_URL",
-                    "-e",
-                    "JIRA_USERNAME",
-                    "-e",
-                    "CONFLUENCE_API_TOKEN",
-                    "-e",
-                    "CONFLUENCE_PERSONAL_TOKEN",
-                    "-e",
-                    "JIRA_API_TOKEN",
-                    "-e",
-                    "JIRA_PERSONAL_TOKEN",
-                    "mcp/atlassian",
-                ],
-                env={
-                    "CONFLUENCE_URL": os.environ.get("CONFLUENCE_URL") or "",
-                    "CONFLUENCE_USERNAME": os.environ.get("ATTLASSIAN_USERNAME") or "",
-                    "JIRA_URL": os.environ.get("JIRA_URL") or "",
-                    "JIRA_USERNAME": os.environ.get("ATTLASSIAN_USERNAME") or "",
-                    "CONFLUENCE_API_TOKEN": os.environ.get("ATTLASSIAN_KEY") or "",
-                    "JIRA_API_TOKEN": os.environ.get("ATTLASSIAN_KEY") or "",
-                },
-            ),
-            # Optional: Filter which tools from the MCP server are exposed
-            # tool_filter=['list_directory', 'read_file']
-        ),
-    ]
+    agent_tools = boat.merge_tool_lists(
+        boat.load_all_filesystem_tools(), boat.load_all_text_tools()
+    )
 
     return Agent(
         model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
@@ -82,6 +63,7 @@ def create_agent() -> Agent:
         instruction=agent_instruction,
         description="Specialized Scrum Master agent that can coach the team and perform basic jira functions from the available tools.",
         tools=agent_tools,
+        sub_agents=[Jira_Johnny_agent],
     )
 
 

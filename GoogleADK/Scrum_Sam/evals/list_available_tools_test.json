@@ -11,7 +11,7 @@
           "user_content": {
             "parts": [
               {
-                "text": "List all available tools alphabetically. Do not try to run them though. Just list the names."
+                "text": "List all available tools alphabetically as a bulleted list only. Dont use, execute, or run the tools.\n\n"
               }
             ],
             "role": "user"
@@ -19,7 +19,7 @@
           "final_response": {
             "parts": [
               {
-                "text": "PLACEHOLDER_RESPONSE_FOR_SCRUM_SAM_TOOLS"
+                "text": "Here are the available tools, listed alphabetically:\n\ncopy_file\ncreate_directory\ndelete_directory\ndelete_file\ndirectory_exists\nescape_string\nextract_sentences\nfile_exists\nget_file_info\nget_file_size\ngenerate_directory_tree\ninsert_at_line\nis_empty_directory\njoin_with_oxford_comma\nlist_all_directory_contents\nlist_directory_contents\nmove_file\nnormalize_line_endings\nnormalize_unicode\nprint\nread_file_to_string\nreplace_in_file\nsmart_split_lines\nstrip_html_tags\nto_camel_case\nto_snake_case\nto_title_case\ntransfer_to_agent\nvalidate_file_content\nvalidate_path\nwrite_file_from_string"
               }
             ],
             "role": "model"
