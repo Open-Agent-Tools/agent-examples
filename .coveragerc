@@ -1,0 +1,25 @@
+[run]
+source = GoogleADK
+omit = 
+    */tests/*
+    */evals/*
+    */__init__.py
+    */setup.py
+    */venv/*
+    */.venv/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml

@@ -8,13 +8,13 @@ services:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: all
+#              capabilities: [gpu]
     restart: unless-stopped
 
   ollama-init:
@@ -48,17 +48,12 @@ services:
     pull_policy: always
     ports:
       - "5678:5678"
+    environment:
+      - N8N_USER_FOLDER=/home/node/.n8n
     volumes:
-      - type: volume
-        source: n8n_data
-        target: /home/node/.n8n
-        read_only: false
-        volume:
-          nocopy: true
-      - type: bind
-        source: /d/Code/
-        target: /code
-        read_only: false
+      - n8n_data:/home/node/.n8n
+      - ${CODE_DIR:-./code}:/code
+    user: root
     restart: unless-stopped
 
 volumes:
