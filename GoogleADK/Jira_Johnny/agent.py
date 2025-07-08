@@ -12,8 +12,6 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
-from basic_open_agent_tools.file_system.tree import generate_directory_tree
-from basic_open_agent_tools.file_system.operations import read_file_to_string
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
 from dotenv import load_dotenv
 
@@ -28,15 +26,12 @@ def create_agent() -> Agent:
     Creates and returns a configured Jira agent instance.
 
     Args:
-        additional_tools: Optional list of additional tools to add to the agent.
 
     Returns:
         Agent: Configured Jira agent with appropriate tools and settings.
     """
 
     agent_tools = [
-        generate_directory_tree,
-        read_file_to_string,
         MCPToolset(
             connection_params=StdioServerParameters(
                 command="docker",

@@ -1,3 +1,6 @@
+# NOT WORKNG
+sub agent jira integraiton is inconsistent
+
 # Scrum Master Agent
 
 A specialized Scrum Master agent designed to coach teams and handle Atlassian Jira interactions for agile project management through Docker-containerized MCP server integration.

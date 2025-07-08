@@ -1,3 +1,8 @@
+# NOT WORKING # 
+Docker MCP toolkit is unstable.
+
+
+
 # Jira Agent
 
 A specialized Jira operations agent designed to handle Atlassian Jira interactions through Docker-containerized MCP server integration.
