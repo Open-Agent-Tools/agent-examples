@@ -9,10 +9,7 @@ description = "Google ADK Agent Examples"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-dependencies = []
+dependencies = ["mcp", "robin-stocks"]
 
-[tool.uv]
-# UV configuration
-pip = { isolated = true }
-# Use requirements.txt as the source of dependencies
-requirements-file = "requirements.txt"
+[tool.hatch.build.targets.wheel]
+packages = ["GoogleADK", "scripts"]

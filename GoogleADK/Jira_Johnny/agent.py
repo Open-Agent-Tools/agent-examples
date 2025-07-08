@@ -5,9 +5,7 @@ Jira operations and interactions with Atlassian tools.
 
 It uses the specified Google model and connects to Atlassian services
 through a Docker container with the necessary credentials.
-"""
-
-import logging
+"""import logging
 import os
 import warnings
 

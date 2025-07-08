@@ -5,6 +5,8 @@ litellm
 ollama
 a2a-sdk
 basic-open-agent-tools
+open-stocks-mcp
+mcp
 
 # LLM and AI libraries
 openai
