@@ -276,3 +276,7 @@ Sessionx.vim
 auto-save-list
 tramp
 .\#*
+
+# Evaluation history files
+**/.adk/
+**/eval_history/

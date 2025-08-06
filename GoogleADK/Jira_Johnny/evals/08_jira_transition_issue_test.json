@@ -1,0 +1,56 @@
+{
+  "eval_set_id": "jira_transition_issue_test_set",
+  "name": "Jira Transition Issue Test",
+  "description": "Test case for transitioning a Jira issue status using jira_transition_issue tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_transition_issue_test",
+      "conversation": [
+        {
+          "invocation_id": "transition-issue-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Move issue WOB-2 from 'To Do' to 'In Progress' status. First check available transitions using jira_get_transitions, then perform the transition using jira_transition_issue."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I have moved issue WOB-2 to 'In Progress' status."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2"
+                },
+                "name": "jira_get_transitions"
+              },
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2",
+                  "transition_id": "21"
+                },
+                "name": "jira_transition_issue"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "eval_set_id": "jira_add_worklog_test_set",
+  "name": "Jira Add Worklog Test",
+  "description": "Test case for adding work log to a Jira issue using jira_add_worklog tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_add_worklog_test",
+      "conversation": [
+        {
+          "invocation_id": "add-worklog-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Log 4 hours of work on issue WOB-2 with the comment 'Implemented core functionality and unit tests'. Use the jira_add_worklog tool."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I've successfully logged 4 hours of work on issue WOB-2 with the comment 'Implemented core functionality and unit tests'."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2",
+                  "time_spent": "4h",
+                  "comment": "Implemented core functionality and unit tests"
+                },
+                "name": "jira_add_worklog"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "eval_set_id": "jira_get_agile_boards_test_set",
+  "name": "Jira Get Agile Boards Test",
+  "description": "Test case for retrieving all Agile boards using jira_get_agile_boards tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_get_agile_boards_test",
+      "conversation": [
+        {
+          "invocation_id": "get-boards-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Show me all available Agile boards in our Jira instance. Use the jira_get_agile_boards tool and list them with their names and IDs."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I found two agile boards: ED board (ID: 1) and WOB board (ID: 2)."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "jira_get_agile_boards"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

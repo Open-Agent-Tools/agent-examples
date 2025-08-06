@@ -1,0 +1,51 @@
+{
+  "eval_set_id": "jira_update_issue_test_set",
+  "name": "Jira Update Issue Test",
+  "description": "Test case for updating a Jira issue using jira_update_issue tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_update_issue_test",
+      "conversation": [
+        {
+          "invocation_id": "update-issue-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Update issue WOB-2 to add a description saying 'Updated by automation agent'. Use the jira_update_issue tool."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I've successfully updated issue WOB-2 with the new description 'Updated by automation agent'."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2",
+                  "fields": {
+                    "description": "Updated by automation agent"
+                  }
+                },
+                "name": "jira_update_issue"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

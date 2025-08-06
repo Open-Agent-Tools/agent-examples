@@ -1,0 +1,51 @@
+{
+  "eval_set_id": "jira_create_issue_test_set",
+  "name": "Jira Create Issue Test",
+  "description": "Test case for creating a new Jira issue using jira_create_issue tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_create_issue_test",
+      "conversation": [
+        {
+          "invocation_id": "create-issue-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Create a new Jira issue with the following details:\n- Project: WOB\n- Summary: Test issue for automation\n- Issue Type: Task\n- Description: This is a test issue created by the Jira agent for validation purposes\n\nUse the jira_create_issue tool and return the issue key of the created issue."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I've created the issue. The issue key is WOB-5."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "project_key": "WOB",
+                  "summary": "Test issue for automation",
+                  "issue_type": "Task",
+                  "description": "This is a test issue created by the Jira agent for validation purposes"
+                },
+                "name": "jira_create_issue"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

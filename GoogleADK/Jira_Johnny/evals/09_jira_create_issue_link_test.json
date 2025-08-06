@@ -1,0 +1,50 @@
+{
+  "eval_set_id": "jira_create_issue_link_test_set",
+  "name": "Jira Create Issue Link Test",
+  "description": "Test case for creating a link between two Jira issues using jira_create_issue_link tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_create_issue_link_test",
+      "conversation": [
+        {
+          "invocation_id": "create-link-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Create a 'blocks' relationship link between issue WOB-5 (source) and WOB-6 (target), where WOB-5 blocks WOB-6. Use the jira_create_issue_link tool."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I've created a 'Blocks' link from issue WOB-5 (inward) to issue WOB-6 (outward)."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "outward_issue_key": "WOB-6",
+                  "inward_issue_key": "WOB-5",
+                  "link_type": "Blocks"
+                },
+                "name": "jira_create_issue_link"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

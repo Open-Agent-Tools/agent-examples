@@ -1,0 +1,49 @@
+{
+  "eval_set_id": "jira_add_comment_test_set",
+  "name": "Jira Add Comment Test",
+  "description": "Test case for adding a comment to a Jira issue using jira_add_comment tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_add_comment_test",
+      "conversation": [
+        {
+          "invocation_id": "add-comment-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Add a comment to issue WOB-2 saying 'This issue has been reviewed by the automation agent and is ready for development.' Use the jira_add_comment tool."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I've successfully added the comment to issue WOB-2: 'This issue has been reviewed by the automation agent and is ready for development.'"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2",
+                  "comment": "This issue has been reviewed by the automation agent and is ready for development."
+                },
+                "name": "jira_add_comment"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

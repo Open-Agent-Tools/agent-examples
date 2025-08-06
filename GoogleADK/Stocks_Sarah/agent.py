@@ -17,6 +17,8 @@ from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParamet
 
 from .prompts import agent_instruction
 
+from basic_open_agent_tools import load_all_datetime_tools
+
 
 # Initialize environment and logging
 load_dotenv()
@@ -34,30 +36,24 @@ def create_agent() -> Agent:
         Agent: Configured Stock Trading agent with appropriate tools and settings.
     """
 
-    # Create environment for MCP server
-    mcp_env = os.environ.copy() or {}
-    mcp_env.update(
-        {
-            "LOG_LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
-        }
-    )
-
-    agent_tools = [
-        MCPToolset(
+    stock_mcp =  [MCPToolset(
             connection_params=StdioServerParameters(
                 command="uv",
                 args=["run", "open-stocks-mcp-server", "--transport", "stdio"],
-                env=mcp_env,
             ),
-        ),
-    ]
+        )]
+
+    date_tools = load_all_datetime_tools()
+
+    all_tools = stock_mcp + date_tools
 
     return Agent(
         model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
         name="Stocks_Sarah",
         instruction=agent_instruction,
         description="Specialized stock trading agent that can perform Robin Stocks operations through MCP tools.",
-        tools=agent_tools,
+        tools=all_tools
+
     )
 
 

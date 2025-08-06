@@ -1,0 +1,51 @@
+{
+  "eval_set_id": "jira_get_issue_test_set",
+  "name": "Jira Get Issue Test",
+  "description": "Test case for retrieving a specific Jira issue using jira_get_issue tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_get_issue_test",
+      "conversation": [
+        {
+          "invocation_id": "get-issue-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Get the details of Jira issue WOB-2 including all fields and comments. Use the jira_get_issue tool."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I have retrieved the details for Jira issue WOB-2, including all fields and the changelog. The summary is \"Test issue - connection verification\" and the description is \"This is a test issue created to verify Jira connection and reporter information.\". It is currently in the \"Done\" status. It was created on 2025-07-01 and updated on 2025-07-01. The assignee and reporter are both \"unseriousai\"."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "issue_key": "WOB-2",
+                  "fields": "*all",
+                  "comment_limit": 100,
+                  "expand": "changelog"
+                },
+                "name": "jira_get_issue"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

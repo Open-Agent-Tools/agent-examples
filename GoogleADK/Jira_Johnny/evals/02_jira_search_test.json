@@ -1,0 +1,48 @@
+{
+  "eval_set_id": "jira_search_test_set",
+  "name": "Jira Search Test",
+  "description": "Test case for searching Jira issues using jira_search tool",
+  "eval_cases": [
+    {
+      "eval_id": "jira_search_test",
+      "conversation": [
+        {
+          "invocation_id": "search-issues-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Search for all open issues assigned to me using JQL. Use the jira_search tool and show me the results."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "OK. I found one issue: \"WOB-2\" with summary \"Test issue - connection verification\" is assigned to you, but it is in \"Done\" status."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "jql": "assignee = currentUser() AND status != Closed"
+                },
+                "name": "jira_search"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "jira_johnny_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}
