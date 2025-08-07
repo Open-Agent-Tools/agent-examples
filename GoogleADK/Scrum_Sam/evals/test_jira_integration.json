@@ -1,0 +1,53 @@
+{
+  "eval_set_id": "scrum_sam_jira_test_set",
+  "name": "Scrum Sam Jira Integration Test",
+  "description": "Test case for Scrum_Sam accessing Jira functionality through Jira_Johnny sub-agent",
+  "eval_cases": [
+    {
+      "eval_id": "scrum_sam_jira_test",
+      "conversation": [
+        {
+          "invocation_id": "jira-access-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Can you help me get a list of Jira boards? I need to see what agile boards are available for sprint planning."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Here are the available agile boards:\n- ED board (ID: 1, Type: simple)\n- WOB board (ID: 2, Type: simple)"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {
+                  "agent_name": "Jira_Johnny"
+                },
+                "name": "transfer_to_agent"
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "jira_get_agile_boards"
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "scrum_sam_agent",
+        "user_id": "test_user",
+        "state": {}
+      }
+    }
+  ]
+}

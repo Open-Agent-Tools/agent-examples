@@ -42,8 +42,6 @@ load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
-Jira_Johnny_agent = create_jira_agent()
-
 
 def create_agent() -> Agent:
     """
@@ -57,13 +55,16 @@ def create_agent() -> Agent:
         boat.load_all_filesystem_tools(), boat.load_all_text_tools()
     )
 
+    # Create fresh Jira_Johnny instance for this Scrum_Sam agent
+    jira_johnny_agent = create_jira_agent()
+
     return Agent(
         model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
         name="Scrum_Sam",
         instruction=agent_instruction,
         description="Specialized Scrum Master agent that can coach the team and perform basic jira functions from the available tools.",
         tools=agent_tools,
-        sub_agents=[Jira_Johnny_agent],
+        sub_agents=[jira_johnny_agent],
     )
 
 
