@@ -17,9 +17,10 @@ from .prompts import agent_instruction
 import basic_open_agent_tools as boat
 
 
-# Import Jira_Johnny with fallback for different execution contexts
+# Import Jira_Johnny and Story_Sage with fallback for different execution contexts
 try:
     from ..Jira_Johnny import create_agent as create_jira_agent
+    from ..Story_Sage import create_agent as create_story_agent
 except ImportError:
     # Fallback for when running via ADK eval or other contexts
     import sys
@@ -32,8 +33,10 @@ except ImportError:
         sys.path.insert(0, str(project_root))
 
     import GoogleADK.Jira_Johnny
+    import GoogleADK.Story_Sage
 
     create_jira_agent = GoogleADK.Jira_Johnny.create_agent
+    create_story_agent = GoogleADK.Story_Sage.create_agent
 
 from dotenv import load_dotenv
 
@@ -55,16 +58,18 @@ def create_agent() -> Agent:
         boat.load_all_filesystem_tools(), boat.load_all_text_tools()
     )
 
-    # Create fresh Jira_Johnny instance for this Scrum_Sam agent
+    # Create fresh sub-agent instances for this Scrum_Sam agent
     jira_johnny_agent = create_jira_agent()
+    # Create Story_Sage without Jira integration to prevent circular dependencies
+    story_sage_agent = create_story_agent(include_jira=False)
 
     return Agent(
         model=os.environ.get("GOOGLE_MODEL") or "gemini-2.0-flash",
         name="Scrum_Sam",
         instruction=agent_instruction,
-        description="Specialized Scrum Master agent that can coach the team and perform basic jira functions from the available tools.",
+        description="Specialized Scrum Master agent that can coach the team, perform Jira functions, and craft high-quality user stories following INVEST principles.",
         tools=agent_tools,
-        sub_agents=[jira_johnny_agent],
+        sub_agents=[jira_johnny_agent, story_sage_agent],
     )
 
 
