@@ -26,6 +26,23 @@ This repository provides practical examples and comparisons of different AI agen
 
 See [getting-started.md](getting-started.md) for framework selection guidance and setup instructions.
 
+## GoogleADK Agent Status (August 2025)
+
+Current status of GoogleADK agents based on latest evaluations:
+
+### ✅ **Working Agents** (5/7)
+- **Butler_Basil**: ✅ Basic filesystem operations agent
+- **FileOps_Freddy**: ✅ Advanced file operations (98.9% success rate)
+- **Jira_Johnny**: ✅ Jira integration via HTTP MCP (100% success rate)
+- **Scrum_Sam**: ✅ Multi-agent Scrum Master with sub-agents
+- **Story_Sage**: ✅ User story specialist with INVEST principles
+
+### ❌ **Broken Agents** (2/7)
+- **Data_Daniel**: ❌ Tool schema validation errors (requires fixes)
+- **Stocks_Sarah**: ❌ MCP server timeout (requires infrastructure setup)
+
+**Overall Success Rate**: 71.4% (5/7 agents functional)
+
 ## Framework Comparison
 
 Each framework offers unique strengths:
