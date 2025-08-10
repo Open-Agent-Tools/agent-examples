@@ -6,6 +6,7 @@ Jira operations and interactions with Atlassian tools.
 It uses the specified Google model and connects to Atlassian services
 through a Docker container with the necessary credentials.
 """
+
 import logging
 import os
 import warnings
@@ -13,7 +14,10 @@ import warnings
 from google.adk.agents import Agent
 
 from .prompts import agent_instruction
-from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StreamableHTTPConnectionParams
+from google.adk.tools.mcp_tool.mcp_toolset import (
+    MCPToolset,
+    StreamableHTTPConnectionParams,
+)
 from dotenv import load_dotenv
 
 # Initialize environment and logging

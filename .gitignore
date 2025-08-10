@@ -280,3 +280,6 @@ tramp
 # Evaluation history files
 **/.adk/
 **/eval_history/
+
+# Claude IDE settings
+.claude/
