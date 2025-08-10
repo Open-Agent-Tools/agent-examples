@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 # Wait for Ollama to be ready
 echo "Waiting for Ollama to be ready..."
@@ -14,8 +13,12 @@ MODELS="llama4:latest gemma3:27b gemma3:4b gemma3:1b gemma3n:latest"
 
 # Pull each model
 for MODEL in $MODELS; do
-  curl -X POST http://ollama:11434/api/pull -d "{\"name\":\"$MODEL\"}"
-  echo "Model $MODEL pulled successfully"
+  if curl -X POST http://ollama:11434/api/pull -d "{\"name\":\"$MODEL\"}"; then
+    echo "Model $MODEL pulled successfully"
+  else
+    echo "Failed to pull model $MODEL"
+    exit 1
+  fi
 done
 
 echo "All models loaded successfully"
