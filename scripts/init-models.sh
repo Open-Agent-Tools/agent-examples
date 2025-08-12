@@ -9,7 +9,7 @@ done
 echo "Ollama is ready. Loading models..."
 
 # List of models to pull - modify this list as needed
-MODELS="llama4:latest gemma3:27b gemma3:4b gemma3:1b gemma3n:latest"
+MODELS="gemma3:4b gemma3n:latest"
 
 # Pull each model
 for MODEL in $MODELS; do

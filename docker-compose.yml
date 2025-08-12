@@ -8,13 +8,13 @@ services:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: all
+#              capabilities: [gpu]
     restart: unless-stopped
 
   ollama-init:
@@ -58,6 +58,7 @@ services:
 
   mcp-atlassian:
     image: ghcr.io/sooperset/mcp-atlassian:latest
+    pull_policy: always
     container_name: mcp-atlassian
     ports:
       - "9000:9000"
@@ -68,7 +69,7 @@ services:
       - CONFLUENCE_URL=${CONFLUENCE_URL:-https://privateerai.atlassian.net/wiki/}
       - CONFLUENCE_USERNAME=${CONFLUENCE_USERNAME:-unseriousai@gmail.com}
       - CONFLUENCE_API_TOKEN=${CONFLUENCE_API_TOKEN}
-    command: ["--transport", "streamable-http", "--port", "9000"]
+    command: ["--transport", "streamable-http", "--port", "9000", "-vv"]
     restart: unless-stopped
 
 volumes:
