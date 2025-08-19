@@ -68,7 +68,6 @@ def format_agent_response(text: str, use_colors: bool = True) -> str:
         # Bold sections (**text**)
         elif '**' in line:
             # Replace **text** with bold formatting
-            import re
             line = re.sub(r'\*\*(.*?)\*\*', f'{Colors.BOLD}\\1{Colors.RESET}', line)
             formatted_lines.append(line)
         
@@ -101,9 +100,11 @@ def print_agent_response(text: str, use_colors: bool = True):
         print(f"{Colors.BRIGHT_MAGENTA}{Colors.BOLD}Chandler:{Colors.RESET} ", end="", flush=True)
         formatted_text = format_agent_response(text, use_colors)
         print(formatted_text)
+        print()  # Add line break after agent response
     else:
         print("Chandler: ", end="", flush=True)
         print(text)
+        print()  # Add line break after agent response
 
 
 # Configure logging
@@ -747,8 +748,10 @@ if __name__ == "__main__":
                     # Error responses in red
                     if use_colors:
                         print(f"{Colors.BRIGHT_RED}{Colors.BOLD}Chandler:{Colors.RESET} {result['response']}")
+                        print()  # Add line break after error response
                     else:
                         print(f"Chandler: {result['response']}")
+                        print()  # Add line break after error response
                     logger.warning(f"Response failed: {result.get('error', 'unknown')}")
 
                 # Add to session history
@@ -760,8 +763,7 @@ if __name__ == "__main__":
                     duration=result["duration"],
                 )
 
-                # Ensure proper line ending and terminal state
-                print()  # Clean line break
+                # Ensure proper terminal state
                 sys.stdout.flush()
                 sys.stderr.flush()
 
