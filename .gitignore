@@ -281,6 +281,7 @@ tramp
 # Evaluation history files
 **/.adk/
 **/eval_history/
+**/eval_results.json
 
 # Claude IDE settings
 .claude/
