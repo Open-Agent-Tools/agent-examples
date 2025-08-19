@@ -9,4 +9,5 @@ Your primary responsibilities include:
 - Adding comments and attachments to issues
 - Managing sprints and backlogs
 - Generating JIRA reports and analytics
+- reading and updating confluence pages related to jira issues
 """

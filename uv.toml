@@ -1,0 +1,7 @@
+# UV configuration for agent-examples project
+python-preference = "managed"
+python-downloads = "automatic"
+
+[pip]
+index-strategy = "first-index"
+prerelease = "disallow"
