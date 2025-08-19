@@ -386,22 +386,8 @@ def robust_agent_call(
                 f"Agent call attempt {attempt + 1} for session {session.session_id}"
             )
 
-            # Make the agent call with stdout capture to apply color formatting
-            import sys
-            import io
-            
-            # Capture stdout to format the agent's response
-            old_stdout = sys.stdout
-            captured_output = io.StringIO()
-            sys.stdout = captured_output
-            
-            try:
-                result = agent(enhanced_query)
-                # Get the captured output
-                agent_stdout = captured_output.getvalue()
-            finally:
-                # Always restore stdout
-                sys.stdout = old_stdout
+            # Make the agent call (streams directly to stdout)
+            result = agent(enhanced_query)
             duration = time.time() - start_time
 
             # Extract response and metrics
@@ -452,7 +438,6 @@ def robust_agent_call(
             return {
                 "success": True,
                 "response": processed_response,
-                "captured_output": agent_stdout,  # Include captured stdout
                 "attempt": attempt + 1,
                 "tokens": token_usage,
                 "duration": duration,
@@ -752,19 +737,13 @@ if __name__ == "__main__":
                 
                 result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
-                # Print the formatted response
+                # Agent already streamed response, just add spacing and log
                 if result["success"]:
-                    # Use captured stdout if available, otherwise use result response
-                    response_text = result.get("captured_output", result["response"])
-                    if response_text.strip():  # Only print if there's actual content
-                        print_agent_response(response_text, use_colors=use_colors)
+                    print()  # Add line break after streamed response
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
-                    # Error responses in red
-                    if use_colors:
-                        print(f"\n\n{Colors.BRIGHT_RED}{result['response']}{Colors.RESET}")
-                    else:
-                        print(f"\n\n{result['response']}")
+                    # Error responses (not streamed)
+                    print(f"\n\n{result['response']}")
                     print()  # Add line break after error response
                     logger.warning(f"Response failed: {result.get('error', 'unknown')}")
 
