@@ -16,3 +16,9 @@ Multi-agent Scrum Master with sub-agent integration. Successfully uses Jira_John
 - **Model**: `gemini-2.0-flash` for reliable responses
 - **Tools**: Filesystem, text, and Jira tools via sub-agent delegation
 - **Dependencies**: Inherits Jira_Johnny's HTTP MCP infrastructure
+
+### 🔍 Quality Status (August 2025)
+Code quality checks completed:
+- ✅ Ruff linting and formatting passed
+- ✅ MyPy type checking passed
+- ⚠️  Pytest not applicable (only JSON eval configs available)

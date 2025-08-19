@@ -1,0 +1,62 @@
+{
+  "total_tests": 2,
+  "passed_tests": 0,
+  "failed_tests": 2,
+  "success_rate": 0.0,
+  "avg_response_time": 10.185,
+  "total_tokens": 0,
+  "avg_tokens": 0.0,
+  "total_retries": 2,
+  "enhanced_features": {
+    "robust_call_success_rate": 0.0,
+    "security_processing_rate": 0.0
+  },
+  "categories": {
+    "mcp_integration": {
+      "total": 1,
+      "passed": 0
+    },
+    "jira_integration": {
+      "total": 1,
+      "passed": 0
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "mcp-connectivity",
+      "category": "mcp_integration",
+      "query": "What tools do you have available? List all your capabilities including any Jira or Confluence tools.",
+      "response": "I encountered an error processing your request. Please try rephrasing your question or try again later.",
+      "expected": "calculator,current_time,file_read,file_write,jira,confluence",
+      "tool_used": null,
+      "passed": false,
+      "response_time": 5.97,
+      "tokens_used": 0,
+      "attempt_count": 2,
+      "enhanced_features": {
+        "robust_call_success": false,
+        "session_managed": true,
+        "security_applied": false
+      },
+      "timestamp": "2025-08-19 08:56:03"
+    },
+    {
+      "test_id": "jira-live-connection",
+      "category": "jira_integration",
+      "query": "List all Jira projects available",
+      "response": "I encountered an error processing your request. Please try rephrasing your question or try again later.",
+      "expected": "WOB, ED, COXAI",
+      "tool_used": null,
+      "passed": false,
+      "response_time": 14.4,
+      "tokens_used": 0,
+      "attempt_count": 2,
+      "enhanced_features": {
+        "robust_call_success": false,
+        "session_managed": true,
+        "security_applied": false
+      },
+      "timestamp": "2025-08-19 08:56:18"
+    }
+  ]
+}

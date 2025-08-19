@@ -1,40 +1,20 @@
 [
   {
-    "id": "mcp-tools-1",
-    "query": "What tools do you have available? List all your capabilities.",
-    "expected": "calculator,current_time,file_read,file_write",
-    "category": "tool_usage",
-    "description": "Test that agent correctly lists available tools",
+    "id": "mcp-connectivity",
+    "category": "mcp_integration",
+    "query": "What tools do you have available? List all your capabilities including any Jira or Confluence tools.",
+    "description": "Test MCP connectivity and tool discovery",
+    "expected": "calculator,current_time,file_read,file_write,jira,confluence",
+    "check_tool_use": false,
     "check_mcp_tools": true
   },
   {
-    "id": "mcp-tools-2", 
-    "query": "Can you help me with Jira tasks?",
-    "expected": "Yes, if Atlassian MCP integration is enabled, I can help with Jira tasks like creating issues, searching for bugs, updating statuses, and managing sprints. Otherwise, I can help you write user stories and plan Jira work conceptually.",
-    "category": "mcp_integration",
-    "description": "Test MCP integration awareness"
-  },
-  {
-    "id": "mcp-tools-3",
-    "query": "What can you do with Confluence?", 
-    "expected": "If Atlassian MCP integration is enabled, I can access Confluence documentation, search pages, read content, and help manage requirements and specifications. Without it, I can help you plan and structure documentation.",
-    "category": "mcp_integration", 
-    "description": "Test Confluence capabilities awareness"
-  },
-  {
-    "id": "basic-tools-1",
-    "query": "What time is it?",
-    "expected": "current_time",
-    "category": "tool_usage",
-    "description": "Test basic tool usage - current_time",
-    "check_tool_use": true
-  },
-  {
-    "id": "basic-tools-2",
-    "query": "Calculate 25 * 48",
-    "expected": "calculator",
-    "category": "tool_usage", 
-    "description": "Test basic tool usage - calculator",
-    "check_tool_use": true
+    "id": "jira-live-connection",
+    "category": "jira_integration", 
+    "query": "List all Jira projects available",
+    "description": "Test live Jira connection through MCP",
+    "expected": "WOB, ED, COXAI",
+    "check_tool_use": true,
+    "check_live_jira": true
   }
 ]

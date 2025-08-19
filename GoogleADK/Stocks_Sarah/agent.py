@@ -13,7 +13,6 @@ import warnings
 
 from dotenv import load_dotenv
 from google.adk.agents import Agent
-from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.mcp_tool.mcp_toolset import (
     MCPToolset,
     StreamableHTTPConnectionParams,
