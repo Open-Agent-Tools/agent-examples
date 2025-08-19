@@ -1,20 +1,20 @@
 {
   "total_tests": 2,
-  "passed_tests": 0,
-  "failed_tests": 2,
-  "success_rate": 0.0,
-  "avg_response_time": 10.185,
-  "total_tokens": 0,
-  "avg_tokens": 0.0,
-  "total_retries": 2,
+  "passed_tests": 1,
+  "failed_tests": 1,
+  "success_rate": 50.0,
+  "avg_response_time": 34.8,
+  "total_tokens": 84684,
+  "avg_tokens": 42342.0,
+  "total_retries": 0,
   "enhanced_features": {
-    "robust_call_success_rate": 0.0,
+    "robust_call_success_rate": 100.0,
     "security_processing_rate": 0.0
   },
   "categories": {
     "mcp_integration": {
       "total": 1,
-      "passed": 0
+      "passed": 1
     },
     "jira_integration": {
       "total": 1,
@@ -26,37 +26,37 @@
       "test_id": "mcp-connectivity",
       "category": "mcp_integration",
       "query": "What tools do you have available? List all your capabilities including any Jira or Confluence tools.",
-      "response": "I encountered an error processing your request. Please try rephrasing your question or try again later.",
+      "response": "{'role': 'assistant', 'content': [{'text': \"I'll list all the available tools and their key capabilities:\\n\\n### [PERSON_NAME] Tools\\n1. `calculator` - Advanced mathematical operations including:\\n   ...",
       "expected": "calculator,current_time,file_read,file_write,jira,confluence",
       "tool_used": null,
-      "passed": false,
-      "response_time": 5.97,
-      "tokens_used": 0,
-      "attempt_count": 2,
+      "passed": true,
+      "response_time": 18.62,
+      "tokens_used": 20761,
+      "attempt_count": 1,
       "enhanced_features": {
-        "robust_call_success": false,
+        "robust_call_success": true,
         "session_managed": true,
         "security_applied": false
       },
-      "timestamp": "2025-08-19 08:56:03"
+      "timestamp": "2025-08-19 09:18:27"
     },
     {
       "test_id": "jira-live-connection",
       "category": "jira_integration",
       "query": "List all Jira projects available",
-      "response": "I encountered an error processing your request. Please try rephrasing your question or try again later.",
+      "response": "{'role': 'assistant', 'content': [{'text': 'Here are all the active Jira projects you have access to:\\n\\n1. **COXAI** - DEMOS COX AI\\n   - Project ID: 10034\\n   - Type: Software (next-gen)\\n\\n2. **ED*...",
       "expected": "WOB, ED, COXAI",
       "tool_used": null,
       "passed": false,
-      "response_time": 14.4,
-      "tokens_used": 0,
-      "attempt_count": 2,
+      "response_time": 50.98,
+      "tokens_used": 63923,
+      "attempt_count": 1,
       "enhanced_features": {
-        "robust_call_success": false,
+        "robust_call_success": true,
         "session_managed": true,
         "security_applied": false
       },
-      "timestamp": "2025-08-19 08:56:18"
+      "timestamp": "2025-08-19 09:19:18"
     }
   ]
 }

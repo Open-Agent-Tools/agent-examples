@@ -9,6 +9,9 @@ open-stocks-mcp
 mcp>=1.1.3
 
 # LLM and AI libraries
+anthropic>=0.64.0
+strands-agents>=1.1.0
+strands-agents-tools>=0.2.4
 openai
 transformers
 torch
