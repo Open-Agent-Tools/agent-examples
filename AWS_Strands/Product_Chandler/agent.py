@@ -386,8 +386,22 @@ def robust_agent_call(
                 f"Agent call attempt {attempt + 1} for session {session.session_id}"
             )
 
-            # Make the agent call
-            result = agent(enhanced_query)
+            # Make the agent call with stdout capture to apply color formatting
+            import sys
+            import io
+            
+            # Capture stdout to format the agent's response
+            old_stdout = sys.stdout
+            captured_output = io.StringIO()
+            sys.stdout = captured_output
+            
+            try:
+                result = agent(enhanced_query)
+                # Get the captured output
+                agent_stdout = captured_output.getvalue()
+            finally:
+                # Always restore stdout
+                sys.stdout = old_stdout
             duration = time.time() - start_time
 
             # Extract response and metrics
@@ -438,6 +452,7 @@ def robust_agent_call(
             return {
                 "success": True,
                 "response": processed_response,
+                "captured_output": agent_stdout,  # Include captured stdout
                 "attempt": attempt + 1,
                 "tokens": token_usage,
                 "duration": duration,
@@ -737,9 +752,12 @@ if __name__ == "__main__":
                 
                 result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
-                # Response already printed by agent, just log and add spacing
+                # Print the formatted response
                 if result["success"]:
-                    print()  # Add line break after agent response
+                    # Use captured stdout if available, otherwise use result response
+                    response_text = result.get("captured_output", result["response"])
+                    if response_text.strip():  # Only print if there's actual content
+                        print_agent_response(response_text, use_colors=use_colors)
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
                     # Error responses in red
