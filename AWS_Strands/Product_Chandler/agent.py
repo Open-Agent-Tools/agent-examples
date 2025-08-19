@@ -14,6 +14,97 @@ from strands import Agent
 from strands_tools import calculator, current_time, file_read, file_write  # type: ignore
 from prompts import SYSTEM_PROMPT  # type: ignore
 
+# Terminal colors and formatting
+class Colors:
+    """ANSI color codes for terminal formatting"""
+    # Reset
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    
+    # Colors
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+    
+    # Bright colors
+    BRIGHT_RED = '\033[91m'
+    BRIGHT_GREEN = '\033[92m'
+    BRIGHT_YELLOW = '\033[93m'
+    BRIGHT_BLUE = '\033[94m'
+    BRIGHT_MAGENTA = '\033[95m'
+    BRIGHT_CYAN = '\033[96m'
+    BRIGHT_WHITE = '\033[97m'
+    
+    # Background colors
+    BG_BLUE = '\033[44m'
+    BG_GREEN = '\033[42m'
+    BG_YELLOW = '\033[43m'
+
+def format_agent_response(text: str, use_colors: bool = True) -> str:
+    """Format the agent response with colors and styling"""
+    if not use_colors or not text:
+        return text
+    
+    # Format headers (lines starting with #)
+    lines = text.split('\n')
+    formatted_lines = []
+    
+    for line in lines:
+        stripped = line.strip()
+        
+        # Main headers (##, ###)
+        if stripped.startswith('###'):
+            formatted_lines.append(f"{Colors.BRIGHT_CYAN}{Colors.BOLD}{line}{Colors.RESET}")
+        elif stripped.startswith('##'):
+            formatted_lines.append(f"{Colors.BRIGHT_BLUE}{Colors.BOLD}{line}{Colors.RESET}")
+        elif stripped.startswith('#'):
+            formatted_lines.append(f"{Colors.BLUE}{Colors.BOLD}{line}{Colors.RESET}")
+        
+        # Bold sections (**text**)
+        elif '**' in line:
+            # Replace **text** with bold formatting
+            import re
+            line = re.sub(r'\*\*(.*?)\*\*', f'{Colors.BOLD}\\1{Colors.RESET}', line)
+            formatted_lines.append(line)
+        
+        # Bullet points
+        elif stripped.startswith(('•', '-', '*')) and not stripped.startswith('**'):
+            formatted_lines.append(f"{Colors.BRIGHT_GREEN}  {stripped}{Colors.RESET}")
+        
+        # Numbered lists
+        elif re.match(r'^\d+\.', stripped):
+            formatted_lines.append(f"{Colors.BRIGHT_YELLOW}{line}{Colors.RESET}")
+        
+        # Questions or prompts
+        elif '?' in stripped and len(stripped) < 100:
+            formatted_lines.append(f"{Colors.CYAN}{line}{Colors.RESET}")
+        
+        # Code blocks or examples (lines with backticks)
+        elif '`' in line:
+            formatted_lines.append(f"{Colors.DIM}{Colors.WHITE}{line}{Colors.RESET}")
+        
+        # Normal text
+        else:
+            formatted_lines.append(line)
+    
+    return '\n'.join(formatted_lines)
+
+def print_agent_response(text: str, use_colors: bool = True):
+    """Print agent response with proper formatting"""
+    if use_colors:
+        # Print "Chandler:" in a distinct color
+        print(f"{Colors.BRIGHT_MAGENTA}{Colors.BOLD}Chandler:{Colors.RESET} ", end="", flush=True)
+        formatted_text = format_agent_response(text, use_colors)
+        print(formatted_text)
+    else:
+        print("Chandler: ", end="", flush=True)
+        print(text)
+
 
 # Configure logging
 def setup_logging(console_output=False):
@@ -499,16 +590,42 @@ def create_agent(logger=None):
 # Agent will be initialized in main function with proper logging
 
 
-def display_welcome():
+def display_welcome(use_colors: bool = True):
     """Display welcome message and agent capabilities"""
-    print("\n🚀 Product Chandler - Your AI Product Management Assistant")
-    display_help()
-    print("\nType 'help' for commands, 'exit' to quit\n")
+    if use_colors:
+        print(f"\n{Colors.BRIGHT_MAGENTA}{Colors.BOLD}🚀 Product Chandler{Colors.RESET} - Your AI Product Management Assistant")
+        display_help(use_colors)
+        print(f"\n{Colors.DIM}Type 'help' for commands, 'exit' to quit{Colors.RESET}\n")
+    else:
+        print("\n🚀 Product Chandler - Your AI Product Management Assistant")
+        display_help(use_colors)
+        print("\nType 'help' for commands, 'exit' to quit\n")
 
 
-def display_help():
+def display_help(use_colors: bool = True):
     """Display help information"""
-    help_text = """
+    if use_colors:
+        print(f"""
+{Colors.BRIGHT_CYAN}{Colors.BOLD}🔧 Product Chandler Help{Colors.RESET}
+
+{Colors.BRIGHT_GREEN}Core Capabilities:{Colors.RESET}
+{Colors.GREEN}• User Story Creation{Colors.RESET} - "Create a user story for user authentication"
+{Colors.GREEN}• Product Planning{Colors.RESET} - "Help me prioritize features for Q2"
+{Colors.GREEN}• Requirements Analysis{Colors.RESET} - "Review these requirements for gaps"
+{Colors.GREEN}• Stakeholder Communication{Colors.RESET} - "Draft an update for leadership"
+{Colors.GREEN}• Agile/Scrum Support{Colors.RESET} - "Plan our next sprint"
+
+{Colors.BRIGHT_YELLOW}Special Commands:{Colors.RESET}
+{Colors.YELLOW}• 'stats'{Colors.RESET} - View session statistics and metrics
+{Colors.YELLOW}• 'context'{Colors.RESET} - View current conversation context
+{Colors.YELLOW}• 'logs'{Colors.RESET} - Show log file location
+{Colors.YELLOW}• 'help'{Colors.RESET} - Show this help message
+{Colors.YELLOW}• 'exit'{Colors.RESET} - End session
+
+{Colors.CYAN}For best results, be specific about your product management needs!{Colors.RESET}
+        """)
+    else:
+        help_text = """
 🔧 Product Chandler Help
 
 Core Capabilities:
@@ -520,21 +637,22 @@ Core Capabilities:
 
 Special Commands:
 • 'stats' - View session statistics and metrics
-• 'debug on/off' - Toggle debug mode
 • 'context' - View current conversation context
+• 'logs' - Show log file location
 • 'help' - Show this help message
 • 'exit' - End session
 
 For best results, be specific about your product management needs!
-    """
-    print(help_text)
+        """
+        print(help_text)
 
 
 if __name__ == "__main__":
     import sys
     
-    # Check if running with verbose flag for debugging
+    # Check command line arguments
     console_logging = "--verbose" in sys.argv or "-v" in sys.argv
+    use_colors = "--no-color" not in sys.argv
     
     # Set up logging (quiet by default)
     logger = setup_logging(console_output=console_logging)
@@ -556,60 +674,81 @@ if __name__ == "__main__":
     logger.info("Product Chandler agent ready for interaction")
     
     # Display clean welcome
-    display_welcome()
+    display_welcome(use_colors)
     
     # Main interaction loop
     try:
         while True:
             try:
-                # Ensure clean terminal state and single prompt
+                # Ensure clean terminal state and single prompt with color
                 sys.stdout.flush()
-                user_input = input("You: ").strip()
+                prompt = f"{Colors.BRIGHT_WHITE}{Colors.BOLD}You:{Colors.RESET} " if use_colors else "You: "
+                user_input = input(prompt).strip()
                 sys.stdout.flush()
 
                 # Handle special commands
                 if user_input.lower() in ["exit", "quit", "bye"]:
                     break
                 elif user_input.lower() == "help":
-                    display_help()
+                    display_help(use_colors)
                     continue
                 elif user_input.lower() == "stats":
                     stats = session.get_session_stats()
-                    print("\n📊 Session Statistics:")
-                    print(f"   Total Queries: {stats['total_queries']}")
-                    print(f"   Success Rate: {stats['success_rate']}")
-                    print(f"   Total Tokens: {stats['total_tokens']}")
-                    print(f"   Avg Response Time: {stats['avg_response_time']}")
+                    if use_colors:
+                        print(f"\n{Colors.BRIGHT_BLUE}📊 Session Statistics:{Colors.RESET}")
+                        print(f"   {Colors.CYAN}Total Queries:{Colors.RESET} {stats['total_queries']}")
+                        print(f"   {Colors.CYAN}Success Rate:{Colors.RESET} {stats['success_rate']}")
+                        print(f"   {Colors.CYAN}Total Tokens:{Colors.RESET} {stats['total_tokens']}")
+                        print(f"   {Colors.CYAN}Avg Response Time:{Colors.RESET} {stats['avg_response_time']}")
+                    else:
+                        print("\n📊 Session Statistics:")
+                        print(f"   Total Queries: {stats['total_queries']}")
+                        print(f"   Success Rate: {stats['success_rate']}")
+                        print(f"   Total Tokens: {stats['total_tokens']}")
+                        print(f"   Avg Response Time: {stats['avg_response_time']}")
                     continue
                 elif user_input.lower() == "context":
                     context = session.get_context_summary()
                     if context:
-                        print(f"\n🧠 Current Context:\n{context}")
+                        if use_colors:
+                            print(f"\n{Colors.BRIGHT_GREEN}🧠 Current Context:{Colors.RESET}")
+                            print(f"{Colors.DIM}{context}{Colors.RESET}")
+                        else:
+                            print(f"\n🧠 Current Context:\n{context}")
                     else:
-                        print("\n🧠 No conversation context yet")
+                        if use_colors:
+                            print(f"\n{Colors.DIM}🧠 No conversation context yet{Colors.RESET}")
+                        else:
+                            print("\n🧠 No conversation context yet")
                     continue
                 elif user_input.lower() == "logs":
-                    print("\n📝 All diagnostic information is being logged to: product_chandler.log")
-                    print("   Use 'tail -f product_chandler.log' to monitor in real-time")
+                    if use_colors:
+                        print(f"\n{Colors.BRIGHT_YELLOW}📝 All diagnostic information is being logged to:{Colors.RESET} {Colors.BOLD}product_chandler.log{Colors.RESET}")
+                        print(f"   {Colors.DIM}Use 'tail -f product_chandler.log' to monitor in real-time{Colors.RESET}")
+                    else:
+                        print("\n📝 All diagnostic information is being logged to: product_chandler.log")
+                        print("   Use 'tail -f product_chandler.log' to monitor in real-time")
                     continue
 
                 # Skip empty inputs
                 if not user_input:
                     continue
 
-                # Process the query with robust error handling (silently)
-                print("Chandler: ", end="", flush=True)
-
                 # Log the user query
                 logger.info(f"User query: {user_input}")
                 
                 result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
+                # Print response with formatting
                 if result["success"]:
-                    print(result["response"])
+                    print_agent_response(result["response"], use_colors=use_colors)
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
-                    print(result["response"])
+                    # Error responses in red
+                    if use_colors:
+                        print(f"{Colors.BRIGHT_RED}{Colors.BOLD}Chandler:{Colors.RESET} {result['response']}")
+                    else:
+                        print(f"Chandler: {result['response']}")
                     logger.warning(f"Response failed: {result.get('error', 'unknown')}")
 
                 # Add to session history
