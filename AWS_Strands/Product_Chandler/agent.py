@@ -95,7 +95,6 @@ def format_agent_response(text: str, use_colors: bool = True) -> str:
 
 def print_agent_response(text: str, use_colors: bool = True):
     """Print agent response with proper formatting"""
-    print()  # Add line break before agent response
     if use_colors:
         formatted_text = format_agent_response(text, use_colors)
         print(formatted_text)
@@ -735,6 +734,9 @@ if __name__ == "__main__":
                 # Log the user query
                 logger.info(f"User query: {user_input}")
                 
+                # Add line break before agent response starts
+                print()
+                
                 result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
                 # Print response with formatting
@@ -743,7 +745,6 @@ if __name__ == "__main__":
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
                     # Error responses in red
-                    print()  # Add line break before error response
                     if use_colors:
                         print(f"{Colors.BRIGHT_RED}{result['response']}{Colors.RESET}")
                     else:
