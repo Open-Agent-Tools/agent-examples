@@ -96,10 +96,10 @@ def format_agent_response(text: str, use_colors: bool = True) -> str:
 def print_agent_response(text: str, use_colors: bool = True):
     """Print agent response with proper formatting"""
     if use_colors:
-        formatted_text = "\n\n" + format_agent_response(text, use_colors)
+        formatted_text = format_agent_response(text, use_colors)
         print(formatted_text)
     else:
-        formatted_text = "\n\n" + text
+        formatted_text = text
         print(formatted_text)
     print()  # Add line break after agent response
 
@@ -737,9 +737,9 @@ if __name__ == "__main__":
                 
                 result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
-                # Print response with formatting
+                # Response already printed by agent, just log and add spacing
                 if result["success"]:
-                    print_agent_response(result["response"], use_colors=use_colors)
+                    print()  # Add line break after agent response
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
                     # Error responses in red
