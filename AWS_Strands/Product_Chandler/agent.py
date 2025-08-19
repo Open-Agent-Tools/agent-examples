@@ -16,21 +16,45 @@ from prompts import SYSTEM_PROMPT  # type: ignore
 
 
 # Configure logging
-def setup_logging():
+def setup_logging(console_output=False):
     """Set up comprehensive logging for the agent"""
-    # Configure Strands debug logging
-    logging.getLogger("strands").setLevel(logging.DEBUG)
-
-    # Configure main application logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler("product_chandler.log", mode="a"),
-        ],
+    # Configure logging for all relevant modules to go to file only
+    modules_to_configure = [
+        "strands", "mcp", "httpx", "anthropic", "botocore", "boto3", 
+        "__main__", "agent", "opentelemetry"
+    ]
+    
+    for module_name in modules_to_configure:
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
+    
+    # Remove any existing handlers to avoid duplication
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+    
+    # Set up file logging for all output
+    file_handler = logging.FileHandler("product_chandler.log", mode="a")
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
     )
-
+    file_handler.setFormatter(file_formatter)
+    
+    # Configure root logger
+    logging.basicConfig(
+        level=logging.DEBUG,
+        handlers=[file_handler],
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+    )
+    
+    # If console output is requested (for debugging), add console handler
+    if console_output:
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        console_formatter = logging.Formatter("%(levelname)s: %(message)s")
+        console_handler.setFormatter(console_formatter)
+        logging.getLogger().addHandler(console_handler)
+    
     return logging.getLogger(__name__)
 
 
@@ -40,7 +64,7 @@ PII_PATTERNS = {
     "ssn": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
     "phone": re.compile(r"\b\d{3}-\d{3}-\d{4}\b|\(\d{3}\)\s*\d{3}-\d{4}\b"),
     "credit_card": re.compile(r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b"),
-    "person_name": re.compile(r"\b[A-Z][a-z]+\s+[A-Z][a-z]+\b"),  # Simple name pattern
+    "person_name": re.compile(r"\b(?!Chandler\b)[A-Z][a-z]{2,}\s+[A-Z][a-z]{2,}\b"),  # Full names only, not Chandler
 }
 
 
@@ -105,8 +129,7 @@ try:
 except ImportError:
     pass
 
-# Initialize logging
-logger = setup_logging()
+# Logger will be initialized in main function based on command line args
 
 
 # Session management
@@ -134,7 +157,7 @@ class ProductManagerSession:
             "total_tokens": 0,
             "total_duration": 0.0,
         }
-        logger.info(f"Started new PM session: {self.session_id}")
+        logging.getLogger(__name__).info(f"Started new PM session: {self.session_id}")
 
     def add_interaction(
         self,
@@ -147,10 +170,8 @@ class ProductManagerSession:
         """Add an interaction to the session history"""
         interaction = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "query": redact_pii(query, self.context["preferences"]["pii_redaction"]),
-            "response": redact_pii(
-                response, self.context["preferences"]["pii_redaction"]
-            ),
+            "query": query,  # PII redaction disabled
+            "response": response,  # PII redaction disabled
             "success": success,
             "tokens": tokens,
             "duration": duration,
@@ -207,7 +228,7 @@ class ProductManagerSession:
 
 
 def robust_agent_call(
-    agent: Agent, query: str, session: ProductManagerSession, max_retries: int = 3
+    agent: Agent, query: str, session: ProductManagerSession, max_retries: int = 3, logger=None
 ) -> Dict[str, Any]:
     """
     Robust agent call with error handling, retries, and security controls
@@ -217,15 +238,18 @@ def robust_agent_call(
         query: User query
         session: Current session context
         max_retries: Maximum number of retry attempts
+        logger: Logger instance to use
 
     Returns:
         Dictionary with success status, response, and metadata
     """
-    enable_pii_redaction = session.context["preferences"]["pii_redaction"]
+    if logger is None:
+        logger = logging.getLogger(__name__)
+    enable_pii_redaction = False  # Disabled as it interferes with PM terminology
     enable_content_filtering = session.context["preferences"]["content_filtering"]
 
-    # Pre-process query: PII redaction and content filtering
-    processed_query = redact_pii(query, enable_pii_redaction)
+    # Pre-process query: PII redaction disabled, content filtering only
+    processed_query = query  # redact_pii(query, enable_pii_redaction)
     filtered_query, is_safe = filter_content(processed_query, enable_content_filtering)
 
     if not is_safe:
@@ -260,7 +284,21 @@ def robust_agent_call(
 
             # Extract response and metrics
             if hasattr(result, "message"):
-                response_text = str(result.message)
+                # Handle structured message response (dictionary format)
+                if isinstance(result.message, dict) and "content" in result.message:
+                    content = result.message["content"]
+                    if isinstance(content, list):
+                        # Extract text from content blocks
+                        text_parts = []
+                        for content_block in content:
+                            if isinstance(content_block, dict) and "text" in content_block:
+                                text_parts.append(content_block["text"])
+                        response_text = "\n".join(text_parts) if text_parts else str(result.message)
+                    else:
+                        response_text = str(result.message)
+                else:
+                    response_text = str(result.message)
+                
                 # Get token usage if available
                 try:
                     token_usage = result.metrics.get_summary()["accumulated_usage"][
@@ -272,8 +310,8 @@ def robust_agent_call(
                 response_text = str(result)
                 token_usage = 0
 
-            # Post-process response: PII redaction
-            processed_response = redact_pii(response_text, enable_pii_redaction)
+            # PII redaction disabled as it interferes with product management terminology
+            processed_response = response_text
 
             # Validate response quality
             if len(processed_response.strip()) < 10:
@@ -335,8 +373,10 @@ def robust_agent_call(
 
 
 # Create agent with enhanced configuration
-def create_agent():
+def create_agent(logger=None):
     """Create and configure the Product Chandler agent with all enhancements"""
+    if logger is None:
+        logger = logging.getLogger(__name__)
 
     # Model configuration with fallback
     if os.getenv("ANTHROPIC_API_KEY"):
@@ -437,23 +477,13 @@ def create_agent():
         raise
 
 
-# Initialize the agent
-agent = create_agent()
+# Agent will be initialized in main function with proper logging
 
 
 def display_welcome():
     """Display welcome message and agent capabilities"""
-    print("🚀 Product Chandler Agent - Enhanced Edition")
-    print("=" * 60)
-    print("Your AI Product Management Assistant with:")
-    print("✅ Advanced error handling and retry logic")
-    print("✅ PII redaction and content filtering")
-    print("✅ Session management and context tracking")
-    print("✅ Comprehensive logging and metrics")
-    print("✅ Atlassian MCP integration (if available)")
-    print("=" * 60)
-    print("Commands: 'stats' for session stats, 'help' for guidance, 'exit' to quit")
-    print()
+    print("\n🚀 Product Chandler - Your AI Product Management Assistant")
+    print("\nType 'help' for commands, 'exit' to quit\n")
 
 
 def display_help():
@@ -486,17 +516,38 @@ For best results, be specific about your product management needs!
 
 
 if __name__ == "__main__":
+    import sys
+    
+    # Check if running with verbose flag for debugging
+    console_logging = "--verbose" in sys.argv or "-v" in sys.argv
+    
+    # Set up logging (quiet by default)
+    logger = setup_logging(console_output=console_logging)
+    
+    # Initialize agent with logger
+    logger.info("Initializing Product Chandler agent...")
+    try:
+        agent = create_agent(logger)
+        logger.info("Agent initialization complete")
+    except Exception as e:
+        print(f"Error initializing agent: {e}")
+        print("Please check product_chandler.log for details")
+        sys.exit(1)
+    
     # Initialize session
     session = ProductManagerSession()
-
-    # Display welcome
+    
+    # Log startup but don't print to console
+    logger.info("Product Chandler agent ready for interaction")
+    
+    # Display clean welcome
     display_welcome()
-
+    
     # Main interaction loop
     try:
         while True:
             try:
-                user_input = input("\n💬 You: ").strip()
+                user_input = input("You: ").strip()
 
                 # Handle special commands
                 if user_input.lower() in ["exit", "quit", "bye"]:
@@ -507,12 +558,10 @@ if __name__ == "__main__":
                 elif user_input.lower() == "stats":
                     stats = session.get_session_stats()
                     print("\n📊 Session Statistics:")
-                    print(f"   Session ID: {stats['session_id']}")
                     print(f"   Total Queries: {stats['total_queries']}")
                     print(f"   Success Rate: {stats['success_rate']}")
                     print(f"   Total Tokens: {stats['total_tokens']}")
                     print(f"   Avg Response Time: {stats['avg_response_time']}")
-                    print(f"   Conversation Length: {stats['conversation_length']}")
                     continue
                 elif user_input.lower() == "context":
                     context = session.get_context_summary()
@@ -521,48 +570,29 @@ if __name__ == "__main__":
                     else:
                         print("\n🧠 No conversation context yet")
                     continue
-                elif user_input.lower() == "debug on":
-                    session.context["preferences"]["debug_mode"] = True
-                    logger.setLevel(logging.DEBUG)
-                    print("🔍 Debug mode enabled")
-                    continue
-                elif user_input.lower() == "debug off":
-                    session.context["preferences"]["debug_mode"] = False
-                    logger.setLevel(logging.INFO)
-                    print("🔍 Debug mode disabled")
+                elif user_input.lower() == "logs":
+                    print("\n📝 All diagnostic information is being logged to: product_chandler.log")
+                    print("   Use 'tail -f product_chandler.log' to monitor in real-time")
                     continue
 
                 # Skip empty inputs
                 if not user_input:
                     continue
 
-                # Process the query with robust error handling
-                print("\n🤖 Chandler:", end=" ", flush=True)
+                # Process the query with robust error handling (silently)
+                print("Chandler: ", end="", flush=True)
 
-                result = robust_agent_call(agent, user_input, session)
+                # Log the user query
+                logger.info(f"User query: {user_input}")
+                
+                result = robust_agent_call(agent, user_input, session, max_retries=3, logger=logger)
 
                 if result["success"]:
                     print(result["response"])
-
-                    # Show metadata in debug mode
-                    if session.context["preferences"]["debug_mode"]:
-                        metadata = result.get("metadata", {})
-                        print("\n🔍 Debug Info:")
-                        print(
-                            f"   Tokens: {result['tokens']}, Duration: {result['duration']:.2f}s"
-                        )
-                        print(
-                            f"   Attempt: {result['attempt']}, Context Added: {metadata.get('context_added', False)}"
-                        )
-                        print(
-                            f"   Query Processed: {metadata.get('query_processed', False)}"
-                        )
+                    logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
                     print(result["response"])
-                    if session.context["preferences"]["debug_mode"]:
-                        print(
-                            f"\n🔍 Debug Info: Error - {result.get('error', 'unknown')}"
-                        )
+                    logger.warning(f"Response failed: {result.get('error', 'unknown')}")
 
                 # Add to session history
                 session.add_interaction(
@@ -573,28 +603,22 @@ if __name__ == "__main__":
                     duration=result["duration"],
                 )
 
+                print()  # Add blank line for readability
+
             except (KeyboardInterrupt, EOFError):
-                print("\n\nSession interrupted by user")
+                print("\n\nGoodbye!")
                 break
             except Exception as e:
                 logger.error(f"Unexpected error in main loop: {e}")
-                print(f"\n❌ Unexpected error: {e}")
-                print("Please try again or type 'exit' to quit")
+                print(f"Sorry, I encountered an error. Please try again or type 'exit' to quit.")
 
     finally:
-        # Display final session statistics
+        # Log final stats but keep console output minimal
         stats = session.get_session_stats()
-        print("\n📊 Final Session Stats:")
-        print(f"   Queries Processed: {stats['total_queries']}")
-        print(f"   Success Rate: {stats['success_rate']}")
-        print(f"   Total Tokens: {stats['total_tokens']}")
-        print(f"   Average Response Time: {stats['avg_response_time']}")
-
-        logger.info(f"Session ended: {session.session_id}")
-
-        # Clean up MCP client connection
-        # Note: In production, MCP client instance would be managed at module level
-        # For now, we'll skip the cleanup to avoid mypy errors
-        logger.info("MCP client cleanup would be performed here")
-
-        print("\n👋 Thanks for using Product Chandler! Goodbye!")
+        logger.info(f"Session ended - Queries: {stats['total_queries']}, Success Rate: {stats['success_rate']}, Tokens: {stats['total_tokens']}")
+        
+        if stats['total_queries'] > 0:
+            print(f"\nSession complete: {stats['total_queries']} queries, {stats['success_rate']} success rate")
+            print(f"Full session details logged to: product_chandler.log")
+        
+        print("\n👋 Thanks for using Product Chandler!")
