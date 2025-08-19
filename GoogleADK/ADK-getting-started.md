@@ -115,8 +115,6 @@ For more information about the ADK web interface, visit:
 - [ADK Web documentation](https://github.com/google/adk-web)
 - [ADK Quickstart Guide](https://google.github.io/adk-docs/get-started/quickstart/#run-your-agent)
 
-
-
 ## Troubleshooting
 
 ### Common Issues
