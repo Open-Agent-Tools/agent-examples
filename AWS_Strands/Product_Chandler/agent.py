@@ -168,15 +168,22 @@ class ProductManagerSession:
         duration: float = 0.0,
     ):
         """Add an interaction to the session history"""
+        # Store only the original user query without context enhancement to prevent loops
+        original_query = self._extract_original_query(query)
+        
         interaction = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "query": query,  # PII redaction disabled
+            "query": original_query,  # Store clean original query only
             "response": response,  # PII redaction disabled
             "success": success,
             "tokens": tokens,
             "duration": duration,
         }
         self.conversation_history.append(interaction)
+        
+        # Keep conversation history manageable to prevent memory issues and context bloat
+        if len(self.conversation_history) > 10:
+            self.conversation_history = self.conversation_history[-10:]
 
         # Update metrics
         self.metrics["total_queries"] += 1
@@ -205,6 +212,18 @@ class ProductManagerSession:
             )
 
         return "\n".join(context_items) if context_items else ""
+    
+    def _extract_original_query(self, query: str) -> str:
+        """Extract the original user query from a potentially context-enhanced query"""
+        # Check if this query contains context enhancement
+        if "Recent conversation context:" in query and "Current request:" in query:
+            # Extract just the current request part
+            parts = query.split("Current request:")
+            if len(parts) > 1:
+                return parts[-1].strip()
+        
+        # Return the query as-is if no context enhancement detected
+        return query
 
     def get_session_stats(self) -> Dict[str, Any]:
         """Get session statistics"""
@@ -263,9 +282,9 @@ def robust_agent_call(
             "duration": 0.0,
         }
 
-    # Add session context to query if available
+    # Add session context to query if available (but prevent double enhancement)
     context_summary = session.get_context_summary()
-    if context_summary:
+    if context_summary and "Recent conversation context:" not in filtered_query:
         enhanced_query = f"{context_summary}\n\nCurrent request: {filtered_query}"
     else:
         enhanced_query = filtered_query
@@ -483,6 +502,7 @@ def create_agent(logger=None):
 def display_welcome():
     """Display welcome message and agent capabilities"""
     print("\n🚀 Product Chandler - Your AI Product Management Assistant")
+    display_help()
     print("\nType 'help' for commands, 'exit' to quit\n")
 
 
@@ -504,11 +524,6 @@ Special Commands:
 • 'context' - View current conversation context
 • 'help' - Show this help message
 • 'exit' - End session
-
-Security Features:
-• PII is automatically redacted from conversations
-• Content filtering ensures professional interactions
-• All interactions are logged for quality assurance
 
 For best results, be specific about your product management needs!
     """
@@ -547,7 +562,10 @@ if __name__ == "__main__":
     try:
         while True:
             try:
+                # Ensure clean terminal state and single prompt
+                sys.stdout.flush()
                 user_input = input("You: ").strip()
+                sys.stdout.flush()
 
                 # Handle special commands
                 if user_input.lower() in ["exit", "quit", "bye"]:
@@ -603,7 +621,10 @@ if __name__ == "__main__":
                     duration=result["duration"],
                 )
 
-                print()  # Add blank line for readability
+                # Ensure proper line ending and terminal state
+                print()  # Clean line break
+                sys.stdout.flush()
+                sys.stderr.flush()
 
             except (KeyboardInterrupt, EOFError):
                 print("\n\nGoodbye!")
