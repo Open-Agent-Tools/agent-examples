@@ -95,16 +95,13 @@ def format_agent_response(text: str, use_colors: bool = True) -> str:
 
 def print_agent_response(text: str, use_colors: bool = True):
     """Print agent response with proper formatting"""
+    print()  # Add line break before agent response
     if use_colors:
-        # Print "Chandler:" in a distinct color
-        print(f"{Colors.BRIGHT_MAGENTA}{Colors.BOLD}Chandler:{Colors.RESET} ", end="", flush=True)
         formatted_text = format_agent_response(text, use_colors)
         print(formatted_text)
-        print()  # Add line break after agent response
     else:
-        print("Chandler: ", end="", flush=True)
         print(text)
-        print()  # Add line break after agent response
+    print()  # Add line break after agent response
 
 
 # Configure logging
@@ -746,12 +743,12 @@ if __name__ == "__main__":
                     logger.info(f"Response delivered successfully (tokens: {result['tokens']}, duration: {result['duration']:.2f}s)")
                 else:
                     # Error responses in red
+                    print()  # Add line break before error response
                     if use_colors:
-                        print(f"{Colors.BRIGHT_RED}{Colors.BOLD}Chandler:{Colors.RESET} {result['response']}")
-                        print()  # Add line break after error response
+                        print(f"{Colors.BRIGHT_RED}{result['response']}{Colors.RESET}")
                     else:
-                        print(f"Chandler: {result['response']}")
-                        print()  # Add line break after error response
+                        print(result['response'])
+                    print()  # Add line break after error response
                     logger.warning(f"Response failed: {result.get('error', 'unknown')}")
 
                 # Add to session history
