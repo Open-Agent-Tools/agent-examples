@@ -1,5 +1,5 @@
 """
-Product Chandler: A Product Manager AI assistant built with Strands Agents
+Product Pete: A Product Manager AI assistant built with Strands Agents
 Includes Atlassian MCP server for Jira/Confluence integration
 Enhanced with production features: logging, error handling, security, and session management
 """
@@ -122,7 +122,7 @@ def setup_logging(console_output=False):
         root_logger.removeHandler(handler)
     
     # Set up file logging for all output
-    file_handler = logging.FileHandler("product_chandler.log", mode="a")
+    file_handler = logging.FileHandler("product_pete.log", mode="a")
     file_handler.setLevel(logging.DEBUG)
     file_formatter = logging.Formatter(
         "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
@@ -153,7 +153,7 @@ PII_PATTERNS = {
     "ssn": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
     "phone": re.compile(r"\b\d{3}-\d{3}-\d{4}\b|\(\d{3}\)\s*\d{3}-\d{4}\b"),
     "credit_card": re.compile(r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b"),
-    "person_name": re.compile(r"\b(?!Chandler\b)[A-Z][a-z]{2,}\s+[A-Z][a-z]{2,}\b"),  # Full names only, not Chandler
+    "person_name": re.compile(r"\b(?!\b)[A-Z][a-z]{2,}\s+[A-Z][a-z]{2,}\b"),
 }
 
 
@@ -482,7 +482,6 @@ def robust_agent_call(
 
 # Create agent with enhanced configuration
 def create_agent(logger=None):
-    """Create and configure the Product Chandler agent with all enhancements"""
     if logger is None:
         logger = logging.getLogger(__name__)
 
@@ -591,11 +590,11 @@ def create_agent(logger=None):
 def display_welcome(use_colors: bool = True):
     """Display welcome message and agent capabilities"""
     if use_colors:
-        print(f"\n{Colors.BRIGHT_MAGENTA}{Colors.BOLD}🚀 Product Chandler{Colors.RESET} - Your AI Product Management Assistant")
+        print(f"\n{Colors.BRIGHT_MAGENTA}{Colors.BOLD}🚀 Product Pete{Colors.RESET} - Your AI Product Management Assistant")
         display_help(use_colors)
         print(f"\n{Colors.DIM}Type 'help' for commands, 'exit' to quit{Colors.RESET}\n")
     else:
-        print("\n🚀 Product Chandler - Your AI Product Management Assistant")
+        print("\n🚀 Product Pete - Your AI Product Management Assistant")
         display_help(use_colors)
         print("\nType 'help' for commands, 'exit' to quit\n")
 
@@ -604,7 +603,7 @@ def display_help(use_colors: bool = True):
     """Display help information"""
     if use_colors:
         print(f"""
-{Colors.BRIGHT_CYAN}{Colors.BOLD}🔧 Product Chandler Help{Colors.RESET}
+{Colors.BRIGHT_CYAN}{Colors.BOLD}🔧 Product Pete Help{Colors.RESET}
 
 {Colors.BRIGHT_GREEN}Core Capabilities:{Colors.RESET}
 {Colors.GREEN}• User Story Creation{Colors.RESET} - "Create a user story for user authentication"
@@ -624,7 +623,7 @@ def display_help(use_colors: bool = True):
         """)
     else:
         help_text = """
-🔧 Product Chandler Help
+🔧 Product Pete Help
 
 Core Capabilities:
 • User Story Creation - "Create a user story for user authentication"
@@ -656,20 +655,20 @@ if __name__ == "__main__":
     logger = setup_logging(console_output=console_logging)
     
     # Initialize agent with logger
-    logger.info("Initializing Product Chandler agent...")
+    logger.info("Initializing Product Pete agent...")
     try:
         agent = create_agent(logger)
         logger.info("Agent initialization complete")
     except Exception as e:
         print(f"Error initializing agent: {e}")
-        print("Please check product_chandler.log for details")
+        print("Please check product_pete.log for details")
         sys.exit(1)
     
     # Initialize session
     session = ProductManagerSession()
     
     # Log startup but don't print to console
-    logger.info("Product Chandler agent ready for interaction")
+    logger.info("Product Pete agent ready for interaction")
     
     # Display clean welcome
     display_welcome(use_colors)
@@ -721,11 +720,11 @@ if __name__ == "__main__":
                     continue
                 elif user_input.lower() == "logs":
                     if use_colors:
-                        print(f"\n{Colors.BRIGHT_YELLOW}📝 All diagnostic information is being logged to:{Colors.RESET} {Colors.BOLD}product_chandler.log{Colors.RESET}")
-                        print(f"   {Colors.DIM}Use 'tail -f product_chandler.log' to monitor in real-time{Colors.RESET}")
+                        print(f"\n{Colors.BRIGHT_YELLOW}📝 All diagnostic information is being logged to:{Colors.RESET} {Colors.BOLD}product_pete.log{Colors.RESET}")
+                        print(f"   {Colors.DIM}Use 'tail -f product_pete.log' to monitor in real-time{Colors.RESET}")
                     else:
-                        print("\n📝 All diagnostic information is being logged to: product_chandler.log")
-                        print("   Use 'tail -f product_chandler.log' to monitor in real-time")
+                        print("\n📝 All diagnostic information is being logged to: product_pete.log")
+                        print("   Use 'tail -f product_pete.log' to monitor in real-time")
                     continue
 
                 # Skip empty inputs
@@ -774,6 +773,6 @@ if __name__ == "__main__":
         
         if stats['total_queries'] > 0:
             print(f"\nSession complete: {stats['total_queries']} queries, {stats['success_rate']} success rate")
-            print(f"Full session details logged to: product_chandler.log")
+            print(f"Full session details logged to: product_pete.log")
         
-        print("\n👋 Thanks for using Product Chandler!")
+        print("\n👋 Thanks for using Product Pete!")
