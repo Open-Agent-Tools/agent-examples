@@ -1,25 +1,16 @@
 # Getting Started with Agent Examples
 
-This repository contains examples from multiple AI agent frameworks. Choose the framework that best fits your needs and follow the corresponding setup guide.
+This repository contains examples from two AI agent frameworks. Choose the framework that best fits your needs and follow the corresponding setup guide.
 
 ## Framework Selection Guide
 
 ### 🔍 Which Framework Should I Choose?
 
 **For specialized single-purpose agents:**
-- **[GoogleADK](GoogleADK/)** - Best for cost-effective, focused agents with local model support
+- **[GoogleADK](GoogleADK/)** - Best for cost-effective, focused agents with local model support and comprehensive tool integration
 
-**For team-based collaboration:**
-- **[CrewAI](CrewAI/)** - Ideal for multi-agent teams working together on complex tasks
-
-**For complex workflow orchestration:**
-- **[LangChain LangGraph](LangChain%20LangGraph/)** - Perfect for graph-based workflows and state management
-
-**For conversational multi-agent systems:**
-- **[MS AutoGen](MS%20AutoGen/)** - Great for dialogue-based agent interactions
-
-**For lightweight deployment:**
-- **[Hugging Face SmolAgents](Hugging%20Face%20SmolAgents/)** - Minimal overhead, fast execution
+**For product management and Atlassian integration:**
+- **[AWS Strands](AWS_Strands/)** - Perfect for product management workflows with Jira/Confluence integration
 
 ## Prerequisites
 
@@ -40,61 +31,37 @@ cd agent-examples
 
 Navigate to your chosen framework directory and follow the specific setup instructions:
 
-- **[GoogleADK Setup](GoogleADK/ADK-getting-started.md)** - FileOps agent and local model integration
-- **[CrewAI Setup](CrewAI/getting-started.md)** - Multi-agent team examples *(coming soon)*
-- **[LangGraph Setup](LangChain%20LangGraph/getting-started.md)** - Graph workflow examples *(coming soon)*
-- **[AutoGen Setup](MS%20AutoGen/getting-started.md)** - Conversational agent examples *(coming soon)*
-- **[SmolAgents Setup](Hugging%20Face%20SmolAgents/getting-started.md)** - Lightweight agent examples *(coming soon)*
+- **[GoogleADK Setup](GoogleADK/ADK-getting-started.md)** - Multiple specialized agents with comprehensive tooling
+- **[AWS Strands Setup](AWS_Strands/)** - Product management agent with Atlassian MCP integration
 
 ## Framework Comparison
 
 | Framework | Best For | Complexity | Local Models | Multi-Agent |
 |-----------|----------|------------|--------------|-------------|
 | GoogleADK | Specialized tasks | Low-Medium | ✅ Yes | Limited |
-| CrewAI | Team collaboration | Medium | ✅ Yes | ✅ Yes |
-| LangGraph | Complex workflows | High | ✅ Yes | ✅ Yes |
-| AutoGen | Conversations | Medium | ✅ Yes | ✅ Yes |
-| SmolAgents | Simple automation | Low | ✅ Yes | Limited |
+| AWS Strands | Product management | Low | ✅ Yes | Single |
 
 ## General Setup Steps
 
-### Using pip (Standard)
+### Quick Install (Recommended)
 
-1. **Install Framework Dependencies**: Each framework has its own requirements.txt
+1. **Install Dependencies**: 
    ```bash
-   pip install -r requirements.txt  # For all dependencies
-   # OR
-   pip install -r GoogleADK/requirements.txt  # For specific framework
+   # Core dependencies only
+   pip install -r requirements.txt
+   
+   # OR full development setup
+   pip install -r requirements.txt requirements-dev.txt requirements-optional.txt
+   
+   # OR using UV (faster)
+   uv sync  # Installs everything from uv.lock
    ```
 
-### Using UV (Faster Alternative)
+2. **Configure Environment**: Set up API keys and environment variables
+3. **Choose Your Model**: Local models for cost-effectiveness or cloud models for performance
+4. **Run Examples**: Start with the provided examples in each framework directory
 
-1. **Install UV**:
-   ```bash
-   pip install uv
-   ```
-
-2. **Install Dependencies with UV**:
-   ```bash
-   uv pip install -r requirements.txt  # For all dependencies
-   # OR
-   uv pip install -r GoogleADK/requirements.txt  # For specific framework
-   ```
-
-3. **Create Virtual Environment with UV** (optional):
-   ```bash
-   uv venv .venv
-   # Activate on Windows
-   .venv\Scripts\activate
-   # Activate on Unix/MacOS
-   source .venv/bin/activate
-   ```
-
-For both methods:
-
-1. **Configure Environment**: Set up API keys and environment variables
-2. **Choose Your Model**: Local models for cost-effectiveness or cloud models for performance
-3. **Run Examples**: Start with the provided examples in each framework directory
+For detailed installation options, see [INSTALL.md](INSTALL.md).
 
 ## Common Environment Variables
 
