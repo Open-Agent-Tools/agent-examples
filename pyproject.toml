@@ -18,6 +18,21 @@ dependencies = [
     "strands-agents>=1.1.0",
     "strands-agents-tools>=0.2.4",
     "python-dotenv>=1.1.1",
+    "pandas>=2.3.2",
+    "numpy>=2.2.6",
+    "openai>=1.101.0",
+    "litellm>=1.75.9",
+    "basic-open-agent-tools>=0.8.2",
+    "requests>=2.32.4",
+    "httpx>=0.28.1",
+    "aiohttp>=3.12.15",
+    "rich>=14.1.0",
+    "click>=8.2.1",
+    "typer>=0.16.1",
+    "openpyxl>=3.1.5",
+    "markdown>=3.8.2",
+    "pyyaml>=6.0.2",
+    "google-adk>=1.10.0",
 ]
 
 [tool.hatch.build.targets.wheel]

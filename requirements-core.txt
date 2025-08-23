@@ -1,9 +1,7 @@
-# Agent Examples - Core Dependencies
-# Install core dependencies: pip install -r requirements.txt
-# Install dev tools: pip install -r requirements-dev.txt  
-# Install optional features: pip install -r requirements-optional.txt
+# Core Agent Framework Dependencies
+# These are essential for the AI agents to function
 
-# Core agent frameworks
+# Agent frameworks
 google-adk
 strands-agents>=1.1.0
 strands-agents-tools>=0.2.4
@@ -20,7 +18,7 @@ basic-open-agent-tools
 open-stocks-mcp
 a2a-sdk
 
-# Essential utilities
+# Core Python utilities
 pydantic>=2.0.0
 python-dotenv
 requests
@@ -30,7 +28,7 @@ rich
 click
 typer
 
-# Data processing (core)
+# Data processing (actually used)
 pandas
 numpy
 python-docx

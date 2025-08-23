@@ -1,0 +1,35 @@
+# Development Dependencies
+# Code quality and development tools
+
+# Linting and formatting
+black
+ruff
+mypy
+flake8
+
+# Build and packaging
+hatchling
+hatch-vcs
+hatch>=1.0.0
+pip-tools
+
+# Version control and commits
+pre-commit>=2.20.0
+commitizen>=4.4.0
+
+# Development environment
+virtualenv
+
+# Optional: Jupyter for experimentation
+jupyter
+ipykernel
+notebook
+
+# Optional: Web interfaces
+fastapi
+uvicorn
+
+# Configuration management
+configparser
+structlog
+loguru
