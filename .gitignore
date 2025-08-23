@@ -286,5 +286,8 @@ tramp
 # Claude IDE settings
 .claude/
 
+# Centralized log files
+.logs/
+
 # AWS Strands MCP Server (submodule/external)
 AWS_Strands/strands_docs_mcp-server/

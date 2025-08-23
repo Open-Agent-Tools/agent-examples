@@ -46,6 +46,7 @@ dependencies = [
     { name = "robin-stocks" },
     { name = "strands-agents", extra = ["anthropic"] },
     { name = "strands-agents-tools" },
+    { name = "tavily-python" },
     { name = "typer" },
 ]
 
@@ -74,6 +75,7 @@ requires-dist = [
     { name = "robin-stocks" },
     { name = "strands-agents", extras = ["anthropic"], specifier = ">=1.1.0" },
     { name = "strands-agents-tools", specifier = ">=0.2.4" },
+    { name = "tavily-python", specifier = ">=0.7.11" },
     { name = "typer", specifier = ">=0.16.1" },
 ]
 
@@ -3273,6 +3275,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/d3/803453b36afefb7c2bb238361cd4ae6125a569b4db67cd9e79846ba2d68c/sympy-1.14.0.tar.gz", hash = "sha256:d3d3fe8df1e5a0b42f0e7bdf50541697dbe7d23746e894990c030e2b05e72517", size = 7793921, upload-time = "2025-04-27T18:05:01.611Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a2/09/77d55d46fd61b4a135c444fc97158ef34a095e5681d0a6c10b75bf356191/sympy-1.14.0-py3-none-any.whl", hash = "sha256:e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5", size = 6299353, upload-time = "2025-04-27T18:04:59.103Z" },
+]
+
+[[package]]
+name = "tavily-python"
+version = "0.7.11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpx" },
+    { name = "requests" },
+    { name = "tiktoken" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/bb/a4/2b816cbb287c6417e7997195a2b8ce32200ea2acc7099fba1ddf37d0d051/tavily_python-0.7.11.tar.gz", hash = "sha256:58c3ab71bb62820ade5498acc17bc372f436e88151389912672add6bf6d31aed", size = 19278, upload-time = "2025-08-18T23:56:57.899Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/53/371a39e17f02e3df8ab3493c77453b0f8f0d2783bd23d6e0fc879d211217/tavily_python-0.7.11-py3-none-any.whl", hash = "sha256:50559d8b605b6854fd85b1b785c603851b86eb4d0e9fd29154f81b54b734dd6e", size = 15826, upload-time = "2025-08-18T23:56:52.203Z" },
 ]
 
 [[package]]

@@ -34,6 +34,7 @@ dependencies = [
     "pyyaml>=6.0.2",
     "google-adk>=1.10.0",
     "pytest>=8.4.1",
+    "tavily-python>=0.7.11",
 ]
 
 [tool.hatch.build.targets.wheel]

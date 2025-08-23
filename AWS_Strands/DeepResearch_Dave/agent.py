@@ -135,6 +135,7 @@ class DeepResearchDave:
         self.model_provider = model_provider
         self.agent = None
         self.current_session = None
+        self._tavily_client = None  # Will hold MCP client reference if connected
         
     def create_agent(self) -> Agent:
         """Create and configure the research agent."""
@@ -142,19 +143,93 @@ class DeepResearchDave:
             # Model configuration with fallback based on available API keys
             model = self._get_model_config()
             
-            # Create basic agent without external tools for now
-            # Tools can be added later when properly configured
+            # Configure MCP tools for research
+            tools = self._setup_research_tools()
+            
+            # Create agent with research tools
             agent = Agent(
                 model=model,
-                system_prompt=SYSTEM_PROMPT
+                system_prompt=SYSTEM_PROMPT,
+                tools=tools
             )
             
-            logger.info("Deep Research Dave agent created successfully")
+            logger.info(f"Deep Research Dave agent created successfully with {len(tools)} tools")
             return agent
             
         except Exception as e:
             logger.error(f"Error creating agent: {str(e)}")
             raise
+    
+    def _setup_research_tools(self) -> List:
+        """Setup research tools including Tavily MCP for web search."""
+        tools = []
+        
+        # Connect to Tavily HTTP MCP server for web search
+        tavily_key = os.getenv("TAVILY_API_KEY")
+        if tavily_key:
+            try:
+                from mcp.client.streamable_http import streamablehttp_client
+                from strands.tools.mcp import MCPClient
+                
+                # Create MCP client for Tavily's hosted HTTP server
+                # API key must be provided as URL query parameter
+                tavily_mcp_client = MCPClient(
+                    lambda: streamablehttp_client(
+                        url=f"https://mcp.tavily.com/mcp/?tavilyApiKey={tavily_key}"
+                    )
+                )
+                
+                # Start the MCP client and get available tools
+                tavily_mcp_client.__enter__()
+                tavily_tools = tavily_mcp_client.list_tools_sync()
+                
+                # Add all Tavily tools to the agent's toolkit
+                for tool in tavily_tools:
+                    tools.append(tool)
+                    
+                logger.info(f"✓ Connected to Tavily MCP - {len(tavily_tools)} search tools added")
+                for tool in tavily_tools[:3]:  # Log first 3 tools
+                    logger.info(f"  - {tool.tool_name}: {tool.mcp_tool.description[:50]}...")
+                
+                # Store client reference for cleanup
+                self._tavily_client = tavily_mcp_client
+                
+            except ImportError as e:
+                logger.warning(f"MCP dependencies missing: {e}")
+                logger.info("Falling back to generic MCP client tool")
+                try:
+                    from strands_tools.mcp_client import mcp_client
+                    tools.append(mcp_client)
+                    logger.info("✓ Added generic MCP client (manual connection required)")
+                except ImportError:
+                    logger.warning("No MCP client available")
+                    
+            except Exception as e:
+                logger.error(f"Failed to connect to Tavily MCP: {e}")
+                # Fallback to generic MCP client
+                try:
+                    from strands_tools.mcp_client import mcp_client
+                    tools.append(mcp_client)
+                    logger.info("✓ Added generic MCP client as fallback")
+                except ImportError:
+                    pass
+        else:
+            logger.warning("No TAVILY_API_KEY found, web search disabled")
+        
+        # Add HTTP request tool for additional research capabilities  
+        try:
+            from strands_tools.http_request import http_request
+            tools.append(http_request)
+            logger.info("✓ Added HTTP request tool")
+        except ImportError:
+            logger.debug("HTTP request tool not available")
+        
+        if not tools:
+            logger.warning("No research tools available - agent will use only LLM knowledge")
+        else:
+            logger.info(f"Research tools configured: {len(tools)} tools available")
+            
+        return tools
     
     def _get_model_config(self):
         """Get model configuration based on provider and available API keys."""
@@ -237,6 +312,7 @@ class DeepResearchDave:
         else:
             logger.warning("No API keys found, using Bedrock fallback")
             return "anthropic.claude-3-7-sonnet-20250219-v1:0"
+            
             
     async def start_research_session(self, topic: str, research_type: str = "comprehensive") -> str:
         """Start a new research session."""
@@ -481,6 +557,17 @@ class DeepResearchDave:
             return None
             
         return self.current_session.get_summary()
+    
+    def cleanup(self):
+        """Clean up resources including MCP client connection."""
+        if self._tavily_client:
+            try:
+                self._tavily_client.__exit__(None, None, None)
+                logger.info("Tavily MCP client connection closed")
+            except Exception as e:
+                logger.warning(f"Error closing Tavily MCP client: {e}")
+            finally:
+                self._tavily_client = None
 
 # Convenience function for direct usage
 def create_agent() -> Agent:
@@ -490,22 +577,116 @@ def create_agent() -> Agent:
 
 # Main execution for testing
 if __name__ == "__main__":
-    async def main():
-        # Example usage
-        dave = DeepResearchDave()
+    # Import utilities from parent directory
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).parent.parent))
+    from utilities import AgentChatInterface
+    
+    # Custom chat interface for Deep Research Dave
+    class DeepResearchDaveChatInterface(AgentChatInterface):
+        async def _execute_agent_query(self, query: str):
+            """Execute query through Deep Research Dave with specialized handling."""
+            from utilities import suppress_output_during_async_execution
+            
+            # Check for specialized commands/patterns
+            query_lower = query.lower()
+            
+            if 'compare' in query_lower and ('vs' in query_lower or 'versus' in query_lower):
+                # Extract options for comparison
+                if 'vs' in query_lower:
+                    parts = query_lower.split('compare')[1].strip().split('vs')
+                elif 'versus' in query_lower:
+                    parts = query_lower.split('compare')[1].strip().split('versus')
+                else:
+                    parts = [query_lower.split('compare')[1].strip()]
+                
+                options = [opt.strip() for opt in parts if opt.strip()]
+                if len(options) >= 2:
+                    return await suppress_output_during_async_execution(
+                        self.agent.compare_options(options[:5], ["features", "pros", "cons", "use cases"])
+                    )
+            
+            elif query_lower.startswith('session:'):
+                # Start research session
+                topic = query[8:].strip()
+                return await suppress_output_during_async_execution(
+                    self.agent.start_research_session(topic, "comprehensive")
+                )
+                
+            elif query_lower.startswith('phase:'):
+                # Research phase
+                instructions = query[6:].strip()
+                return await suppress_output_during_async_execution(
+                    self.agent.conduct_research_phase(instructions)
+                )
+                
+            elif query_lower == 'synthesize':
+                # Synthesize findings
+                return await suppress_output_during_async_execution(
+                    self.agent.synthesize_findings()
+                )
+                
+            elif query_lower.startswith('report'):
+                # Generate report
+                report_type = "comprehensive"
+                if ':' in query_lower:
+                    report_type = query_lower.split(':', 1)[1].strip()
+                return await suppress_output_during_async_execution(
+                    self.agent.generate_research_report(report_type)
+                )
+                
+            elif query_lower == 'status':
+                # Show session status
+                status = self.agent.get_session_status()
+                if status:
+                    return f"Research Session Status:\n{status}"
+                else:
+                    return "No active research session"
+            
+            # Default to quick research
+            return await suppress_output_during_async_execution(
+                self.agent.quick_research(query)
+            )
+    
+    def main():
+        """Main entry point - start REPL chat interface."""
+        # Define agent capabilities and examples
+        capabilities = [
+            "Live web search and real-time information gathering",
+            "Comprehensive research with source evaluation",
+            "Comparative analysis between options",
+            "Multi-phase research sessions",
+            "Structured report generation"
+        ]
         
-        # Quick research example
-        result = await dave.quick_research("Latest trends in AI agent frameworks 2025")
-        print("Quick Research Result:")
-        print(result)
+        examples = [
+            "Latest trends in AI agent frameworks 2025",
+            "Compare AWS Strands vs LangChain",
+            "Python 3.13 new features and updates",
+            "session: Cybersecurity best practices for startups",
+            "phase: Focus on implementation costs and timelines",
+            "synthesize",
+            "report: executive",
+            "status"
+        ]
         
-        # Full research session example
-        await dave.start_research_session("AWS Strands vs Google ADK comparison", "comparative")
-        phase_result = await dave.conduct_research_phase("Focus on architecture, capabilities, and use cases")
-        synthesis = await dave.synthesize_findings(["architecture", "performance", "ease of use"])
-        report = await dave.generate_research_report("comprehensive")
+        required_env_vars = {
+            "ANTHROPIC_API_KEY": "AI model access (primary)",
+            "OPENAI_API_KEY": "AI model access (alternative)",  
+            "GOOGLE_API_KEY": "AI model access (alternative)",
+            "TAVILY_API_KEY": "web search functionality"
+        }
         
-        print("\nResearch Report:")
-        print(report)
+        # Create and run chat interface
+        chat_interface = DeepResearchDaveChatInterface(
+            agent_name="Deep Research Dave",
+            agent_factory=DeepResearchDave,
+            capabilities=capabilities,
+            examples=examples,
+            required_env_vars=required_env_vars
+        )
         
-    asyncio.run(main())
+        asyncio.run(chat_interface.run())
+    
+    main()

@@ -13,6 +13,7 @@ Deep Research Dave is designed to handle complex research tasks that require:
 ## Key Features
 
 ### Research Capabilities
+- **Live Web Search**: Real-time information gathering via Tavily MCP integration
 - **Comprehensive Research**: Multi-phase research sessions with systematic approach
 - **Quick Research**: Rapid insights for immediate needs
 - **Comparative Analysis**: Side-by-side evaluation of options
@@ -32,7 +33,30 @@ Deep Research Dave is designed to handle complex research tasks that require:
 
 ## Usage Examples
 
-### Quick Research
+### Interactive Chat (Recommended)
+Run Deep Research Dave in an interactive terminal chat:
+
+```bash
+cd AWS_Strands/DeepResearch_Dave
+uv run python agent.py
+```
+
+This provides a user-friendly chat interface where you can:
+- Ask research questions directly
+- Access specialized research functions via commands
+- Get formatted, real-time responses
+- Use commands like `help`, `quit`
+- See research timing and status
+
+#### Specialized Commands:
+- `session: <topic>` - Start a comprehensive research session
+- `phase: <instructions>` - Execute a specific research phase
+- `synthesize` - Analyze and synthesize current findings
+- `report: <type>` - Generate structured reports (comprehensive/executive)
+- `status` - Show current session status
+- `Compare X vs Y` - Comparative analysis between options
+
+### Quick Research (Programmatic)
 ```python
 from AWS_Strands.DeepResearch_Dave import DeepResearchDave
 import asyncio
@@ -50,6 +74,32 @@ asyncio.run(main())
 ```
 
 **Important:** Run with `uv run python your_script.py` to ensure proper environment loading and package access.
+
+## Configuration
+
+### Required Environment Variables
+
+Add these to your `.env` file:
+
+```env
+# Required for AI model access
+ANTHROPIC_API_KEY=your_anthropic_key_here
+
+# Required for live web search (get from tavily.com)
+TAVILY_API_KEY=your_tavily_key_here
+
+# Optional: Alternative AI models
+OPENAI_API_KEY=your_openai_key_here
+GOOGLE_API_KEY=your_google_key_here
+```
+
+### Web Search Integration
+
+Deep Research Dave uses Tavily's hosted MCP server for live web search:
+- **Service**: Tavily MCP at `https://mcp.tavily.com/mcp/`
+- **Authentication**: Bearer token via TAVILY_API_KEY
+- **Capabilities**: Real-time web search, content extraction, source verification
+- **No installation required**: Connects to hosted service automatically
 
 ### Comprehensive Research Session
 ```python
