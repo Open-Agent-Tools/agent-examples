@@ -468,65 +468,88 @@ class DeepResearchDave:
             self.current_session.status = "error"
             raise
             
-    async def quick_research(self, query: str, max_sources: int = 5) -> str:
-        """Conduct quick research for immediate insights."""
+    async def deep_research(self, topic: str) -> str:
+        """Initiate a comprehensive deep research session."""
         try:
-            if not self.agent:
-                self.agent = self.create_agent()
-                
-            prompt = f"""
-            Quick Research Query: {query}
+            # Start comprehensive research session
+            await self.start_research_session(topic, "comprehensive")
             
-            Please provide a rapid but thorough research response including:
+            # Phase 1: Gather information
+            gather_phase = await self.conduct_research_phase(
+                "Gather comprehensive information from multiple sources, "
+                "focusing on authoritative and recent content"
+            )
             
-            1. **Key Points**: 5-7 essential findings (bullet points)
-            2. **Primary Sources**: {max_sources} most relevant sources with credibility notes
-            3. **Quick Analysis**: Brief assessment of findings reliability
-            4. **Immediate Insights**: 2-3 actionable takeaways
-            5. **Follow-up Questions**: Areas that might need deeper research
+            # Phase 2: Analysis and synthesis
+            synthesis = await self.synthesize_findings()
             
-            Focus on speed while maintaining research quality standards.
-            """
+            # Phase 3: Generate comprehensive report
+            report = await self.generate_research_report("comprehensive")
             
-            response = await self.robust_agent_call(prompt)
-            logger.info(f"Quick research completed for: {query}")
-            return response
+            return report
             
         except Exception as e:
-            logger.error(f"Error in quick research: {str(e)}")
+            logger.error(f"Error in deep research: {str(e)}")
+            if self.current_session:
+                self.current_session.status = "error"
             raise
             
-    async def compare_options(self, options: List[str], criteria: List[str]) -> str:
-        """Conduct comparative research analysis."""
+    async def comparative_deep_research(self, options: List[str], criteria: List[str] = None) -> str:
+        """Conduct deep comparative research analysis with multiple phases."""
         try:
-            if not self.agent:
-                self.agent = self.create_agent()
-                
-            prompt = f"""
-            Comparative Research Analysis
+            if not criteria:
+                criteria = ["features", "performance", "scalability", "cost", "ecosystem", 
+                          "learning curve", "maintenance", "future outlook"]
             
-            Options to Compare: {', '.join(options)}
+            # Start research session
+            topic = f"Comparative analysis of {', '.join(options)}"
+            await self.start_research_session(topic, "comparative")
+            
+            # Phase 1: Research each option thoroughly
+            research_prompt = f"""
+            Phase 1: Comprehensive Information Gathering
+            
+            Options to Research: {', '.join(options)}
+            
+            For each option, gather detailed information on:
+            - Core features and capabilities
+            - Technical architecture and design
+            - Performance characteristics
+            - Ecosystem and community
+            - Documentation and support
+            - Real-world use cases
+            - Recent developments and roadmap
+            """
+            await self.conduct_research_phase(research_prompt)
+            
+            # Phase 2: Comparative analysis
+            analysis_prompt = f"""
+            Phase 2: Deep Comparative Analysis
+            
             Evaluation Criteria: {', '.join(criteria)}
             
-            Please conduct comprehensive comparative research:
-            
-            1. **Research Each Option**: Gather detailed information for each option
-            2. **Criteria-Based Analysis**: Evaluate each option against the criteria
-            3. **Comparison Matrix**: Create side-by-side comparison
-            4. **Pros/Cons Analysis**: Strengths and weaknesses for each option
-            5. **Scoring Framework**: Rate options on each criterion (1-10 scale)
-            6. **Recommendation**: Clear guidance on best choice with rationale
-            7. **Context Considerations**: When each option might be preferred
-            
-            Provide objective, evidence-based comparison with clear recommendations.
+            Conduct thorough comparison:
+            1. **Detailed Feature Matrix**: Comprehensive capability comparison
+            2. **Performance Analysis**: Benchmarks, scalability, efficiency
+            3. **Ecosystem Evaluation**: Tools, libraries, community strength
+            4. **Total Cost Analysis**: Licensing, development, maintenance costs
+            5. **Risk Assessment**: Technical debt, vendor lock-in, obsolescence
+            6. **Future Viability**: Roadmap, industry adoption, trends
             """
+            await self.conduct_research_phase(analysis_prompt)
             
-            response = await self.robust_agent_call(prompt)
-            logger.info(f"Comparative analysis completed for: {', '.join(options)}")
-            return response
+            # Phase 3: Synthesis and recommendations
+            synthesis = await self.synthesize_findings(criteria)
+            
+            # Generate comprehensive comparison report
+            report = await self.generate_research_report("comparative")
+            
+            return report
             
         except Exception as e:
-            logger.error(f"Error in comparative analysis: {str(e)}")
+            logger.error(f"Error in comparative deep research: {str(e)}")
+            if self.current_session:
+                self.current_session.status = "error"
             raise
             
     async def robust_agent_call(self, prompt: str, max_retries: int = 3) -> str:
@@ -593,7 +616,7 @@ if __name__ == "__main__":
             query_lower = query.lower()
             
             if 'compare' in query_lower and ('vs' in query_lower or 'versus' in query_lower):
-                # Extract options for comparison
+                # Extract options for deep comparison
                 if 'vs' in query_lower:
                     parts = query_lower.split('compare')[1].strip().split('vs')
                 elif 'versus' in query_lower:
@@ -604,7 +627,7 @@ if __name__ == "__main__":
                 options = [opt.strip() for opt in parts if opt.strip()]
                 if len(options) >= 2:
                     return await suppress_output_during_async_execution(
-                        self.agent.compare_options(options[:5], ["features", "pros", "cons", "use cases"])
+                        self.agent.comparative_deep_research(options[:5])
                     )
             
             elif query_lower.startswith('session:'):
@@ -644,30 +667,31 @@ if __name__ == "__main__":
                 else:
                     return "No active research session"
             
-            # Default to quick research
+            # Default to deep research session
             return await suppress_output_during_async_execution(
-                self.agent.quick_research(query)
+                self.agent.deep_research(query)
             )
     
     def main():
         """Main entry point - start REPL chat interface."""
         # Define agent capabilities and examples
         capabilities = [
-            "Live web search and real-time information gathering",
-            "Comprehensive research with source evaluation",
-            "Comparative analysis between options",
-            "Multi-phase research sessions",
-            "Structured report generation"
+            "Multi-phase comprehensive research sessions",
+            "In-depth comparative analysis with extensive evaluation",
+            "Academic-level research with detailed source documentation",
+            "Structured research planning and execution",
+            "Professional research reports with citations",
+            "Deep market analysis and competitive intelligence"
         ]
         
         examples = [
-            "Latest trends in AI agent frameworks 2025",
-            "Compare AWS Strands vs LangChain",
-            "Python 3.13 new features and updates",
-            "session: Cybersecurity best practices for startups",
-            "phase: Focus on implementation costs and timelines",
+            "Comprehensive analysis of enterprise AI adoption patterns",
+            "compare Kubernetes vs Docker Swarm for enterprise orchestration", 
+            "session: Digital transformation strategies for financial services",
+            "Deep dive into quantum computing commercial applications",
+            "phase: Analyze vendor ecosystem and partnerships",
             "synthesize",
-            "report: executive",
+            "report: comprehensive",
             "status"
         ]
         
