@@ -1,151 +1,63 @@
-# Quick Research Quinten 🔍⚡
+# Quick Research Quinten
 
-A specialized AI research agent built on the AWS Strands framework, optimized for rapid information gathering and immediate insights. Quinten focuses on delivering fast, accurate, and actionable research results with exceptional speed and clarity.
+Fast AI research agent optimized for rapid insights in 30-90 seconds.
 
-## Overview
+## Key Capabilities
+- **Rapid Web Search** - Tavily MCP integration for targeted research
+- **Quick Comparisons** - Side-by-side analysis under 2 minutes  
+- **Fact Checking** - Source validation with credibility assessment
+- **Trend Analysis** - Current developments and patterns
+- **Technical Lookups** - API docs, syntax, best practices
 
-Quick Research Quinten is designed for scenarios where you need immediate answers and quick insights. Unlike comprehensive research agents that may take several minutes, Quinten optimizes for speed while maintaining quality, typically delivering results in 30-90 seconds.
+## Quick Start
 
-## Key Features
-
-### 🚀 Core Capabilities
-- **Rapid Web Search**: Leverages Tavily MCP for fast, targeted internet research
-- **Quick Comparisons**: Side-by-side analysis of options in under 2 minutes
-- **Fast Fact Checking**: Verify claims with source validation
-- **Trend Analysis**: Current developments and emerging patterns
-- **Immediate Insights**: Actionable takeaways from research
-
-### ⚡ Speed Optimization
-- Targeted search strategies for maximum efficiency
-- Limited to 1-3 strategic searches per query
-- Focuses on most relevant and recent information
-- Concise, scannable output format
-- Response times: 30-120 seconds typically
-
-## Installation
-
-### Prerequisites
-- Python 3.10+
-- At least one AI model API key (Anthropic, OpenAI, or Google)
-- Tavily API key (optional but recommended for web search)
-
-### Setup
-
-1. Install dependencies:
 ```bash
-pip install strands-agents strands-agents-tools python-dotenv
-```
+# Install
+pip install strands-agents strands-agents-tools
 
-2. Configure environment variables in `.env`:
-```env
-# AI Model Access (at least one required)
-ANTHROPIC_API_KEY=your_anthropic_key    # Primary recommendation
-OPENAI_API_KEY=your_openai_key         # Alternative
-GOOGLE_API_KEY=your_google_key         # Alternative
+# Configure .env
+ANTHROPIC_API_KEY=your_key
+TAVILY_API_KEY=your_key
 
-# Web Search (recommended)
-TAVILY_API_KEY=your_tavily_key
+# Run
+python agent.py
 ```
 
 ## Usage
 
-### Quick Start
-
-```python
-from agent import QuickResearchQuinten
-
-# Initialize the agent
-quinten = QuickResearchQuinten()
-
-# Quick research
-result = await quinten.quick_research("What are the key features of Python 3.13?")
-
-# Comparison
-result = await quinten.compare_options(["React", "Vue", "Angular"])
-
-# Fact checking
-result = await quinten.fact_check("Python is faster than C++")
-
-# Trend analysis
-result = await quinten.trend_analysis("AI agent frameworks")
-```
-
-### Command Line Interface
-
-Run the interactive mode:
+**Interactive Chat:**
 ```bash
 python agent.py
 ```
 
-Or run example usage:
-```bash
-python example_usage.py
-python example_usage.py interactive  # For interactive mode
+**Programmatic:**
+```python
+from agent import QuickResearchQuinten
+quinten = QuickResearchQuinten()
+result = await quinten.quick_research("Python 3.13 features")
 ```
 
-### Interactive Commands
+**Commands:**
+- `compare X vs Y` - Quick comparisons
+- `fact check: [claim]` - Verify claims  
+- `trends: [topic]` - Current trends
+- `status` - Session info
 
-- **General query**: Type any research question
-- **Comparison**: `compare X vs Y` or `compare X versus Y`
-- **Fact check**: `fact check: [claim]` or `verify: [claim]`
-- **Trends**: `trends: [topic]` or include "trend" in your query
-- **Status**: `status` - Show current session information
-- **Exit**: `quit` or `exit`
+## Output Format
 
-## Output Formats
+Delivers concise, scannable results in 30-120 seconds:
 
-### Quick Research Brief
 ```
-Key Points:
-• Essential finding 1
-• Essential finding 2
-• Essential finding 3-5
-
-Primary Sources:
-1. [Source Name] (High credibility) - Date
-2. [Source Name] (Medium credibility) - Date
-
-Immediate Insights:
-→ Actionable takeaway 1
-→ Actionable takeaway 2
-
-Follow-up Areas:
-- Topic needing deeper research
+Key Points: • Finding 1 • Finding 2 • Finding 3
+Sources: [Source] (credibility) - date  
+Insights: → Takeaway 1 → Takeaway 2
 ```
 
-### Comparison Matrix
-```
-Quick Overview:
-- Option A: Brief description
-- Option B: Brief description
-
-Key Differentiators:
-| Criteria    | Option A | Option B |
-|------------|----------|----------|
-| Performance | Fast     | Faster   |
-| Complexity  | Low      | Medium   |
-
-Recommendation: Option A for X scenarios, Option B for Y scenarios
-```
-
-### Fact Check Result
-```
-Verdict: TRUE / FALSE / PARTIALLY TRUE
-
-Evidence:
-✓ Supporting evidence point
-✗ Refuting evidence point
-
-Sources: [Authoritative source with date]
-Confidence: High/Medium/Low
-```
-
-## Architecture
-
-### Session Management
-- Lightweight session tracking for research context
-- Automatic source credibility assessment
-- Duration and performance metrics
+## Features
+- Response times: 30-120 seconds
+- Source credibility assessment
+- Multiple fallback options
+- Lightweight session tracking
 
 ### Tool Integration
 - **Tavily MCP**: Primary web search interface
