@@ -1,5 +1,9 @@
 # Deep Research Dave Agent
 
+## ⚠️ UNDER CONSTRUCTION - NON-WORKING ⚠️
+**This agent is currently being redesigned and rebuilt. It is not functional in its current state.**
+**See [gap_analysis.md](./gap_analysis.md) for detailed implementation plan.**
+
 A specialized AI research agent built on the AWS Strands framework for conducting comprehensive, systematic research across any domain. This agent implements the patterns described in the [Deep Research Agent PRD](../../PRD_Examples/Deep%20Research%20Agent/).
 
 ## Quick Start
@@ -15,16 +19,16 @@ dave = DeepResearchDave()
 result = await dave.deep_research("Your research topic")
 ```
 
-## Current Implementation Status ✅
+## Current Implementation Status ❌
 
-Deep Research Dave is **production-ready** with core research capabilities:
+Deep Research Dave is **under construction** and requires significant refactoring:
 
-- ✅ **Multi-phase research sessions** with systematic workflow
-- ✅ **Source evaluation** and credibility assessment  
-- ✅ **Research synthesis** and report generation
-- ✅ **Interactive chat interface** with specialized commands
-- ✅ **Tavily MCP integration** for real-time web search
-- ✅ **Multi-model support** (Anthropic, OpenAI, Google)
+- ⚠️ **Basic research workflow** exists but needs enhancement
+- ❌ **No persistent storage** - research lost between sessions
+- ❌ **Limited quality assurance** - basic credibility only
+- ❌ **Missing academic sources** - no ArXiv, Scholar, PubMed
+- ❌ **No configuration management** - fixed parameters only
+- ❌ **Lacks security controls** - no encryption or audit trails
 
 ## Configuration
 
@@ -37,15 +41,15 @@ ANTHROPIC_API_KEY=your_anthropic_key_here
 TAVILY_API_KEY=your_tavily_key_here
 ```
 
-### Key Features
+### Planned Features (Not Yet Implemented)
 - **Comprehensive Research**: Multi-phase structured approach (plan → gather → analyze → report)
 - **Source Validation**: Automatic credibility assessment and fact-checking
 - **Comparative Analysis**: Side-by-side evaluation of options
 - **Professional Output**: Academic-quality reports with proper citations
 
-## TO DO: Enhancement Priorities
+## Current Development Status
 
-Reference: [Complete implementation plan in original TODO.md](./TODO.md)
+Reference: [Gap analysis and implementation plan](./gap_analysis.md) | [Original TODO.md](./TODO.md)
 
 ### Priority 1: Persistent Research Infrastructure
 **Need**: Research projects that span multiple sessions and persistent artifact storage
@@ -56,7 +60,7 @@ Reference: [Complete implementation plan in original TODO.md](./TODO.md)
 - [ ] **Project Lifecycle** - Create, resume, and archive research projects across sessions
 - [ ] **Session Continuity** - Resume interrupted research with full context
 
-**Success Criteria**: Can maintain research projects across multiple chat sessions with persistent storage
+**Success Criteria**: Will maintain research projects across multiple chat sessions with persistent storage
 
 ### Priority 2: Specialized Research Sub-Agents  
 **Need**: Domain-specific expertise for complex research tasks
@@ -68,7 +72,7 @@ Reference: [Complete implementation plan in original TODO.md](./TODO.md)
 - [ ] **Synthesis Agent** - Cross-source insight generation and contradiction resolution
 - [ ] **Agent Coordination** - Delegate tasks and integrate sub-agent results
 
-**Success Criteria**: Specialized agents handle domain-specific research with integrated results
+**Success Criteria**: Will enable specialized agents to handle domain-specific research with integrated results
 
 ### Priority 3: Advanced Research Quality & Methodologies
 **Need**: PhD-level research rigor and systematic approaches
@@ -80,7 +84,7 @@ Reference: [Complete implementation plan in original TODO.md](./TODO.md)
 - [ ] **Confidence Scoring** - Quantitative reliability assessment for all findings
 - [ ] **Academic Integration** - Connect to scholarly databases and citation tools
 
-**Success Criteria**: Research output meets academic publication standards
+**Success Criteria**: Will produce research output meeting academic publication standards
 
 ### Priority 4: Professional Reporting & Knowledge Management
 **Need**: Publication-ready outputs and organizational memory
@@ -92,7 +96,7 @@ Reference: [Complete implementation plan in original TODO.md](./TODO.md)
 - [ ] **Export Integration** - Zotero, Mendeley, and academic tool compatibility
 - [ ] **Collaboration Features** - Team research and knowledge sharing
 
-**Success Criteria**: Professional publication-ready reports with organizational learning
+**Success Criteria**: Will generate professional publication-ready reports with organizational learning
 
 ## Architecture Overview
 
@@ -106,11 +110,13 @@ Deep Research Dave follows a modular design that implements the [Deep Research A
 
 ## Current Limitations
 
+- **Non-functional**: Agent requires complete rebuild based on gap analysis
 - Research artifacts don't persist across sessions
 - No specialized sub-agents for domain expertise
 - Limited to single-session research projects  
 - Basic source validation without advanced fact-checking
 - No integration with academic databases or citation tools
+- Missing core PRD requirements for quality assurance and persistence
 
 ## Usage Examples
 
@@ -146,8 +152,8 @@ To extend Deep Research Dave's capabilities:
 
 ## Next Steps
 
-See the [complete TODO.md](./TODO.md) for detailed implementation roadmap. The immediate focus is on persistent workspace infrastructure to enable multi-session research projects.
+See the [gap analysis document](./gap_analysis.md) for comprehensive implementation roadmap. The immediate focus is on persistent workspace infrastructure to enable multi-session research projects, followed by advanced quality assurance systems.
 
 ---
 
-*Status: Production-ready with core capabilities | Next: Persistent research infrastructure*
+*Status: Under construction - non-functional | Next: Complete rebuild following gap analysis*
