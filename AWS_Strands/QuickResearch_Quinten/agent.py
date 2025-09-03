@@ -129,6 +129,8 @@ class QuickResearchQuinten:
             
             # Create agent with research tools
             agent = Agent(
+                name="Quick Research Quinten", 
+                description="A specialized quick research agent for rapid information gathering and insights",
                 model=model,
                 system_prompt=SYSTEM_PROMPT,
                 tools=tools
@@ -470,129 +472,17 @@ def create_agent() -> Agent:
 # Root agent instance for module-level access
 root_agent = create_agent()
 
-# Main execution for testing
+# Simple test function for local execution
+def main():
+    """Simple test function to verify QuickResearch_Quinten works."""
+    print("Testing Quick Research Quinten...")
+    
+    try:
+        response = root_agent("What are the key features of Python 3.13?")
+        print(f"Agent Response: {response}")
+    except Exception as e:
+        logger.error(f"Test failed: {e}")
+        print(f"Error: {e}")
+
 if __name__ == "__main__":
-    # Import utilities from parent directory
-    import sys
-    from pathlib import Path
-    sys.path.append(str(Path(__file__).parent.parent))
-    from utilities import AgentChatInterface
-    
-    # Custom chat interface for Quick Research Quinten
-    class QuickResearchQuintenChatInterface(AgentChatInterface):
-        async def _execute_agent_query(self, query: str):
-            """Execute query through Quick Research Quinten with specialized handling."""
-            from utilities import suppress_output_during_async_execution
-            
-            # Check for specialized commands/patterns
-            query_lower = query.lower()
-            
-            if 'compare' in query_lower and ('vs' in query_lower or 'versus' in query_lower):
-                # Extract options for comparison
-                if 'vs' in query_lower:
-                    parts = query.split(' vs ', 1)
-                elif 'versus' in query_lower:
-                    parts = query.split(' versus ', 1)
-                else:
-                    parts = [query]
-                
-                if len(parts) >= 2:
-                    # Try to extract what comes before 'compare' and after
-                    import re
-                    pattern = r'compare\s+(.*?)\s+(?:vs|versus)\s+(.*?)(?:\s+for\s+(.*))?$'
-                    match = re.search(pattern, query_lower)
-                    if match:
-                        options = [match.group(1).strip(), match.group(2).strip()]
-                        criteria = None
-                        if match.group(3):
-                            criteria = [c.strip() for c in match.group(3).split(',')]
-                        return await suppress_output_during_async_execution(
-                            self.agent.compare_options(options, criteria)
-                        )
-                    else:
-                        # Fallback to simple split
-                        options = [p.strip() for p in parts]
-                        return await suppress_output_during_async_execution(
-                            self.agent.compare_options(options[:5])
-                        )
-            
-            elif query_lower.startswith('fact check:') or query_lower.startswith('verify:'):
-                # Fact checking
-                if query_lower.startswith('fact check:'):
-                    claim = query[11:].strip()
-                else:
-                    claim = query[7:].strip()
-                return await suppress_output_during_async_execution(
-                    self.agent.fact_check(claim)
-                )
-                
-            elif query_lower.startswith('trends:') or 'trend' in query_lower:
-                # Trend analysis
-                if query_lower.startswith('trends:'):
-                    topic = query[7:].strip()
-                else:
-                    # Extract topic after 'trend' or 'trends'
-                    import re
-                    match = re.search(r'trends?\s+(?:in|for|about)?\s+(.+)', query, re.I)
-                    if match:
-                        topic = match.group(1).strip()
-                    else:
-                        topic = query
-                return await suppress_output_during_async_execution(
-                    self.agent.trend_analysis(topic)
-                )
-                
-            elif query_lower == 'status':
-                # Show session status
-                status = self.agent.get_session_status()
-                if status:
-                    return f"Quick Research Session Status:\n{json.dumps(status, indent=2)}"
-                else:
-                    return "No active research session"
-            
-            # Default to quick research
-            return await suppress_output_during_async_execution(
-                self.agent.quick_research(query)
-            )
-    
-    def main():
-        """Main entry point - start REPL chat interface."""
-        # Define agent capabilities and examples
-        capabilities = [
-            "Rapid web search and information gathering",
-            "Quick comparative analysis between options",
-            "Fast fact-checking with source verification",
-            "Current trend analysis and insights",
-            "Immediate actionable recommendations"
-        ]
-        
-        examples = [
-            "What are the key features of Python 3.13?",
-            "Compare React vs Vue for a startup project",
-            "Fact check: Python is faster than C++",
-            "Trends: AI agent frameworks in 2025",
-            "Best practices for API security",
-            "Latest updates on AWS Lambda pricing",
-            "verify: JavaScript was created in 10 days",
-            "status"
-        ]
-        
-        required_env_vars = {
-            "ANTHROPIC_API_KEY": "AI model access (primary)",
-            "OPENAI_API_KEY": "AI model access (alternative)",  
-            "GOOGLE_API_KEY": "AI model access (alternative)",
-            "TAVILY_API_KEY": "web search functionality"
-        }
-        
-        # Create and run chat interface
-        chat_interface = QuickResearchQuintenChatInterface(
-            agent_name="Quick Research Quinten",
-            agent_factory=QuickResearchQuinten,
-            capabilities=capabilities,
-            examples=examples,
-            required_env_vars=required_env_vars
-        )
-        
-        asyncio.run(chat_interface.run())
-    
     main()

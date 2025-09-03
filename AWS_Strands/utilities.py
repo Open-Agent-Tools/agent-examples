@@ -1,15 +1,15 @@
 """
 Common utilities for AWS Strands agents.
-Provides shared functionality for chat interfaces, formatting, and logging.
+Provides shared functionality for environment setup, logging, and agent creation.
+Note: Chat loop functionality has been moved to chat_loop.py
 """
 
-import asyncio
 import logging
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Dict, Optional
 from dotenv import load_dotenv
 
 
@@ -88,91 +88,10 @@ def suppress_output_during_execution(func):
     return wrapper
 
 
-async def suppress_output_during_async_execution(coro):
-    """
-    Suppress stdout/stderr during async coroutine execution.
-    
-    Args:
-        coro: Async coroutine to execute
-        
-    Returns:
-        Result of the coroutine
-    """
-    original_stdout = sys.stdout
-    original_stderr = sys.stderr
-    
-    with open(os.devnull, 'w') as devnull:
-        sys.stdout = devnull
-        sys.stderr = devnull
-        try:
-            return await coro
-        finally:
-            sys.stdout = original_stdout
-            sys.stderr = original_stderr
+# Async utilities moved to chat_loop.py
 
 
-def display_agent_banner(agent_name: str, capabilities: list, examples: list):
-    """
-    Display a formatted banner for agent initialization.
-    
-    Args:
-        agent_name: Name of the agent
-        capabilities: List of agent capabilities
-        examples: List of example queries
-    """
-    print(f"{agent_name.upper()} - Interactive Chat")
-    print("=" * 60)
-    print(f"Welcome to {agent_name}!")
-    print()
-    
-    if capabilities:
-        print("Capabilities:")
-        for capability in capabilities:
-            print(f"  * {capability}")
-        print()
-    
-    if examples:
-        print("Example Queries:")
-        for example in examples:
-            print(f"  * '{example}'")
-        print()
-    
-    print("Commands:")
-    print("  help  - Show this help message")
-    print("  quit  - Exit the chat")
-    print("  exit  - Exit the chat")
-    print("=" * 60)
-
-
-def display_help(agent_name: str, capabilities: list, examples: list):
-    """
-    Display help information for an agent.
-    
-    Args:
-        agent_name: Name of the agent
-        capabilities: List of agent capabilities  
-        examples: List of example queries
-    """
-    print(f"\n{agent_name.upper()} - Help")
-    print("=" * 50)
-    
-    if capabilities:
-        print("Capabilities:")
-        for capability in capabilities:
-            print(f"  * {capability}")
-        print()
-    
-    if examples:
-        print("Example Queries:")
-        for example in examples:
-            print(f"  * '{example}'")
-        print()
-    
-    print("Commands:")
-    print("  help  - Show this help message")
-    print("  quit  - Exit the chat")
-    print("  exit  - Exit the chat")
-    print("=" * 50)
+# Display functions moved to chat_loop.py
 
 
 def format_agent_response(response: Any, duration: float) -> None:
@@ -221,199 +140,8 @@ def check_environment_requirements(required_keys: Dict[str, str]) -> list:
     return missing_keys
 
 
-class AgentChatInterface:
-    """
-    Generic chat interface for AWS Strands agents.
-    Provides common REPL functionality that can be customized per agent.
-    """
-    
-    def __init__(
-        self, 
-        agent_name: str,
-        agent_factory: Callable,
-        capabilities: list = None,
-        examples: list = None,
-        required_env_vars: Dict[str, str] = None
-    ):
-        """
-        Initialize chat interface.
-        
-        Args:
-            agent_name: Display name of the agent
-            agent_factory: Function that creates and returns agent instance
-            capabilities: List of agent capabilities for help display
-            examples: List of example queries for help display
-            required_env_vars: Dict of required env vars and descriptions
-        """
-        self.agent_name = agent_name
-        self.agent_factory = agent_factory
-        self.capabilities = capabilities or []
-        self.examples = examples or []
-        self.required_env_vars = required_env_vars or {}
-        self.agent = None
-        self.log_file = None
-        
-    def setup_environment(self) -> bool:
-        """
-        Setup environment and check requirements.
-        
-        Returns:
-            True if setup successful, False otherwise
-        """
-        # Load environment variables
-        env_path = load_environment_variables()
-        if env_path:
-            print(f"Loaded environment from: {env_path}")
-        
-        # Setup logging
-        self.log_file = setup_file_logging(self.agent_name)
-        
-        # Check required environment variables
-        missing_keys = check_environment_requirements(self.required_env_vars)
-        
-        if any("API key" in key for key in missing_keys):
-            # Critical API keys missing
-            print("Error: Required API keys missing:")
-            for key in missing_keys:
-                if "API key" in key:
-                    print(f"  * {key}")
-            return False
-        
-        if missing_keys:
-            print("Warnings:")
-            for key in missing_keys:
-                print(f"  * {key}")
-        
-        return True
-    
-    def initialize_agent(self) -> bool:
-        """
-        Initialize the agent with output suppression.
-        
-        Returns:
-            True if initialization successful, False otherwise
-        """
-        print(f"Initializing {self.agent_name}...")
-        
-        try:
-            # Use suppression decorator for clean initialization
-            @suppress_output_during_execution
-            def create_agent():
-                return self.agent_factory()
-            
-            self.agent = create_agent()
-            
-            print(f"{self.agent_name} is ready!")
-            print("Ask me any question or type 'help' for examples.")
-            print("=" * 60)
-            if self.log_file:
-                print(f"Logs are being written to: {self.log_file}")
-            
-            return True
-            
-        except Exception as e:
-            print(f"Failed to initialize {self.agent_name}: {e}")
-            if self.log_file:
-                print(f"Check {self.log_file} for detailed error information.")
-            return False
-    
-    async def process_query(self, user_input: str) -> bool:
-        """
-        Process user query through the agent.
-        
-        Args:
-            user_input: User's input string
-            
-        Returns:
-            True to continue chat loop, False to exit
-        """
-        # Handle commands
-        if user_input.lower() in ["exit", "quit", "bye"]:
-            return False
-        elif user_input.lower() == "help":
-            display_help(self.agent_name, self.capabilities, self.examples)
-            return True
-        elif not user_input:
-            return True
-        
-        # Process query through agent
-        try:
-            print(f"{self.agent_name}: Processing your query...")
-            start_time = time.time()
-            
-            # This should be overridden in subclasses for agent-specific logic
-            result = await self._execute_agent_query(user_input)
-            
-            duration = time.time() - start_time
-            format_agent_response(result, duration)
-            
-        except Exception as e:
-            print(f"{self.agent_name}: Query failed - {e}")
-            print("Try rephrasing your question or check the logs for details.")
-        
-        return True
-    
-    async def _execute_agent_query(self, query: str) -> Any:
-        """
-        Execute query through agent. Override in subclasses.
-        
-        Args:
-            query: User query string
-            
-        Returns:
-            Agent response
-        """
-        # Default implementation - should be overridden
-        if hasattr(self.agent, 'quick_research'):
-            return await suppress_output_during_async_execution(
-                self.agent.quick_research(query)
-            )
-        else:
-            return "Agent query method not implemented"
-    
-    async def run(self) -> None:
-        """Run the interactive chat loop."""
-        # Setup environment
-        if not self.setup_environment():
-            return
-        
-        # Initialize agent
-        if not self.initialize_agent():
-            return
-        
-        # Display initial banner
-        display_agent_banner(self.agent_name, self.capabilities, self.examples)
-        
-        # Main chat loop
-        try:
-            while True:
-                try:
-                    # Get user input
-                    sys.stdout.flush()
-                    user_input = input(f"\nYou: ").strip()
-                    sys.stdout.flush()
-                    
-                    # Process query
-                    should_continue = await self.process_query(user_input)
-                    if not should_continue:
-                        break
-                        
-                except KeyboardInterrupt:
-                    print(f"\n\nChat interrupted. Thanks for using {self.agent_name}!")
-                    break
-                except EOFError:
-                    print(f"\n\nChat ended. Thanks for using {self.agent_name}!")
-                    break
-                    
-        finally:
-            # Cleanup
-            await self._cleanup()
-            print(f"{self.agent_name} session complete!")
-    
-    async def _cleanup(self) -> None:
-        """Cleanup agent resources. Override in subclasses if needed."""
-        if self.agent and hasattr(self.agent, 'cleanup'):
-            self.agent.cleanup()
+# Chat interface functionality has been moved to chat_loop.py
+# This module now focuses on core utilities only
 
 
 # Terminal color constants

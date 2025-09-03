@@ -148,6 +148,8 @@ class DeepResearchDave:
             
             # Create agent with research tools
             agent = Agent(
+                name="Deep Research Dave",
+                description="A specialized research agent for comprehensive information gathering and analysis",
                 model=model,
                 system_prompt=SYSTEM_PROMPT,
                 tools=tools
@@ -601,119 +603,17 @@ def create_agent() -> Agent:
 # Root agent instance for module-level access
 root_agent = create_agent()
 
-# Main execution for testing
+# Simple test function for local execution
+def main():
+    """Simple test function to verify DeepResearch_Dave works."""
+    print("Testing Deep Research Dave...")
+    
+    try:
+        response = root_agent("Quick research on Python 3.13 new features")
+        print(f"Agent Response: {response}")
+    except Exception as e:
+        logger.error(f"Test failed: {e}")
+        print(f"Error: {e}")
+
 if __name__ == "__main__":
-    # Import utilities from parent directory
-    import sys
-    from pathlib import Path
-    sys.path.append(str(Path(__file__).parent.parent))
-    from utilities import AgentChatInterface
-    
-    # Custom chat interface for Deep Research Dave
-    class DeepResearchDaveChatInterface(AgentChatInterface):
-        async def _execute_agent_query(self, query: str):
-            """Execute query through Deep Research Dave with specialized handling."""
-            from utilities import suppress_output_during_async_execution
-            
-            # Check for specialized commands/patterns
-            query_lower = query.lower()
-            
-            if 'compare' in query_lower and ('vs' in query_lower or 'versus' in query_lower):
-                # Extract options for deep comparison
-                if 'vs' in query_lower:
-                    parts = query_lower.split('compare')[1].strip().split('vs')
-                elif 'versus' in query_lower:
-                    parts = query_lower.split('compare')[1].strip().split('versus')
-                else:
-                    parts = [query_lower.split('compare')[1].strip()]
-                
-                options = [opt.strip() for opt in parts if opt.strip()]
-                if len(options) >= 2:
-                    return await suppress_output_during_async_execution(
-                        self.agent.comparative_deep_research(options[:5])
-                    )
-            
-            elif query_lower.startswith('session:'):
-                # Start research session
-                topic = query[8:].strip()
-                return await suppress_output_during_async_execution(
-                    self.agent.start_research_session(topic, "comprehensive")
-                )
-                
-            elif query_lower.startswith('phase:'):
-                # Research phase
-                instructions = query[6:].strip()
-                return await suppress_output_during_async_execution(
-                    self.agent.conduct_research_phase(instructions)
-                )
-                
-            elif query_lower == 'synthesize':
-                # Synthesize findings
-                return await suppress_output_during_async_execution(
-                    self.agent.synthesize_findings()
-                )
-                
-            elif query_lower.startswith('report'):
-                # Generate report
-                report_type = "comprehensive"
-                if ':' in query_lower:
-                    report_type = query_lower.split(':', 1)[1].strip()
-                return await suppress_output_during_async_execution(
-                    self.agent.generate_research_report(report_type)
-                )
-                
-            elif query_lower == 'status':
-                # Show session status
-                status = self.agent.get_session_status()
-                if status:
-                    return f"Research Session Status:\n{status}"
-                else:
-                    return "No active research session"
-            
-            # Default to deep research session
-            return await suppress_output_during_async_execution(
-                self.agent.deep_research(query)
-            )
-    
-    def main():
-        """Main entry point - start REPL chat interface."""
-        # Define agent capabilities and examples
-        capabilities = [
-            "Multi-phase comprehensive research sessions",
-            "In-depth comparative analysis with extensive evaluation",
-            "Academic-level research with detailed source documentation",
-            "Structured research planning and execution",
-            "Professional research reports with citations",
-            "Deep market analysis and competitive intelligence"
-        ]
-        
-        examples = [
-            "Comprehensive analysis of enterprise AI adoption patterns",
-            "compare Kubernetes vs Docker Swarm for enterprise orchestration", 
-            "session: Digital transformation strategies for financial services",
-            "Deep dive into quantum computing commercial applications",
-            "phase: Analyze vendor ecosystem and partnerships",
-            "synthesize",
-            "report: comprehensive",
-            "status"
-        ]
-        
-        required_env_vars = {
-            "ANTHROPIC_API_KEY": "AI model access (primary)",
-            "OPENAI_API_KEY": "AI model access (alternative)",  
-            "GOOGLE_API_KEY": "AI model access (alternative)",
-            "TAVILY_API_KEY": "web search functionality"
-        }
-        
-        # Create and run chat interface
-        chat_interface = DeepResearchDaveChatInterface(
-            agent_name="Deep Research Dave",
-            agent_factory=DeepResearchDave,
-            capabilities=capabilities,
-            examples=examples,
-            required_env_vars=required_env_vars
-        )
-        
-        asyncio.run(chat_interface.run())
-    
     main()
