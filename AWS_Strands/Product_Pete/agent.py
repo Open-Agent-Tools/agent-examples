@@ -34,22 +34,27 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def add_mcp_tools(base_tools: list, mcp_url: str):
-    """Add MCP tools to base tools list - failures will cascade as exceptions."""
+    """Add MCP tools to base tools list - handle failures gracefully for containerization."""
     logger.info(f"Connecting to MCP server at {mcp_url}")
     
-    mcp_client = MCPClient(lambda: streamablehttp_client(mcp_url))
-    mcp_client.start()
-    mcp_tools = list(mcp_client.list_tools_sync())
-    base_tools.extend(mcp_tools)
-    
-    logger.info(f"Successfully added {len(mcp_tools)} MCP tools")
-    return base_tools
+    try:
+        mcp_client = MCPClient(lambda: streamablehttp_client(mcp_url))
+        mcp_client.start()
+        mcp_tools = list(mcp_client.list_tools_sync())
+        base_tools.extend(mcp_tools)
+        
+        logger.info(f"Successfully added {len(mcp_tools)} MCP tools")
+        return base_tools
+    except Exception as e:
+        logger.warning(f"Failed to connect to MCP server at {mcp_url}: {e}")
+        logger.warning("Agent will start without MCP tools - they may be available later")
+        return base_tools
 
 
 def create_agent():
     """Create Product Pete agent with MCP tools."""
     tools =[]
-    # Add MCP tools - let failures cascade
+    # Add MCP tools - handle failures gracefully
     mcp_url = os.getenv("MCP_SERVER_URL", "http://localhost:9000/mcp/")
     tools = add_mcp_tools(tools, mcp_url)
     
