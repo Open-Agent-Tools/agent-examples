@@ -496,7 +496,7 @@ def setup_agent_logging(agent_name: str):
     return logging.getLogger(__name__)
 
 
-def create_strands_agent(model_config: dict, tools: list, system_prompt: str, logger=None):
+def create_strands_agent(model_config: dict, tools: list, system_prompt: str, logger=None, name="Agent", description="A Strands Agent"):
     """Create a Strands agent with error handling."""
     from strands import Agent
     
@@ -516,7 +516,7 @@ def create_strands_agent(model_config: dict, tools: list, system_prompt: str, lo
         if logger:
             logger.info("Using Bedrock")
 
-    return Agent(model=model, tools=tools, system_prompt=system_prompt)
+    return Agent(name=name, description=description, model=model, tools=tools, system_prompt=system_prompt)
 
 
 def add_mcp_tools(base_tools: list, mcp_url: str, logger=None):

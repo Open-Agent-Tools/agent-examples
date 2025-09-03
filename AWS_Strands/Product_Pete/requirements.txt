@@ -1,29 +1,5 @@
-# Core Strands Agents dependencies
-strands-agents>=1.4.0
-strands-agents-tools>=0.2.3
-
-# Environment and configuration management
-python-dotenv>=1.0.0
-
-# Enhanced logging and monitoring (optional but recommended)
-# Uncomment if you want structured logging with additional features
-# structlog>=23.1.0
-# loguru>=0.7.0
-
-# MCP (Model Context Protocol) integration for Atlassian tools
-# These are optional - uncomment if you have Atlassian MCP server running
-# mcp-client>=0.1.0
-# mcp-streamable-http>=0.1.0
-
-# Additional security and validation (if needed for production)
-# Uncomment for enhanced PII detection and content filtering
-# pydantic>=2.0.0
-# spacy>=3.6.0  # For advanced NLP-based PII detection
-# presidio-analyzer>=2.2.33  # For enterprise-grade PII detection
-
-# Type checking (development)
-# mypy>=1.0.0
-
-# Testing (development)
-# pytest>=7.0.0
-# pytest-asyncio>=0.21.0
+# AWS Strands Agent Dependencies
+strands-agents
+strands-agents-tools
+python-dotenv
+anthropic
