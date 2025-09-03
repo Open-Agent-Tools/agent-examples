@@ -11,10 +11,15 @@ except ImportError:
 # Load environment variables
 try:
     from dotenv import load_dotenv
+    current_path = Path(__file__)
     for i in range(4):
-        env_path = Path(__file__).parents[i] / ".env"
-        if env_path.exists():
-            load_dotenv(env_path)
+        try:
+            env_path = current_path.parents[i] / ".env"
+            if env_path.exists():
+                load_dotenv(env_path)
+                break
+        except IndexError:
+            # Not enough parent directories, stop searching
             break
 except ImportError:
     pass
