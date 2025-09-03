@@ -467,6 +467,9 @@ def create_agent() -> Agent:
     research_quinten = QuickResearchQuinten()
     return research_quinten.create_agent()
 
+# Root agent instance for module-level access
+root_agent = create_agent()
+
 # Main execution for testing
 if __name__ == "__main__":
     # Import utilities from parent directory

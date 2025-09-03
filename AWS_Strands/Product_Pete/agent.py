@@ -3,7 +3,10 @@
 import os
 from pathlib import Path
 from strands_tools import calculator, current_time, file_read, file_write  # type: ignore
-from prompts import SYSTEM_PROMPT  # type: ignore
+try:
+    from .prompts import SYSTEM_PROMPT
+except ImportError:
+    from prompts import SYSTEM_PROMPT  # type: ignore
 
 # Load environment variables
 try:
@@ -16,6 +19,44 @@ try:
 except ImportError:
     pass
 
+def create_agent():
+    """Create Product Pete agent instance."""
+    try:
+        # Import utilities (try to avoid circular imports)
+        import sys
+        from pathlib import Path
+        sys.path.append(str(Path(__file__).parent.parent))
+        from utilities import create_strands_agent, setup_agent_logging, add_mcp_tools, suppress_output_during_execution
+        
+        @suppress_output_during_execution
+        def create_components():
+            logger = setup_agent_logging("Product Pete")
+            
+            # Basic tools
+            tools = [calculator, current_time, file_read, file_write]
+            
+            # Add MCP tools (Atlassian)
+            tools = add_mcp_tools(tools, "http://localhost:9000/mcp/", logger)
+            
+            # Model config
+            model_config = {
+                "model_id": "claude-3-5-sonnet-20241022",
+                "max_tokens": 4096,
+                "temperature": 0.3
+            }
+            
+            # Create agent
+            agent = create_strands_agent(model_config, tools, SYSTEM_PROMPT, logger)
+            
+            return agent
+            
+        return create_components()
+    except Exception as e:
+        # Return None if utilities not available (e.g., during import)
+        return None
+
+# Root agent instance for module-level access
+root_agent = create_agent()
 
 if __name__ == "__main__":
     import sys
