@@ -64,7 +64,7 @@ def create_agent():
             "api_key": os.getenv("ANTHROPIC_API_KEY"),
         },
         model_id="claude-sonnet-4-20250514",
-        max_tokens=1024,
+        max_tokens=32768,
         params={
             "temperature": 0.7,
         }
