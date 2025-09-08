@@ -22,12 +22,27 @@ from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
 
-# Setup logging
-logging.basicConfig(
-    level=logging.WARNING,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+# Setup logging directory
+log_dir = Path(__file__).parent.parent / '.logs'
+log_dir.mkdir(exist_ok=True)
+
+# We'll configure logging after we know the agent name
 logger = logging.getLogger(__name__)
+
+def setup_logging(agent_name: str):
+    """Setup logging with agent-specific filename."""
+    log_file = log_dir / f'{agent_name.lower().replace(" ", "_")}_chat.log'
+    
+    # Clear any existing handlers
+    logging.root.handlers = []
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file)
+        ]
+    )
 
 def load_environment_variables():
     """Load environment variables from .env file."""
@@ -173,15 +188,17 @@ class ChatLoop:
                     
                     try:
                         # Call the agent directly
+                        logger.info(f"Processing query: {user_input[:100]}...")
                         response = self.agent(user_input)
                         duration = time.time() - start_time
+                        logger.info(f"Query completed successfully in {duration:.1f}s")
                         format_agent_response(response, duration)
                         
                     except Exception as e:
                         duration = time.time() - start_time
                         print(f"{self.agent_name}: Query failed - {e}")
                         print("Try rephrasing your question or check the logs for details.")
-                        logger.error(f"Agent query failed: {e}")
+                        logger.error(f"Agent query failed after {duration:.1f}s: {e}", exc_info=True)
                     
                 except KeyboardInterrupt:
                     print(f"\n\nChat interrupted. Thanks for using {self.agent_name}!")
@@ -226,12 +243,17 @@ Examples:
         env_path = load_environment_variables()
         if env_path:
             print(f"Loaded environment from: {env_path}")
+            logger.info(f"Loaded environment from: {env_path}")
         
         # Load the agent
         print(f"Loading agent from: {args.agent}")
         agent, agent_name, agent_description = load_agent_module(args.agent)
         
+        # Setup logging with agent name
+        setup_logging(agent_name)
+        
         print(f"Agent loaded successfully: {agent_name}")
+        logger.info(f"Agent loaded successfully: {agent_name} - {agent_description}")
         
         # Start chat loop
         chat_loop = ChatLoop(agent, agent_name, agent_description)
