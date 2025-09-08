@@ -9,14 +9,22 @@ from pathlib import Path
 from strands import Agent
 from strands.models.anthropic import AnthropicModel
 
-# Load .env file
+# Load .env file - search current directory and up to 3 parent folders
 try:
     from dotenv import load_dotenv
-    for i in range(4):
-        env_path = Path(__file__).parents[i] / ".env"
-        if env_path.exists():
-            load_dotenv(env_path)
-            break
+    
+    # Start with current file directory
+    current_path = Path(__file__).parent
+    env_path = current_path / ".env"
+    if env_path.exists():
+        load_dotenv(env_path)
+    else:
+        # Search up to 3 parent directories safely
+        for i in range(min(3, len(Path(__file__).parents))):
+            env_path = Path(__file__).parents[i] / ".env"
+            if env_path.exists():
+                load_dotenv(env_path)
+                break
 except ImportError:
     pass
 
@@ -41,21 +49,41 @@ def create_agent() -> Agent:
         }
     )
     
-    # # Import tools
-    # try:
-    #     from .tools import ...
-    # except ImportError:
-    #     from tools import ...
+    # Import custom tools
+    try:
+        from .tools import generate_search_url, process_web_content
+    except ImportError:
+        from tools import generate_search_url, process_web_content
+    
+    # Import official strands_tools
+    tools = [generate_search_url, process_web_content]
+    
+    # Add file operations
+    try:
+        from strands_tools.file_read import file_read
+        tools.append(file_read)
+    except ImportError:
+        pass
+        
+    try:
+        from strands_tools.file_write import file_write
+        tools.append(file_write)
+    except ImportError:
+        pass
+        
+    try:
+        from strands_tools.current_time import current_time
+        tools.append(current_time)
+    except ImportError:
+        pass
     
     # Create agent with atomic tools
     return Agent(
         name="Quick Research Quinten",
-        description="Research agent with URL generation and web crawling tools",
+        description="Research agent with URL generation, web fetching, and file management tools",
         model=model,
         system_prompt=SYSTEM_PROMPT,
-        tools=[
-
-        ]
+        tools=tools
     )
 
 
@@ -67,7 +95,5 @@ if __name__ == "__main__":
     print(f"✓ Agent: {agent.name}")
     print(f"✓ Model: {agent.model}")
     
-    # Test a simple tool
-    from tools import get_search_urls
-    urls = get_search_urls("test query", ["google", "wikipedia"])
-    print(f"✓ Generated {len(urls)} search URLs")
+    # Agent ready for tool integration
+    print("✓ Agent ready for tool integration")

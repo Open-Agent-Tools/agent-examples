@@ -119,6 +119,7 @@ When user says **"cleanup"**:
 
 ### AWS Strands Agents
 - **Product_Pete**: Product Manager assistant with Atlassian MCP integration
+- **QuickResearch_Quinten**: Generic web research agent for targeted information gathering
 
 ## Important Notes
 
