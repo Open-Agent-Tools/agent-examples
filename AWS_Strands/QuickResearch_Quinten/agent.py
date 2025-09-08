@@ -51,12 +51,12 @@ def create_agent() -> Agent:
     
     # Import custom tools
     try:
-        from .tools import generate_search_url, process_web_content
+        from .tools import generate_search_url, process_web_content, extract_urls_from_content, extract_contact_info
     except ImportError:
-        from tools import generate_search_url, process_web_content
+        from tools import generate_search_url, process_web_content, extract_urls_from_content, extract_contact_info
     
     # Import official strands_tools
-    tools = [generate_search_url, process_web_content]
+    tools = [generate_search_url, process_web_content, extract_urls_from_content, extract_contact_info]
     
     # Add file operations
     try:
