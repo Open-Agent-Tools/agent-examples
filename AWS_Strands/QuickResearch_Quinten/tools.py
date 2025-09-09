@@ -20,23 +20,22 @@ logger.setLevel(logging.INFO)
 
 @tool
 def generate_search_url(engine: str, keywords: List[str]) -> str:
-    """
-    Generate search URLs for conducting web research on specific topics.
+    """Generate search URLs for web research tasks.
 
-    This tool creates search engine URLs with DuckDuckGo as the primary engine 
-    due to better bot detection avoidance and cleaner results parsing.
+    Creates properly formatted search engine URLs optimized for automated access.
+    DuckDuckGo is recommended for better bot detection avoidance.
 
     Args:
-        engine: The search engine to use for URL generation (string)
-               Supported: "duckduckgo", "bing", "google" 
-               Recommended: "duckduckgo" (best for automated access)
-        keywords: List of search terms to combine into a search query (list of strings)
-                 Should be relevant keywords that describe what you're searching for
-                 Example: ["Python", "tutorial"] or ["business", "contact", "email"]
-                 Must contain at least one keyword
+        engine: Search engine to use. Options: "duckduckgo", "bing", "google".
+                Recommended: "duckduckgo"
+        keywords: Search terms as list of strings. Must contain at least one term.
+                 Example: ["Python", "tutorial"] or ["company", "contact"]
 
     Returns:
-        A properly formatted, URL-encoded search URL optimized for web scraping
+        str: URL-encoded search URL ready for web scraping
+    
+    Raises:
+        ValueError: If keywords list is empty or engine is unsupported
     """
     logger.info(f"generate_search_url called: engine='{engine}', keywords={keywords}")
     
@@ -68,86 +67,34 @@ def generate_search_url(engine: str, keywords: List[str]) -> str:
 
 @tool
 def process_web_content(url: str, timeout: int = 30) -> str:
-    """
-    Extract clean, readable content from web pages for AI analysis and research.
+    """Extract clean, readable content from web pages using browser automation.
 
-    Use this tool when you need to fetch web content and convert it into clean, structured format
-    that's easy to analyze and extract information from. This is the primary tool for processing
-    web pages during research workflows, converting raw HTML into readable markdown content.
+    Processes web pages through complete pipeline: HTTP request → HTML parsing → 
+    content cleaning → markdown conversion. Removes ads, navigation, and tracking 
+    elements to provide clean content for analysis.
 
-    This tool handles the complete web content processing pipeline: HTTP request → HTML parsing → 
-    content cleaning → markdown conversion → metadata extraction. It's designed to work with URLs
-    from search results, business websites, news articles, and other web sources.
+    Uses Crawl4AI browser automation to handle modern websites with JavaScript
+    and anti-bot protection. Automatically converts HTML to structured markdown.
 
-    The tool automatically removes noise elements (ads, navigation, tracking scripts) and extracts
-    the main content, making it much easier for AI to understand and analyze web page information.
-
-    Example workflow integration:
-        1. Use generate_search_url to create search URLs
-        2. Use this tool to process search result pages
-        3. Extract business website URLs from the results
-        4. Use this tool again to process business websites for contact info
-        5. Use file_write to save findings for future reference
-
-    Example response for successful processing:
-        {
-            "status": "success",
-            "url": "https://company.com/about",
-            "title": "About Us - Company Name",
-            "description": "Learn about our company history and mission",
-            "content": "# About Company Name\n\nWe are a leading provider of...\n\n## Contact Information\n\nEmail: info@company.com\nPhone: (555) 123-4567",
-            "word_count": 847
-        }
-
-    When to use this tool:
-        - Processing search engine result pages to find relevant links
-        - Extracting content from business websites for contact information
-        - Converting news articles or blog posts to readable format
-        - Analyzing competitor websites for research
-        - Processing any web page that contains information you need to analyze
-
-    What this tool handles automatically:
-        - Removes ads, navigation menus, sidebars, and footer content
-        - Strips out JavaScript, tracking pixels, and analytics code
-        - Converts HTML tables, lists, and formatting to clean markdown
-        - Extracts page title and meta description for context
-        - Handles redirects and follows canonical URLs
-        - Provides detailed error reporting for blocked or failed requests
-
-    Limitations and modern web challenges:
-        - Many sites now use anti-bot protection (CloudFlare, reCAPTCHA, etc.)
-        - JavaScript-heavy sites may not render complete content
-        - Some sites may return different content to automated requests
-        - Rate limiting may block rapid successive requests
-        - Results marked as "blocked" require manual verification
+    Common workflow:
+        1. generate_search_url() → create search URLs
+        2. process_web_content() → process search results  
+        3. extract_urls_from_content() → find target URLs
+        4. process_web_content() → extract target content
+        5. extract_contact_info() → parse contact details
 
     Args:
-        url: The web page URL to process and extract content from (string)
-             Must be a valid HTTP or HTTPS URL
-             Example: "https://www.company.com/contact" or "https://news.site.com/article"
-        timeout: Maximum time to wait for the web request in seconds (integer)
-                Default: 30 seconds, recommended range: 10-60 seconds
-                Higher values for slow-loading pages, lower for quick checks
+        url: Valid HTTP/HTTPS URL to process.
+             Example: "https://company.com/contact"
+        timeout: Request timeout in seconds. Default: 30, range: 10-60
 
     Returns:
-        Dictionary containing the processing results and extracted content:
-        
-        On success (status="success"):
-        - status: "success" (string)
-        - url: Final URL after any redirects (string)
-        - title: Page title extracted from HTML <title> tag (string)
-        - description: Meta description from <meta name="description"> (string)
-        - content: Clean markdown content with main page information (string)
-        - word_count: Number of words in the processed content (integer)
-        - original_length: Size of raw HTML in characters (integer)
-        - processed_length: Size of cleaned markdown in characters (integer)
+        str: Formatted markdown content with title and extracted text.
+             Returns error message string if processing fails.
 
-        On error (status="error" or "blocked"):
-        - status: "error" or "blocked" (string)
-        - url: The requested URL (string)
-        - error: Description of what went wrong (string)
-        - suggestion: Recommended next steps for manual verification (string, if blocked)
-        - content: None
+    Note:
+        Modern websites may use anti-bot protection (CloudFlare, reCAPTCHA).
+        JavaScript-heavy sites may not render complete content.
     """
     logger.info(f"process_web_content called: url='{url}', timeout={timeout}")
     
@@ -203,18 +150,19 @@ def process_web_content(url: str, timeout: int = 30) -> str:
 
 @tool
 def extract_urls_from_content(content: str, domain_filter: Optional[str] = None) -> str:
-    """
-    Extract and validate URLs from web content, especially search results.
-    
-    LLMs often struggle with precise URL extraction from messy HTML/markdown content.
-    This tool uses regex patterns to reliably find all URLs and validate them.
-    
+    """Extract and validate URLs from web content using regex patterns.
+
+    Reliably finds URLs in messy HTML/markdown content where LLMs struggle with
+    precise extraction. Handles multiple URL formats and validates results.
+
     Args:
-        content: Text/markdown content to extract URLs from (string)
-        domain_filter: Optional domain to filter results (e.g., ".com", "facebook")
-    
+        content: Text/markdown content to parse for URLs
+        domain_filter: Optional domain substring to filter results.
+                      Example: ".com", "facebook", "linkedin"
+
     Returns:
-        Formatted list of extracted URLs as string
+        str: Formatted numbered list of extracted URLs.
+             Returns "No URLs found" message if none match criteria.
     """
     logger.info(f"extract_urls_from_content called: content_length={len(content)}, domain_filter='{domain_filter}'")
     
@@ -273,17 +221,18 @@ def extract_urls_from_content(content: str, domain_filter: Optional[str] = None)
 
 @tool
 def extract_contact_info(content: str) -> str:
-    """
-    Extract structured contact information from web content.
-    
-    LLMs struggle with precise pattern matching for emails, phones, and addresses.
-    This tool uses specialized regex patterns to reliably find contact details.
-    
+    """Extract structured contact information using specialized regex patterns.
+
+    Reliably finds emails, phone numbers, addresses, and social media links
+    where LLMs struggle with precise pattern matching.
+
     Args:
-        content: Text/markdown content to extract contact info from (string)
-    
+        content: Text/markdown content to parse for contact details
+
     Returns:
-        Structured contact information as formatted string
+        str: Formatted contact information grouped by type (emails, phones, 
+             addresses, social media). Returns "No contact information found"
+             if none detected.
     """
     logger.info(f"extract_contact_info called: content_length={len(content)}")
     
@@ -395,15 +344,6 @@ def extract_contact_info(content: str) -> str:
         logger.error(f"Contact extraction error: {str(e)}")
         return f"**Error**: Contact extraction failed - {str(e)}"
 
-
-# Official strands_tools are now used for:
-# - file_read: Read files and configuration data
-# - file_write: Save research results and reports  
-# - current_time: Timestamp research activities
-#
-# Custom tools specific to QuickResearch_Quinten implemented above:
-# - generate_search_url: Create Google search URLs
-# - process_web_content: Complete URL-to-markdown pipeline
 
 # Export custom functions
 __all__ = ['generate_search_url', 'process_web_content', 'extract_urls_from_content', 'extract_contact_info']
