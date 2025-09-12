@@ -75,30 +75,95 @@ model = AnthropicModel(
 )
 
 
-# Create worker agent tool using proper Strands @tool decorator
+# Create individual worker agent tools using proper Strands @tool decorator
 @tool
-def delegate_to_worker(task_instruction: str) -> str:
+def worker1(task_instruction: str) -> str:
     """
-    Delegate a task to a specialized worker sub-agent.
+    Delegate a task to worker agent #1.
 
     Args:
         task_instruction: Clear instruction for the worker to execute
 
     Returns:
-        Result from the worker agent
+        Result from worker agent #1
     """
     try:
-        # Import worker at runtime to avoid circular imports
-
-        # Execute task with worker agent
         result = worker(task_instruction)
         return str(result)
-
     except Exception as e:
-        return f"Worker agent error: {str(e)}"
+        return f"Worker1 error: {str(e)}"
+
+@tool
+def worker2(task_instruction: str) -> str:
+    """
+    Delegate a task to worker agent #2.
+
+    Args:
+        task_instruction: Clear instruction for the worker to execute
+
+    Returns:
+        Result from worker agent #2
+    """
+    try:
+        result = worker(task_instruction)
+        return str(result)
+    except Exception as e:
+        return f"Worker2 error: {str(e)}"
+
+@tool
+def worker3(task_instruction: str) -> str:
+    """
+    Delegate a task to worker agent #3.
+
+    Args:
+        task_instruction: Clear instruction for the worker to execute
+
+    Returns:
+        Result from worker agent #3
+    """
+    try:
+        result = worker(task_instruction)
+        return str(result)
+    except Exception as e:
+        return f"Worker3 error: {str(e)}"
+
+@tool
+def worker4(task_instruction: str) -> str:
+    """
+    Delegate a task to worker agent #4.
+
+    Args:
+        task_instruction: Clear instruction for the worker to execute
+
+    Returns:
+        Result from worker agent #4
+    """
+    try:
+        result = worker(task_instruction)
+        return str(result)
+    except Exception as e:
+        return f"Worker4 error: {str(e)}"
+
+@tool
+def worker5(task_instruction: str) -> str:
+    """
+    Delegate a task to worker agent #5.
+
+    Args:
+        task_instruction: Clear instruction for the worker to execute
+
+    Returns:
+        Result from worker agent #5
+    """
+    try:
+        result = worker(task_instruction)
+        return str(result)
+    except Exception as e:
+        return f"Worker5 error: {str(e)}"
 
 
-all_tools = tools.append(delegate_to_worker)
+
+all_tools = tools + [worker1, worker2, worker3, worker4, worker5]
 
 
 def create_agent() -> Agent:
