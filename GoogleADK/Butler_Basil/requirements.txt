@@ -1,0 +1,21 @@
+# Google ADK Core Requirements
+google-adk
+basic-open-agent-tools
+python-dotenv
+
+# LLM Integration
+litellm
+ollama
+
+# Agent Communication
+a2a-sdk
+
+# Utilities
+pydantic
+rich
+loguru
+
+# Optional: Web Interface
+fastapi
+uvicorn
+

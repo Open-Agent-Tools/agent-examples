@@ -1,0 +1,15 @@
+# AWS Strands Agent Framework
+strands-agents>=0.1.0
+strands-agents-tools>=0.1.0
+
+# AI Model Provider
+anthropic>=0.34.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Open Agent Tools for CSV and file operations
+basic-open-agent-tools
+
+# Optional: For enhanced file operations
+pathlib2>=2.3.0
