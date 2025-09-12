@@ -56,11 +56,18 @@ Design a workflow for:
 ### Core Orchestration Features
 - **Multi-step Process Management**: Coordinate complex sequences of operations
 - **Dependency Resolution**: Handle task dependencies and execution ordering
-- **Parallel Execution Planning**: Identify opportunities for concurrent operations
+- **Parallel Task Execution**: Use up to 5 worker agents simultaneously for CSV processing and other tasks
 - **Error Recovery**: Implement robust failure handling and recovery strategies
 - **Progress Monitoring**: Track and report on workflow execution status
 
+### CSV Processing with Worker Delegation
+- **Parallel CSV Processing**: Process CSV files using multiple worker agents concurrently
+- **Row-by-row Delegation**: Assign individual CSV rows to specific worker agents
+- **Task Aggregation**: Collect and combine results from all worker agents
+- **Data Validation**: Coordinate data validation across multiple workers
+
 ### Use Cases
+- **CSV Data Processing**: Large-scale data processing with parallel worker delegation
 - **DevOps Workflows**: CI/CD pipeline coordination, deployment orchestration
 - **Data Processing**: Multi-stage data pipelines with validation and error handling
 - **Business Process Automation**: Coordinating tasks across different business systems
@@ -79,22 +86,25 @@ MCP_SERVER_URL=http://localhost:9000/mcp/
 ```
 
 ### Model Configuration
-- **Default Model**: Claude 3.5 Sonnet (claude-3-5-sonnet-20241022)
-- **Max Tokens**: 8192 (suitable for complex orchestration plans)
+- **Orchestrator Model**: Claude 3.5 Sonnet (claude-3-5-sonnet-20241022) for complex orchestration
+- **Worker Model**: Claude 3.5 Haiku (claude-3-5-haiku-20241022) for fast task processing
+- **Max Tokens**: 8192 (orchestrator) / 4096 (workers)
 - **Temperature**: 0.3 (balanced between reliability and creativity)
 
 ## Architecture
 
 ### Core Components
-- **agent.py**: Main agent implementation with Strands framework integration
-- **prompts.py**: Orchestration-specific system prompts and instructions
+- **agent.py**: Main orchestrator with 5 individual worker tools (worker1-worker5)
+- **subagent.py**: Worker sub-agent for delegated task processing
+- **prompts.py**: Orchestration-specific system prompts and CSV processing workflows
+- **test_data.csv**: Test CSV file with 20 fictional universes/music styles
 - **__init__.py**: Module exports and version management
-- **requirements.txt**: Dependency specifications
+- **requirements.txt**: Dependencies including basic-open-agent-tools
 
 ### Available Tools
-- **27 data processing tools** from basic-open-agent-tools (CSV reading, writing, cleaning, validation)
-- **18 file system tools** from basic-open-agent-tools (read/write/move/copy files and directories)  
-- **worker_agent** - Tool for delegating tasks to specialized worker sub-agents
+- **CSV tools** from basic-open-agent-tools (read_csv_simple, write_csv_simple, csv_to_dict_list)
+- **File system tools** from basic-open-agent-tools (read/write/move/copy files and directories)
+- **5 Worker Agents**: worker1, worker2, worker3, worker4, worker5 - Individual tools for parallel task delegation
 - Fallback to strands_tools if basic-open-agent-tools unavailable
 
 ## Example Interactions
@@ -123,25 +133,32 @@ This requires a multi-stage process with validation gates, parallel testing, and
 [Detailed execution plan follows...]
 ```
 
-### Worker Agent Delegation
+### CSV Processing with 5 Worker Agents
 ```
-User: Process this CSV file of customer data - validate emails, standardize phone numbers, and flag duplicates.
+User: Process this CSV file with 20 writing styles - add descriptions for each one.
 
-Ollie: I'll orchestrate this using worker agents:
+Ollie: I'll orchestrate this using 5 worker agents for parallel processing:
 
 ## Analysis
-CSV has 1000 rows of customer data requiring validation and standardization.
+CSV has 20 rows requiring description generation for fictional universes and music styles.
 
 ## Agent Strategy  
-I'll delegate individual rows to worker agents, processing up to 5 concurrent workers.
+I'll assign 4 rows each to worker1-worker5 for simultaneous processing.
 
 ## Execution Plan
-1. Read CSV structure using data processing tools
-2. Delegate each row to worker_agent with specific validation instructions
-3. Workers will validate emails, standardize phones, check for duplicates
-4. Aggregate results and generate summary report
+1. Read CSV data using csv_to_dict_list
+2. Assign rows 1-4 to worker1, 5-8 to worker2, 9-12 to worker3, 13-16 to worker4, 17-20 to worker5
+3. Each worker processes their assigned rows independently
+4. Aggregate all results and save to new CSV file
 
-[Processing begins with worker delegation...]
+Example workflow:
+- worker1: Process "Star Wars", "Harry Potter", "Bruno Mars", "Hobbits"
+- worker2: Process "Marvel Universe", "Game of Thrones", "Taylor Swift", "Lord of the Rings"
+- worker3: Process "The Beatles", "Disney Princess", "Sherlock Holmes", "Ed Sheeran"
+- worker4: Process "Cyberpunk", "Adele", "Pirates of the Caribbean", "Anime"
+- worker5: Process "Beyoncé", "Steampunk", "Johnny Cash", "Western"
+
+[Processing begins with parallel worker delegation...]
 ```
 
 ## Development
@@ -164,11 +181,11 @@ python ../chat_loop.py --agent agent.py
 
 ## Status
 - **Framework**: AWS Strands ✅
-- **Model Integration**: Anthropic Claude ✅
-- **Basic Tools**: File operations, time utilities ✅
-- **Multi-Agent Tools**: Swarm and graph coordination ✅
+- **Model Integration**: Anthropic Claude (Sonnet + Haiku) ✅
+- **BOAT Tools**: CSV and file system operations ✅
+- **5 Worker Agents**: Individual parallel task delegation ✅
 - **Core Orchestration**: Task decomposition and workflow design ✅
-- **Status**: Ready for advanced multi-agent orchestration
+- **Status**: Ready for parallel CSV processing and task orchestration
 
 ## Next Steps
 - Add specialized orchestration tools (task queues, monitoring)

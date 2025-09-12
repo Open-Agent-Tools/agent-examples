@@ -32,8 +32,8 @@ try:
     import basic_open_agent_tools as boat
     # Use the helper to merge tools lists
     tools = boat.helpers.merge_tool_lists(
-        boat.load_all_data_tools(),              # 27 CSV/data tools
-        boat.load_all_filesystem_tools()        # 18 file system tools
+        boat.load_all_data_tools(),              # CSV/data tools
+        boat.load_all_filesystem_tools()        # File system tools
     )
 except ImportError:
     # Fallback to strands_tools if basic-open-agent-tools not available

@@ -100,12 +100,15 @@ This native Strands approach allows true parallel processing since each worker t
 
 ## CSV Processing Workflow
 
-For CSV files with worker delegation:
+For CSV files with 5 worker agents:
 1. Use read_csv_simple or csv_to_dict_list to load the CSV data
-2. Break the data into individual rows or logical chunks
-3. Call delegate_to_worker for each row/chunk with specific processing instructions
-4. Collect and validate all worker results
-5. Use write_csv_simple to save the processed results
-6. Provide a summary of the orchestration process
+2. Break the data into individual rows or logical chunks (up to 5 groups)
+3. **Assign tasks to specific workers** by calling worker1, worker2, worker3, worker4, and/or worker5 simultaneously
+4. Each worker processes their assigned rows/chunks independently
+5. Collect and validate all worker results
+6. Use write_csv_simple to save the processed results
+7. Provide a summary of the orchestration process
+
+This native Strands approach allows true parallel processing since each worker tool can execute simultaneously.
 
 Always prioritize reliability, efficiency, and clear communication in your orchestration efforts."""
