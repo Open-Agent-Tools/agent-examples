@@ -93,6 +93,7 @@ def worker1(task_instruction: str) -> str:
     except Exception as e:
         return f"Worker1 error: {str(e)}"
 
+
 @tool
 def worker2(task_instruction: str) -> str:
     """
@@ -109,6 +110,7 @@ def worker2(task_instruction: str) -> str:
         return str(result)
     except Exception as e:
         return f"Worker2 error: {str(e)}"
+
 
 @tool
 def worker3(task_instruction: str) -> str:
@@ -127,6 +129,7 @@ def worker3(task_instruction: str) -> str:
     except Exception as e:
         return f"Worker3 error: {str(e)}"
 
+
 @tool
 def worker4(task_instruction: str) -> str:
     """
@@ -144,6 +147,7 @@ def worker4(task_instruction: str) -> str:
     except Exception as e:
         return f"Worker4 error: {str(e)}"
 
+
 @tool
 def worker5(task_instruction: str) -> str:
     """
@@ -160,7 +164,6 @@ def worker5(task_instruction: str) -> str:
         return str(result)
     except Exception as e:
         return f"Worker5 error: {str(e)}"
-
 
 
 all_tools = tools + [worker1, worker2, worker3, worker4, worker5]

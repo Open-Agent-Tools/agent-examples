@@ -12,7 +12,7 @@ from strands.models.anthropic import AnthropicModel
 # Load environment variables
 try:
     from dotenv import load_dotenv
-    
+
     # Search current directory and up to 3 parent folders for .env
     current_path = Path(__file__).parent
     env_path = current_path / ".env"
@@ -30,10 +30,11 @@ except ImportError:
 # Import basic open agent tools
 try:
     import basic_open_agent_tools as boat
+
     # Use the helper to merge tools lists
     tools = boat.helpers.merge_tool_lists(
-        boat.load_all_data_tools(),              # CSV/data tools
-        boat.load_all_filesystem_tools()        # File system tools
+        boat.load_all_data_tools(),  # CSV/data tools
+        boat.load_all_filesystem_tools(),  # File system tools
     )
 except ImportError:
     # Fallback to strands_tools if basic-open-agent-tools not available
@@ -41,6 +42,7 @@ except ImportError:
         from strands_tools.file_read import file_read
         from strands_tools.file_write import file_write
         from strands_tools.current_time import current_time
+
         tools = [file_read, file_write, current_time]
     except ImportError:
         tools = []
@@ -54,11 +56,12 @@ model = AnthropicModel(
     max_tokens=4096,
     params={
         "temperature": 0.3,
-    }
+    },
 )
 
 # Simple system prompt for worker agent
 WORKER_SYSTEM_PROMPT = """You are a worker agent."""
+
 
 def create_agent() -> Agent:
     """Create a worker sub-agent."""
@@ -67,8 +70,9 @@ def create_agent() -> Agent:
         description="A worker agent for processing delegated tasks",
         model=model,
         system_prompt=WORKER_SYSTEM_PROMPT,
-        tools=tools
+        tools=tools,
     )
+
 
 # Module-level agent
 root_agent = create_agent()
@@ -78,7 +82,7 @@ if __name__ == "__main__":
     print(f"✓ Agent: {agent.name}")
     print(f"✓ Model: {agent.model}")
     print("✓ Worker Agent ready for delegated tasks")
-    
+
     # Simple test
     try:
         response = agent("Hello! I am ready to work on tasks.")

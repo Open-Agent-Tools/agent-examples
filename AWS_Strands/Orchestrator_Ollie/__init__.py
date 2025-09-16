@@ -1,7 +1,7 @@
 """
 Orchestrator Ollie Agent
 
-A specialized agent for coordinating and orchestrating tasks across 
+A specialized agent for coordinating and orchestrating tasks across
 multiple systems, agents, and workflows.
 """
 
@@ -10,7 +10,7 @@ from .prompts import SYSTEM_PROMPT
 
 __all__ = [
     "create_agent",
-    "root_agent", 
+    "root_agent",
     "SYSTEM_PROMPT",
 ]
 
