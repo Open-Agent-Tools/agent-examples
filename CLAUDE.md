@@ -83,8 +83,23 @@ PYTHONPATH=.:$PYTHONPATH adk eval \
 ```
 
 ### Running Strands Agents
+
+#### Interactive Chat Loop (Recommended)
 ```bash
-# Run Product Pete agent
+# Run any Strands agent with the feature-rich chat loop
+python scripts/strands_chat_loop/chat_loop.py --agent AWS_Strands/Product_Pete/agent.py
+python scripts/strands_chat_loop/chat_loop.py --agent AWS_Strands/Complex_Coding_Clara/agent.py
+
+# With custom config
+python scripts/strands_chat_loop/chat_loop.py --agent <agent> --config ~/.chatrc-custom
+```
+
+**Features:** Command history, token tracking, prompt templates, status bar, session summaries
+**Docs:** See [scripts/strands_chat_loop/README.md](scripts/strands_chat_loop/README.md)
+
+#### Direct Agent Execution
+```bash
+# Run agent directly (basic interface)
 python AWS_Strands/Product_Pete/agent.py
 ```
 
