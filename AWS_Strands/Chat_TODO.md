@@ -4,7 +4,7 @@ This document tracks planned enhancements for the AWS Strands chat loop interfac
 
 ## Status Summary
 
-**Recently Completed (10/27 features):**
+**Recently Completed (11/27 features):**
 - ✅ Command History with Readline (fully working with editing)
 - ✅ Multi-line Input Support
 - ✅ Automatic Error Recovery with Retry Logic
@@ -15,11 +15,12 @@ This document tracks planned enhancements for the AWS Strands chat loop interfac
 - ✅ Configuration File Support
 - ✅ Status Bar (Minimal)
 - ✅ Token/Cost Tracking
+- ✅ Prompt Templates
 
 **Next Up (High Priority):**
 - ⏭️ Save Conversation - Export to markdown
 
-**Total Progress:** 10 of 27 planned features completed (37%)
+**Total Progress:** 11 of 27 planned features completed (41%)
 
 ## High Priority - UX Enhancements
 
@@ -108,11 +109,12 @@ This document tracks planned enhancements for the AWS Strands chat loop interfac
 - [ ] Delete old sessions
 - [ ] Search across sessions
 
-### 14. Prompt Templates
-- [ ] Save reusable prompts
-- [ ] Load template with `/template <name>`
-- [ ] Variable substitution in templates
-- [ ] Share templates between agents
+### 14. Prompt Templates ✅ COMPLETED
+- [x] Save reusable prompts (markdown files in ~/.prompts/)
+- [x] Load template with `/template_name <context>`
+- [x] Variable substitution in templates ({input} placeholder)
+- [x] List templates with `templates` command
+- [x] Share templates between agents (global ~/.prompts/ directory)
 
 ## Low Priority - Nice to Have
 
@@ -280,6 +282,49 @@ This document tracks planned enhancements for the AWS Strands chat loop interfac
 ------------------------------------------------------------
 Time: 2.3s │ Tokens: 1.5K (in: 234, out: 1.3K) │ Cost: $0.0213 │ Session: $0.0789
 ```
+
+### Prompt Templates ✅ (2025-01-08)
+- Markdown-based templates stored in `~/.prompts/` directory
+- Call templates with `/template_name <optional context>`
+- Variable substitution using `{input}` placeholder
+- List available templates with `templates` command
+- First line markdown heading used as template description
+- Shared across all agents (global directory)
+- Auto-creates directory on first use
+
+**Implementation:**
+- Templates are standard markdown files with `.md` extension
+- Variable `{input}` replaced with provided context
+- If no `{input}` placeholder, context appended to template
+- Templates listed with descriptions from first `#` line
+
+**Example Templates:**
+```markdown
+# Code review
+Please review the following code for:
+- Best practices and design patterns
+- Potential bugs or edge cases
+{input}
+```
+
+**Usage:**
+```
+You: templates
+Available Prompt Templates (3):
+  /review - Code review
+  /explain - Explain code
+  /debug - Debug assistance
+
+You: /review def foo(): return bar
+✓ Loaded template: review
+[Sends "Please review the following code for... def foo(): return bar"]
+```
+
+**Design Decisions:**
+- Markdown format for rich formatting and readability
+- Global `~/.prompts/` location for sharing across projects
+- Simple `/name` syntax (no `/template` prefix needed)
+- Automatic variable substitution with fallback to appending
 
 ### Configuration File Support ✅ (2025-01-08)
 - Comprehensive configuration system with YAML format

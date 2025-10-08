@@ -443,6 +443,9 @@ class ChatLoop:
         # Setup rich console if available and enabled
         self.console = Console() if self.use_rich else None
 
+        # Setup prompt templates directory
+        self.prompts_dir = Path.home() / '.prompts'
+
         # Extract agent metadata
         self.agent_metadata = self._extract_agent_metadata()
 
@@ -582,11 +585,13 @@ class ChatLoop:
 
         print()
         print("Commands:")
-        print("  help   - Show this help message")
-        print("  info   - Show detailed agent information")
-        print("  clear  - Clear screen and reset agent session")
-        print("  quit   - Exit the chat")
-        print("  exit   - Exit the chat")
+        print("  help      - Show this help message")
+        print("  info      - Show detailed agent information")
+        print("  templates - List available prompt templates")
+        print("  /name     - Use prompt template from ~/.prompts/name.md")
+        print("  clear     - Clear screen and reset agent session")
+        print("  quit      - Exit the chat")
+        print("  exit      - Exit the chat")
         print()
         print("Features:")
         if READLINE_AVAILABLE:
@@ -614,11 +619,19 @@ class ChatLoop:
         print(f"Description: {self.agent_description}")
         print()
         print("Commands:")
-        print("  help   - Show this help message")
-        print("  info   - Show detailed agent information")
-        print("  clear  - Clear screen and reset agent session")
-        print("  quit   - Exit the chat")
-        print("  exit   - Exit the chat")
+        print("  help      - Show this help message")
+        print("  info      - Show detailed agent information")
+        print("  templates - List available prompt templates")
+        print("  /name     - Use prompt template from ~/.prompts/name.md")
+        print("  clear     - Clear screen and reset agent session")
+        print("  quit      - Exit the chat")
+        print("  exit      - Exit the chat")
+        print()
+        print("Prompt Templates:")
+        print("  Create: Save markdown files to ~/.prompts/name.md")
+        print("  Use: Type /name <optional context>")
+        print("  Variables: Use {input} in template for substitution")
+        print("  Example: /review {input} → replaces {input} with context")
         print()
         print("Multi-line Input:")
         print("  Type \\\\ to start multi-line mode")
@@ -1056,6 +1069,55 @@ class ChatLoop:
                     logger.error(f"Non-retryable error: {e}", exc_info=True)
                     raise
 
+    def load_template(self, template_name: str, input_text: str = "") -> Optional[str]:
+        """
+        Load a prompt template from ~/.prompts/{template_name}.md
+
+        Args:
+            template_name: Name of the template (without .md extension)
+            input_text: Text to substitute for {input} placeholder
+
+        Returns:
+            Processed template text, or None if template not found
+        """
+        template_path = self.prompts_dir / f"{template_name}.md"
+
+        if not template_path.exists():
+            return None
+
+        try:
+            with open(template_path, 'r', encoding='utf-8') as f:
+                template = f.read()
+
+            # Replace {input} placeholder with provided text
+            if '{input}' in template:
+                template = template.replace('{input}', input_text)
+            elif input_text:
+                # If no {input} placeholder but input provided, append it
+                template = f"{template}\n\n{input_text}"
+
+            return template
+
+        except Exception as e:
+            logger.error(f"Error loading template {template_name}: {e}")
+            return None
+
+    def list_templates(self) -> List[str]:
+        """
+        List available prompt templates from ~/.prompts/
+
+        Returns:
+            List of template names (without .md extension)
+        """
+        if not self.prompts_dir.exists():
+            return []
+
+        templates = []
+        for file in self.prompts_dir.glob('*.md'):
+            templates.append(file.stem)
+
+        return sorted(templates)
+
     def display_session_summary(self):
         """Display session summary on exit."""
         session_duration = time.time() - self.session_start_time
@@ -1124,6 +1186,51 @@ class ChatLoop:
                     elif user_input.lower() == "info":
                         self.display_info()
                         continue
+                    elif user_input.lower() == "templates":
+                        # List available prompt templates
+                        templates = self.list_templates()
+                        if templates:
+                            print(f"\n{Colors.system('Available Prompt Templates')} ({len(templates)}):")
+                            print(f"{Colors.DIM}{'-' * 60}{Colors.RESET}")
+                            for template in templates:
+                                template_path = self.prompts_dir / f"{template}.md"
+                                # Read first line for description if available
+                                try:
+                                    with open(template_path, 'r', encoding='utf-8') as f:
+                                        first_line = f.readline().strip()
+                                        # If first line is a comment, use it as description
+                                        if first_line.startswith('#'):
+                                            desc = first_line.lstrip('#').strip()
+                                            print(f"  /{Colors.SUCCESS}{template}{Colors.RESET} - {Colors.DIM}{desc}{Colors.RESET}")
+                                        else:
+                                            print(f"  /{Colors.SUCCESS}{template}{Colors.RESET}")
+                                except:
+                                    print(f"  /{Colors.SUCCESS}{template}{Colors.RESET}")
+                            print(f"{Colors.DIM}{'-' * 60}{Colors.RESET}")
+                            print(Colors.system(f"Usage: /template_name <optional context>"))
+                            print(Colors.system(f"Location: {self.prompts_dir}"))
+                        else:
+                            print(f"\n{Colors.system('No prompt templates found')}")
+                            print(f"Create templates in: {self.prompts_dir}")
+                            print(f"Example: {self.prompts_dir}/review.md")
+                        continue
+                    elif user_input.startswith('/') and len(user_input) > 1:
+                        # Template command: /template_name <optional input>
+                        parts = user_input[1:].split(maxsplit=1)
+                        template_name = parts[0]
+                        input_text = parts[1] if len(parts) > 1 else ""
+
+                        # Try to load template
+                        template = self.load_template(template_name, input_text)
+                        if template:
+                            print(Colors.system(f"✓ Loaded template: {template_name}"))
+                            # Use the template as the user input
+                            user_input = template
+                        else:
+                            print(Colors.error(f"Template not found: {template_name}"))
+                            print(f"Available templates: {', '.join(self.list_templates()) or 'none'}")
+                            print(f"Create at: {self.prompts_dir}/{template_name}.md")
+                            continue
                     elif user_input.lower() == "clear":
                         # Clear screen (cross-platform)
                         os.system('clear' if os.name != 'nt' else 'cls')
