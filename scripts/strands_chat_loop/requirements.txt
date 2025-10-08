@@ -1,0 +1,12 @@
+# Strands Chat Loop Requirements
+# Interactive chat interface for AWS Strands agents
+
+# Core dependencies
+anthropic-bedrock>=0.10.0  # AWS Bedrock integration for Claude
+pyyaml>=6.0.1              # Configuration file parsing (.chatrc)
+
+# Optional but recommended
+rich>=13.7.0               # Enhanced terminal formatting and markdown rendering
+
+# Note: readline is built-in to Python on Unix systems
+# Windows users may need pyreadline3 for command history support

@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 """
-Generic Chat Loop for AWS Strands Agents
+Strands Chat Loop - Interactive CLI for AWS Strands Agents
 
-A unified chat interface that can run any Strands agent by importing the
-root_agent from the specified agent module.
+A feature-rich, unified chat interface for any Strands agent with token tracking,
+prompt templates, configuration management, and extensive UX enhancements.
 
 Features:
 - Async streaming support with real-time response display
 - Command history with readline (↑↓ to navigate, saved to ~/.chat_history)
 - Multi-line input support (type \\\\ to enter multi-line mode)
-- Automatic error recovery with retry logic (timeouts, connection errors, rate limits)
-- Color-coded output for better readability
+- Token tracking and cost estimation per query and session
+- Prompt templates from ~/.prompts/ with variable substitution
 - Configuration file support (~/.chatrc or .chatrc in project root)
-- Graceful error handling
+- Status bar with real-time metrics (queries, tokens, duration)
+- Session summary on exit with full statistics
+- Automatic error recovery with retry logic
+- Rich markdown rendering with syntax highlighting
+- Agent metadata display (model, tools, capabilities)
 
 Usage:
-    python AWS_Strands/chat_loop.py --agent AWS_Strands/Product_Pete/agent.py
-    python AWS_Strands/chat_loop.py --agent AWS_Strands/DeepResearch_Dave/agent.py
+    python scripts/strands_chat_loop/chat_loop.py --agent AWS_Strands/Product_Pete/agent.py
+    python scripts/strands_chat_loop/chat_loop.py --agent AWS_Strands/DeepResearch_Dave/agent.py
+    python scripts/strands_chat_loop/chat_loop.py --agent <agent_path> --config ~/.chatrc-custom
 """
 
 import argparse
