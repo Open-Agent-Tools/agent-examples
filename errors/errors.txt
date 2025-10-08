@@ -1,0 +1,152 @@
+
+[2025-10-08T13:28:41.258297] Python REPL Error:
+Code:
+def hello_fast_coder():
+    return "Hello from Fast Coder"
+
+hello_fast_coder()
+Error:
+Traceback (most recent call last):
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/python_repl.py", line 595, in python_repl
+    user_input = get_user_input(
+        "<yellow><bold>Do you want to proceed with Python code execution?</bold> [y/*]</yellow>"
+    )
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 70, in get_user_input
+    result = loop.run_until_complete(get_user_input_async(prompt, default, keyboard_interrupt_return_default))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 44, in get_user_input_async
+    return await _get_input()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 35, in _get_input
+    response = await session.prompt_async(HTML(f"{prompt} "))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/shortcuts/prompt.py", line 1229, in prompt_async
+    return await self.app.run_async(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        set_exception_handler=set_exception_handler, handle_sigint=handle_sigint
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/application/application.py", line 651, in run_async
+    assert not self._is_running, "Application is already running."
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: Application is already running.
+
+
+[2025-10-08T13:28:42.557578] Python REPL Error:
+Code:
+import pandas as pd
+
+# Assuming 'data.csv' is the file to be read
+file_path = 'data.csv'
+
+# Using the read_csv_simple tool to read the CSV file
+data = read_csv_simple(file_path=file_path, delimiter=',', headers=True)
+
+# Convert the list of dictionaries to a pandas DataFrame
+df = pd.DataFrame(data)
+
+df.head()
+Error:
+Traceback (most recent call last):
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/python_repl.py", line 595, in python_repl
+    user_input = get_user_input(
+        "<yellow><bold>Do you want to proceed with Python code execution?</bold> [y/*]</yellow>"
+    )
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 70, in get_user_input
+    result = loop.run_until_complete(get_user_input_async(prompt, default, keyboard_interrupt_return_default))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 44, in get_user_input_async
+    return await _get_input()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 35, in _get_input
+    response = await session.prompt_async(HTML(f"{prompt} "))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/shortcuts/prompt.py", line 1229, in prompt_async
+    return await self.app.run_async(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        set_exception_handler=set_exception_handler, handle_sigint=handle_sigint
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/application/application.py", line 651, in run_async
+    assert not self._is_running, "Application is already running."
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: Application is already running.
+
+
+[2025-10-08T13:28:44.210506] Python REPL Error:
+Code:
+def hello_fast_coder():
+    return "Hello from Fast Coder"
+
+hello_fast_coder()
+Error:
+Traceback (most recent call last):
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/python_repl.py", line 595, in python_repl
+    user_input = get_user_input(
+        "<yellow><bold>Do you want to proceed with Python code execution?</bold> [y/*]</yellow>"
+    )
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 70, in get_user_input
+    result = loop.run_until_complete(get_user_input_async(prompt, default, keyboard_interrupt_return_default))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 44, in get_user_input_async
+    return await _get_input()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 35, in _get_input
+    response = await session.prompt_async(HTML(f"{prompt} "))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/shortcuts/prompt.py", line 1229, in prompt_async
+    return await self.app.run_async(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        set_exception_handler=set_exception_handler, handle_sigint=handle_sigint
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/application/application.py", line 651, in run_async
+    assert not self._is_running, "Application is already running."
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: Application is already running.
+
+
+[2025-10-08T13:28:47.287464] Python REPL Error:
+Code:
+def hello_fast_coder():
+    return "Hello from Fast Coder"
+
+hello_fast_coder()
+Error:
+Traceback (most recent call last):
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/python_repl.py", line 595, in python_repl
+    user_input = get_user_input(
+        "<yellow><bold>Do you want to proceed with Python code execution?</bold> [y/*]</yellow>"
+    )
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 70, in get_user_input
+    result = loop.run_until_complete(get_user_input_async(prompt, default, keyboard_interrupt_return_default))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 44, in get_user_input_async
+    return await _get_input()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/strands_tools/utils/user_input.py", line 35, in _get_input
+    response = await session.prompt_async(HTML(f"{prompt} "))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/shortcuts/prompt.py", line 1229, in prompt_async
+    return await self.app.run_async(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        set_exception_handler=set_exception_handler, handle_sigint=handle_sigint
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/wes/Development/agent-examples/.venv/lib/python3.13/site-packages/prompt_toolkit/application/application.py", line 651, in run_async
+    assert not self._is_running, "Application is already running."
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: Application is already running.
+

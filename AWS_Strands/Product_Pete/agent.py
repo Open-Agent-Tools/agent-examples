@@ -17,14 +17,17 @@ except ImportError:
 # Load environment variables from .env file
 from dotenv import load_dotenv
 
-# Load .env file from current directory only
-current_dir = Path(__file__).parent
-env_file = current_dir / ".env"
-if env_file.exists():
-    load_dotenv(env_file)
-else:
-    # Also try loading from default location if current dir doesn't have it
-    load_dotenv()
+# Search for .env up to 3 levels up (to find root .env)
+env_loaded = False
+for i in range(3):
+    env_path = Path(__file__).parents[i] / ".env"
+    if env_path.exists():
+        load_dotenv(env_path, override=False)  # Don't override if already set
+        env_loaded = True
+        break
+
+if not env_loaded:
+    load_dotenv(override=False)  # Try default location
 
 # Setup simplified logging (warn/debug/error only)
 logging.basicConfig(

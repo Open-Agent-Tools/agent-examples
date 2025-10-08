@@ -10,21 +10,21 @@ from pathlib import Path
 from strands import Agent, tool
 from strands.models.anthropic import AnthropicModel
 
-# Load environment variables
+# Load environment variables - search up to 3 parent folders for root .env
 try:
     from dotenv import load_dotenv
 
-    # Search current directory and up to 3 parent folders for .env
-    current_path = Path(__file__).parent
-    env_path = current_path / ".env"
-    if env_path.exists():
-        load_dotenv(env_path)
-    else:
-        for i in range(min(3, len(Path(__file__).parents))):
-            env_path = Path(__file__).parents[i] / ".env"
-            if env_path.exists():
-                load_dotenv(env_path)
-                break
+    # Search up to 3 levels up (to find root .env)
+    env_loaded = False
+    for i in range(3):
+        env_path = Path(__file__).parents[i] / ".env"
+        if env_path.exists():
+            load_dotenv(env_path, override=False)  # Don't override if already set
+            env_loaded = True
+            break
+
+    if not env_loaded:
+        load_dotenv(override=False)  # Try default location
 except ImportError:
     pass
 
