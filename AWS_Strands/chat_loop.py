@@ -154,15 +154,28 @@ def setup_readline_history():
 
     # Enable tab completion and better editing
     try:
-        # Parse readline init file if it exists
-        readline.parse_and_bind("tab: complete")
+        # Suppress CPR warning by redirecting stderr temporarily
+        import sys
+        old_stderr = sys.stderr
+        sys.stderr = open(os.devnull, 'w')
 
-        # Enable vi or emacs mode (emacs is default)
-        readline.parse_and_bind("set editing-mode emacs")
+        try:
+            # Parse readline init file if it exists
+            readline.parse_and_bind("tab: complete")
 
-        # Enable better line editing
-        readline.parse_and_bind("set show-all-if-ambiguous on")
-        readline.parse_and_bind("set completion-ignore-case on")
+            # Enable vi or emacs mode (emacs is default)
+            readline.parse_and_bind("set editing-mode emacs")
+
+            # Disable horizontal scroll to prevent CPR check
+            readline.parse_and_bind("set horizontal-scroll-mode off")
+
+            # Enable better line editing
+            readline.parse_and_bind("set show-all-if-ambiguous on")
+            readline.parse_and_bind("set completion-ignore-case on")
+        finally:
+            # Restore stderr
+            sys.stderr.close()
+            sys.stderr = old_stderr
     except Exception as e:
         logger.debug(f"Could not configure readline: {e}")
 
