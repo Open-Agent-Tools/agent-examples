@@ -945,7 +945,17 @@ class ChatLoop:
                         cycle_count = metrics.cycle_count
                     if hasattr(metrics, 'tool_metrics') and metrics.tool_metrics:
                         # Count total tool calls across all tools
-                        tool_count = sum(len(calls) for calls in metrics.tool_metrics.values()) if isinstance(metrics.tool_metrics, dict) else len(metrics.tool_metrics)
+                        try:
+                            if isinstance(metrics.tool_metrics, dict):
+                                tool_count = sum(len(calls) for calls in metrics.tool_metrics.values())
+                            elif hasattr(metrics.tool_metrics, '__len__'):
+                                tool_count = len(metrics.tool_metrics)
+                            elif hasattr(metrics.tool_metrics, '__dict__'):
+                                # ToolMetrics object - count attributes that look like tool calls
+                                tool_count = len([k for k in metrics.tool_metrics.__dict__.keys() if not k.startswith('_')])
+                        except Exception as e:
+                            logger.debug(f"Could not extract tool count: {e}")
+                            tool_count = None
 
             # Track tokens (always, for session summary)
             if usage_info:
