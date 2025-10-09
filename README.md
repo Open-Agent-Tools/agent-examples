@@ -19,19 +19,6 @@ Practical AI agent implementations across multiple frameworks with specialized a
 
 ## Quick Start
 
-**Automated Installation (Recommended):**
-```bash
-# Clone repository
-git clone <repository-url>
-cd agent-examples
-
-# Run installation script
-./install.sh           # Linux/macOS/Git Bash
-# or
-python install.py      # Cross-platform Python script
-
-# Edit .env and add your API keys
-```
 
 **Manual Installation:**
 ```bash
@@ -51,13 +38,7 @@ cd GoogleADK && adk web
 cd AWS_Strands/DeepResearch_Dave && uv run python agent.py
 ```
 
-## Key Features
 
-- **Production-Ready** - 71.4% success rate across all agents
-- **Multi-Model Support** - Anthropic, OpenAI, Google, local models
-- **Cost Optimization** - Local model integration via Ollama
-- **MCP Integration** - Web search, Atlassian, Context7 tools
-- **Specialized Tasks** - File ops, research, project management
 
 ## Environment Setup
 
@@ -78,5 +59,4 @@ OLLAMA_BASE_URL=http://localhost:11434
 ## Documentation
 
 - **[CLAUDE.md](CLAUDE.md)** - Comprehensive development guide
-- **[INSTALL.md](INSTALL.md)** - Detailed installation options
 - Individual agent READMEs in framework directories
