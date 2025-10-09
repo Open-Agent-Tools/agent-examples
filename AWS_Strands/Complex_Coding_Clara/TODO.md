@@ -1,396 +1,426 @@
 # Complex Coding Clara - Implementation TODO
 
-Implementation roadmap for a multi-agent coding system based on the architecture defined in `coding-agent-architecture.md`.
+**Current Status:** ✅ **Phases 1-6 Complete** - All 14 agents operational with 3-tier cost optimization
 
-## Architecture Overview
+This TODO tracks remaining enhancements and optimizations for the Clara multi-agent coding system.
 
-Clara is a **meta-orchestrator** that coordinates 7 specialized coding agents using intelligent routing, multi-agent patterns (Graph/Swarm), and cost optimization.
+## Current State (January 2025)
 
----
+**✅ Completed:**
+- 14 specialist agents implemented and operational (100% success rate)
+- 3-tier cost-optimized model distribution (54% cost savings)
+- Agents-as-tools pattern across all agents
+- Basic tool integration (strands-tools + basic-open-agent-tools)
+- MCP integrations: Atlassian (Agile Specialist), Context7 (Doc Research)
+- Configuration validation and health monitoring systems
+- http_request tool added to Web Specialist and Doc Research Specialist
 
-## Implementation Phases
-
-### Phase 1: Core Infrastructure & Specialist Agents
-
-#### 1.1 Project Structure
-- [ ] Create directory structure:
-  ```
-  Complex_Coding_Clara/
-  ├── agent.py              # Main orchestrator (Clara)
-  ├── prompts.py            # System prompts for all agents
-  ├── agents/               # Specialist agent modules
-  │   ├── __init__.py
-  │   ├── architect.py      # Opus 4.1
-  │   ├── senior_coder.py   # Sonnet 4.5
-  │   ├── fast_coder.py     # Nova Pro
-  │   ├── test_engineer.py  # Llama 3.3 70B
-  │   ├── code_reviewer.py  # Nova Pro/Haiku
-  │   ├── debug_agent.py    # Sonnet 4.5
-  │   └── documentation.py  # Nova Lite
-  ├── router.py             # Request classifier (Nova Micro)
-  ├── tools/                # Shared tools
-  │   ├── __init__.py
-  │   ├── file_tools.py
-  │   ├── git_tools.py
-  │   └── code_analysis.py
-  ├── requirements.txt
-  ├── __init__.py
-  └── README.md
-  ```
-
-#### 1.2 Model Configuration
-- [ ] Set up Anthropic models:
-  - [ ] Claude Opus 4.1 (Architect) - `claude-opus-4-20250514`
-  - [ ] Claude Sonnet 4.5 (Senior Coder, Debug) - `claude-sonnet-4-20250514`
-  - [ ] Claude Haiku (Code Reviewer fallback) - `claude-3-5-haiku-20241022`
-- [ ] Research AWS Bedrock Nova models availability:
-  - [ ] Nova Micro (Router)
-  - [ ] Nova Lite (Documentation)
-  - [ ] Nova Pro (Fast Coder, Code Reviewer)
-- [ ] Research Llama 3.3 70B access (Test Engineer)
-- [ ] Create model factory pattern for easy switching
-
-#### 1.3 Request Router
-- [ ] Implement `router.py`:
-  - [ ] Task complexity classifier (SIMPLE → MEDIUM → COMPLEX → CRITICAL)
-  - [ ] Use Nova Micro or Claude Haiku as fallback
-  - [ ] Return routing decision with confidence score
-  - [ ] Log routing decisions for analysis
-
-#### 1.4 Specialist Agents - Individual Implementation
-
-**Architect Agent** (`agents/architect.py`)
-- [ ] Use Claude Opus 4.1
-- [ ] System prompt for architecture decisions
-- [ ] Capabilities:
-  - [ ] System design & architecture patterns
-  - [ ] Technology stack selection
-  - [ ] Database schema design
-  - [ ] Critical path analysis
-- [ ] Implement as `@tool` for orchestrator
-
-**Senior Coder Agent** (`agents/senior_coder.py`)
-- [ ] Use Claude Sonnet 4.5
-- [ ] System prompt for complex coding
-- [ ] Capabilities:
-  - [ ] Complex algorithms & data structures
-  - [ ] Performance optimization
-  - [ ] Advanced refactoring
-  - [ ] Multi-step problem solving
-- [ ] Implement as `@tool` for orchestrator
-
-**Fast Coder Agent** (`agents/fast_coder.py`)
-- [ ] Use Nova Pro (or Sonnet 4.5 fallback)
-- [ ] System prompt for standard coding tasks
-- [ ] Capabilities:
-  - [ ] CRUD operations & API endpoints
-  - [ ] Boilerplate code generation
-  - [ ] Standard design patterns
-  - [ ] Simple function implementations
-- [ ] Implement as `@tool` for orchestrator
-
-**Test Engineer Agent** (`agents/test_engineer.py`)
-- [ ] Use Llama 3.3 70B (or Sonnet 4.5 fallback)
-- [ ] System prompt for test generation
-- [ ] Capabilities:
-  - [ ] Unit test generation
-  - [ ] Integration test scaffolding
-  - [ ] Test case design & coverage
-  - [ ] Edge case identification
-- [ ] Implement as `@tool` for orchestrator
-
-**Code Reviewer Agent** (`agents/code_reviewer.py`)
-- [ ] Use Nova Pro (primary) + Claude Haiku (fallback)
-- [ ] System prompt for code review
-- [ ] Capabilities:
-  - [ ] Style & convention checks
-  - [ ] Logic & correctness review
-  - [ ] Security vulnerability scanning
-  - [ ] Best practice enforcement
-- [ ] Implement as `@tool` for orchestrator
-
-**Debug Agent** (`agents/debug_agent.py`)
-- [ ] Use Claude Sonnet 4.5
-- [ ] System prompt for debugging
-- [ ] Capabilities:
-  - [ ] Error message interpretation
-  - [ ] Stack trace analysis
-  - [ ] Root cause identification
-  - [ ] Fix strategy generation
-- [ ] Implement as `@tool` for orchestrator
-
-**Documentation Agent** (`agents/documentation.py`)
-- [ ] Use Nova Lite (or Haiku fallback)
-- [ ] System prompt for documentation
-- [ ] Capabilities:
-  - [ ] Docstring generation
-  - [ ] README creation & updates
-  - [ ] API documentation
-  - [ ] Inline comment insertion
-- [ ] Implement as `@tool` for orchestrator
+**See [STATUS.md](STATUS.md) for complete implementation details.**
 
 ---
 
-### Phase 2: Multi-Agent Patterns
+## Remaining Work
 
-#### 2.1 Graph Pattern (Deterministic Workflows)
+### Priority 0 (Critical - High Impact, Low Effort)
+
+#### Custom Tools - Structured Test Output
+**Impact:** Test Engineer can't parse test results → manual analysis required
+- [ ] Create `run_pytest()` wrapper that:
+  - Executes pytest with `--json-report` flag
+  - Parses JSON output into structured format
+  - Returns: passed/failed counts, coverage %, specific failures
+  - Error handling for missing pytest-json-report plugin
+- [ ] Add to Test Engineer agent tools
+- [ ] Update Test Engineer prompt to use structured output
+
+**Files:** `tools/testing_tools.py`, `agents/test_engineer/agent.py`
+
+---
+
+#### Custom Tools - Git Write Operations
+**Impact:** Can't create commits, branches, PRs → manual git operations required
+- [ ] Create `git_commit()` wrapper:
+  - Stage files with validation
+  - Create commit with message
+  - Return commit hash and summary
+  - Error handling for conflicts
+- [ ] Create `git_branch()` wrapper:
+  - Create/switch branches
+  - Check branch existence
+  - Handle conflicts
+- [ ] Create `git_push()` wrapper with safety checks
+- [ ] Add to relevant agents (Senior Coder, Fast Coder, Debug)
+- [ ] Update prompts to document git write capabilities
+
+**Files:** `tools/git_tools.py`, multiple agent files
+
+---
+
+#### Intelligence - Cost Tracking
+**Impact:** No visibility into actual costs → can't validate savings claims
+- [ ] Implement token usage logging per agent call
+- [ ] Calculate cost using model pricing:
+  - Sonnet 4.5: $3/$15 per million
+  - Haiku 3.5: $0.80/$4 per million
+  - Nova Pro: $0.80/$3.20 per million
+  - Llama 3.3: $0.99/$0.99 per million
+  - Nova Lite: $0.075/$0.30 per million
+- [ ] Log to file or database per request
+- [ ] Create summary report function
+- [ ] Add to Clara orchestrator
+
+**Files:** `agent.py`, `tools/cost_tracking.py`
+
+---
+
+### Priority 1 (Important - High Impact, Medium Effort)
+
+#### Custom Tools - Static Analysis JSON Parsers
+**Impact:** Linting/type checking via shell only → no structured feedback
+- [ ] Create `run_ruff_check()` wrapper:
+  - Execute `ruff check --output-format=json`
+  - Parse JSON output
+  - Return structured errors by file/line
+- [ ] Create `run_mypy()` wrapper:
+  - Execute `mypy --output=json`
+  - Parse JSON output
+  - Return type errors by file/line
+- [ ] Add to Code Reviewer agent
+- [ ] Update Code Reviewer prompt
+
+**Files:** `tools/static_analysis_tools.py`, `agents/code_reviewer/agent.py`
+
+---
+
+#### Custom Tools - Secret Detection
+**Impact:** Security risk - can't scan for leaked secrets
+- [ ] Create `scan_secrets()` tool:
+  - Regex patterns for common secrets (API keys, tokens, passwords)
+  - Integration with truffleHog or detect-secrets (optional)
+  - Return: file, line, secret type, severity
+- [ ] Add to Code Reviewer agent
+- [ ] Update Code Reviewer prompt for security scanning
+
+**Files:** `tools/security_tools.py`, `agents/code_reviewer/agent.py`
+
+---
+
+#### Custom Tools - AST Parsing
+**Impact:** Can't analyze code structure programmatically
+- [ ] Create `parse_ast()` tool:
+  - Use Python `ast` module for Python code
+  - Support for function/class extraction
+  - Return: functions, classes, imports, complexity hints
+- [ ] Create `analyze_complexity()` tool:
+  - McCabe complexity calculation
+  - Lines of code metrics
+  - Return: complexity score, refactoring candidates
+- [ ] Add to Senior Coder and Code Reviewer agents
+- [ ] Update prompts
+
+**Files:** `tools/ast_tools.py`, multiple agent files
+
+---
+
+#### Intelligence - Router Agent (Nova Micro)
+**Impact:** Clara manually decides routing → no automatic task classification
+- [ ] Create Router agent with Nova Micro:
+  - Task complexity classifier (SIMPLE → MEDIUM → COMPLEX → CRITICAL)
+  - Return: recommended agent(s), confidence score, reasoning
+  - Use Nova Micro for cost optimization
+- [ ] Integrate into Clara orchestrator:
+  - Query router before delegating
+  - Allow override for low confidence
+  - Log routing decisions for analysis
+- [ ] Track routing accuracy over time
+
+**Files:** `agents/router/agent.py`, `agent.py`
+
+---
+
+#### Intelligence - Prompt Caching
+**Impact:** Missing 40%+ potential cost savings on repeated prompts
+- [ ] Implement prompt caching for:
+  - Agent system prompts (cached per agent)
+  - Project context (file structures, common imports)
+  - Tool definitions (cached per agent)
+- [ ] Use AWS Bedrock caching features (if available)
+- [ ] Track cache hit rates
+- [ ] Implement cache invalidation strategy:
+  - Time-based (e.g., 5 minutes)
+  - Content-based (hash of prompt)
+
+**Files:** `agent.py`, all agent files in `agents/*/agent.py`
+
+---
+
+#### Orchestration - Graph Pattern
+**Impact:** Sequential execution only → can't optimize workflows
 - [ ] Implement `patterns/graph_pattern.py`:
-  - [ ] Sequential workflow: Router → Agent → Test → Review → Documentation
-  - [ ] Use Strands `GraphBuilder`
-  - [ ] Add conditional branching (e.g., if review fails, return to coder)
-  - [ ] Support for parallel execution where appropriate
+  - Use Strands `GraphBuilder` (if available)
+  - Define standard workflow: Code → Test → Review → Doc
+  - Add conditional branching:
+    - If review fails → return to coder with feedback
+    - If tests fail → return to coder with error details
+  - Support parallel execution where possible
+- [ ] Integrate into Clara orchestrator
+- [ ] Add workflow selection logic
 
-**Example Graph Flow:**
+**Example Flow:**
 ```
-User Request → Router → [Architect/Senior/Fast Coder] → Test Engineer → Code Reviewer → Documentation → Output
-                                                                              ↓ (if issues)
-                                                                         Back to Coder
+User Request → Clara
+              ↓
+         [Coder Agent] → Test Engineer → Code Reviewer → Documentation
+                            ↓ fail          ↓ fail
+                         Back to Coder   Back to Coder
 ```
 
-#### 2.2 Swarm Pattern (Exploratory Collaboration)
+**Files:** `patterns/graph_pattern.py`, `agent.py`
+
+---
+
+#### Orchestration - Conditional Branching
+**Impact:** No retry logic on failures → manual intervention required
+- [ ] Implement retry logic for:
+  - Test failures → send errors back to coder
+  - Review issues → send feedback back to coder
+  - Build failures → send logs to debug agent
+- [ ] Add max retry limit (e.g., 3 attempts)
+- [ ] Track retry success rates
+
+**Files:** `agent.py`, `patterns/graph_pattern.py`
+
+---
+
+### Priority 2 (Enhancement - Medium Impact, Medium-High Effort)
+
+#### Custom Tools - Profiling & Performance
+**Impact:** Can't identify performance bottlenecks
+- [ ] Create `profile_code()` tool:
+  - Integrate cProfile
+  - Run code with profiling
+  - Return: top functions by time, call counts
+- [ ] Create `detect_memory_leaks()` tool:
+  - Integration with memory_profiler or tracemalloc
+  - Return: memory usage over time, leak candidates
+- [ ] Add to Debug agent
+- [ ] Update Debug prompt
+
+**Files:** `tools/profiling_tools.py`, `agents/debug/agent.py`
+
+---
+
+#### Custom Tools - LSP Integration
+**Impact:** Missing type hints, autocomplete context, go-to-definition
+- [ ] Research LSP libraries (pylsp, pyright, jedi)
+- [ ] Create `get_type_info()` tool:
+  - Query LSP server for type at position
+  - Return: type, documentation, signature
+- [ ] Create `find_references()` tool:
+  - Find all references to symbol
+  - Return: file, line, context
+- [ ] Add to Senior Coder and Python Specialist
+- [ ] Requires LSP server running (separate process)
+
+**Files:** `tools/lsp_tools.py`, multiple agent files
+
+---
+
+#### Domain Tools - Database Specialist
+**Impact:** No query optimization guidance
+- [ ] Create `analyze_query_plan()` tool:
+  - Execute EXPLAIN/EXPLAIN ANALYZE
+  - Parse output for slow operations
+  - Return: scan types, index usage, recommendations
+- [ ] Create `suggest_indexes()` tool:
+  - Analyze query patterns
+  - Suggest missing indexes
+  - Estimate impact
+- [ ] Add to Database Specialist
+- [ ] Update Database Specialist prompt
+
+**Files:** `tools/database_tools.py`, `agents/database_specialist/agent.py`
+
+---
+
+#### Domain Tools - DevOps Specialist
+**Impact:** No validation for K8s/Terraform configs
+- [ ] Create `validate_k8s_manifest()` tool:
+  - Use kubeval or kubectl --dry-run
+  - Return: validation errors, warnings
+- [ ] Create `terraform_plan()` wrapper:
+  - Execute terraform plan
+  - Parse output for changes
+  - Return: resources to add/change/destroy
+- [ ] Add to DevOps Specialist
+- [ ] Update DevOps Specialist prompt
+
+**Files:** `tools/devops_tools.py`, `agents/devops_specialist/agent.py`
+
+---
+
+#### Intelligence - Metrics Dashboard
+**Impact:** Can't measure agent performance over time
+- [ ] Create metrics collection:
+  - Success/failure rates per agent
+  - Average response time per agent
+  - Cost per task type
+  - Routing accuracy (if router implemented)
+- [ ] Create dashboard (web-based or CLI):
+  - Summary statistics
+  - Agent performance comparison
+  - Cost trends over time
+  - Routing decision analysis
+- [ ] Export to CSV for analysis
+
+**Files:** `tools/metrics.py`, `dashboard/app.py` (optional)
+
+---
+
+### Priority 3 (Future - Low Impact or High Effort)
+
+#### Orchestration - Swarm Pattern
+**Impact:** Can't parallelize exploration tasks (low priority for coding)
 - [ ] Implement `patterns/swarm_pattern.py`:
-  - [ ] Use Strands `Swarm` class
-  - [ ] Allow multiple agents to collaborate simultaneously
-  - [ ] Meta-orchestrator synthesizes results
-  - [ ] Good for research, exploration, multiple approaches
+  - Use Strands `Swarm` class (if available)
+  - Allow multiple agents to work in parallel
+  - Synthesize results in Clara
+  - Good for: research, multiple approaches, brainstorming
+- [ ] Integrate into Clara orchestrator
+- [ ] Define use cases where Swarm is beneficial
 
-**Example Swarm Flow:**
-```
-User Request → Meta Orchestrator → [Senior Coder + Fast Coder + Test Engineer + Reviewer]
-                                   (All collaborate in parallel)
-                                            ↓
-                                   Synthesized Solution
-```
-
-#### 2.3 Meta Orchestrator (Clara)
-- [ ] Implement main `agent.py`:
-  - [ ] Understand user intent
-  - [ ] Plan execution strategy
-  - [ ] Select pattern (Graph vs Swarm)
-  - [ ] Coordinate specialist agents
-  - [ ] Synthesize final output
-- [ ] Use Claude Sonnet 4.5
-- [ ] Integration with router
-- [ ] Integration with both patterns
-- [ ] State management across multi-turn conversations
+**Files:** `patterns/swarm_pattern.py`, `agent.py`
 
 ---
 
-### Phase 3: Tools Integration (Use Existing)
+#### Security - Code Execution Sandboxing
+**Impact:** Security risk for arbitrary code execution
+- [ ] Research sandboxing options:
+  - Docker containers (isolated execution)
+  - pyodide (WASM-based Python)
+  - Firecracker microVMs
+  - AWS Lambda (serverless execution)
+- [ ] Implement sandbox wrapper for python_repl
+- [ ] Add resource limits (CPU, memory, time)
+- [ ] Add filesystem restrictions
+- [ ] Update all agents using python_repl
 
-#### 3.1 Use Existing Tools (MVP Approach)
-**From `strands-agents-tools`:**
-- [ ] Import `file_read`, `file_write`, `editor`
-- [ ] Import `python_repl`, `shell`
-- [ ] Import `calculator`, `current_time`
-
-**From `basic-open-agent-tools`:**
-- [ ] Import CSV tools (`read_csv_simple`, `write_csv_simple`, `csv_to_dict_list`)
-- [ ] Import filesystem tools via `load_all_filesystem_tools()`
-- [ ] Merge tool lists using `boat.helpers.merge_tool_lists()`
-
-**Testing via shell:**
-- [ ] Use `shell(command="pytest <path>")` for running tests
-- [ ] Use `shell(command="ruff check <path>")` for linting
-- [ ] Use `shell(command="ruff format <path>")` for formatting
-
-**Git via shell (read-only for MVP):**
-- [ ] Use `shell(command="git status")` for status
-- [ ] Use `shell(command="git diff <file>")` for diffs
-- [ ] Use `shell(command="git log")` for history
-- [ ] Document need for git write operations in Phase 4
-
-#### 3.2 Custom Tools (Deferred to Phase 4)
-**Code Analysis (NOT in MVP):**
-- [ ] `parse_ast(code: str, language: str) -> dict` - Phase 4
-- [ ] `analyze_complexity(code: str) -> dict` - Phase 4
-- [ ] `find_references(symbol: str, workspace: str) -> list` - Phase 4
-- [ ] LSP integration for type info - Phase 4
-
-**Structured Wrappers (NOT in MVP):**
-- [ ] `run_tests()` with structured output - Phase 4
-- [ ] `git_commit()` wrapper with validation - Phase 4
-- [ ] `run_linter()` with parsed output - Phase 4
-
-**See TOOLS_ANALYSIS.md for complete gap analysis**
+**Files:** `tools/sandbox.py`, all agent files
 
 ---
 
-### Phase 4: Optimization & Intelligence
+#### Production - Session State Persistence
+**Impact:** Can't save/resume conversations
+- [ ] Implement session storage:
+  - Local filesystem (MVP)
+  - S3 (production)
+  - Include: conversation history, agent state, context
+- [ ] Add session management:
+  - Create/load/save/delete sessions
+  - Session expiration
+  - Session summary generation
+- [ ] Integrate into Clara orchestrator
 
-#### 4.1 Intelligent Routing
-- [ ] Implement Bedrock's built-in prompt routing (if available)
-- [ ] Track routing accuracy metrics
-- [ ] A/B test routing strategies
-- [ ] Fallback to safer (more expensive) models on uncertainty
-
-#### 4.2 Prompt Caching
-- [ ] Cache system prompts for all agents
-- [ ] Cache project context (file structures, common imports)
-- [ ] Implement cache invalidation strategy
-- [ ] Track cache hit rates and cost savings
-
-#### 4.3 Batch Processing
-- [ ] Identify batchable operations (tests, docs)
-- [ ] Implement batch API usage
-- [ ] Queue system for non-urgent tasks
-- [ ] Track batch vs real-time cost differences
-
-#### 4.4 Cost Tracking & Monitoring
-- [ ] Log token usage per agent per request
-- [ ] Calculate cost per operation
-- [ ] Dashboard for cost analysis
-- [ ] Alerts for cost anomalies
+**Files:** `session/manager.py`, `agent.py`
 
 ---
 
-### Phase 5: User Interface & Experience
-
-#### 5.1 CLI Interface
-- [ ] Interactive chat mode
-- [ ] Command-based interface
-- [ ] File/directory arguments
-- [ ] Output formatting options
-- [ ] Progress indicators for long operations
-
-#### 5.2 Session Management
-- [ ] Session initialization with project context
-- [ ] Conversation history persistence
-- [ ] State save/resume capability
-- [ ] Session summary generation
-- [ ] Multi-turn conversation support
-
-#### 5.3 Output Quality
-- [ ] Code syntax highlighting
-- [ ] Diff visualization
-- [ ] Test result formatting
-- [ ] Error message clarity
-- [ ] Actionable feedback
-
----
-
-### Phase 6: Testing & Quality Assurance
-
-#### 6.1 Unit Tests
-- [ ] Test each specialist agent individually
-- [ ] Test router classification accuracy
-- [ ] Test tool functions
-- [ ] Test pattern implementations (Graph, Swarm)
-- [ ] Mock external API calls
-
-#### 6.2 Integration Tests
-- [ ] End-to-end workflow tests
-- [ ] Multi-agent collaboration tests
-- [ ] Error recovery tests
-- [ ] Session persistence tests
-
-#### 6.3 Evaluation Suite
-- [ ] Create coding task benchmark
-- [ ] Measure correctness, quality, cost, latency
-- [ ] Compare against baselines
-- [ ] Track improvements over iterations
-
----
-
-### Phase 7: Production Readiness (Future)
-
-#### 7.1 AgentCore Deployment
+#### Production - AgentCore Deployment
+**Impact:** Not production-ready for scale
 - [ ] Research Amazon Bedrock AgentCore Runtime
-- [ ] Containerization strategy
-- [ ] Session isolation setup
-- [ ] Auto-scaling configuration
-- [ ] Memory service integration
+- [ ] Create containerization strategy (Docker)
+- [ ] Implement auto-scaling configuration
+- [ ] Set up CloudWatch integration:
+  - Custom metrics (cost, latency, quality)
+  - Distributed tracing
+  - Error tracking and alerting
+- [ ] Security hardening:
+  - API key management (Secrets Manager)
+  - Input validation and sanitization
+  - Audit logging
+  - Rate limiting
 
-#### 7.2 Observability
-- [ ] CloudWatch integration
-- [ ] Custom metrics (cost, latency, quality)
-- [ ] Distributed tracing
-- [ ] Error tracking and alerting
-- [ ] Performance dashboards
-
-#### 7.3 Security
-- [ ] API key management (Secrets Manager)
-- [ ] Code execution sandboxing
-- [ ] Input validation and sanitization
-- [ ] Audit logging
-- [ ] Rate limiting
-
-#### 7.4 Documentation
-- [ ] User guide
-- [ ] API reference
-- [ ] Architecture documentation
-- [ ] Troubleshooting guide
-- [ ] Cost optimization guide
+**Files:** `Dockerfile`, `deployment/`, `observability/`
 
 ---
 
-## Success Criteria
+## Individual Agent TODO Lists
 
-### Phase 1-3 (MVP)
-- [ ] Orchestrator + 3 specialist agents functional (Senior Coder, Test Engineer, Code Reviewer)
-- [ ] Agents-as-Tools pattern working
-- [ ] File operations via strands-tools + boat
-- [ ] Code execution via python_repl/shell
-- [ ] Git read operations via shell
-- [ ] Testing/linting via shell
-- [ ] Can complete: "Add a GET /health endpoint with tests"
-- [ ] Cost tracking per agent invocation
+For agent-specific tool needs, see:
+- `agents/test_engineer/TODO.md` - Coverage tools, fixture generation
+- `agents/code_reviewer/TODO.md` - Static analysis, secret detection
+- `agents/python_specialist/TODO.md` - PEP compliance, type hints
+- `agents/database_specialist/TODO.md` - Query analysis, migrations
+- `agents/devops_specialist/TODO.md` - K8s validation, Terraform
+- `agents/debug/TODO.md` - Profiling, memory leak detection
+- `agents/web_specialist/TODO.md` - Bundle analysis, accessibility
+- `agents/agile_specialist/TODO.md` - MCP enhancements
+- `agents/doc_research_specialist/TODO.md` - MCP enhancements
+- (Others have minimal tool gaps)
 
-### Phase 4 (Custom Tools & Enhancement)
-- [ ] Add remaining 4 specialist agents (Architect, Fast Coder, Debug, Documentation)
-- [ ] Build custom AST analysis tools
-- [ ] Build structured test runner wrapper
-- [ ] Build git operation wrappers
-- [ ] Router implementation (Nova Micro)
-- [ ] Can complete: "Refactor authentication module with comprehensive tests"
+---
 
-### Phase 5-6 (Advanced Features)
-- [ ] Graph pattern implementation
-- [ ] Swarm pattern (if needed)
+## Success Metrics
+
+### Phase 7 (Custom Tools - P0/P1)
+- [ ] Structured test output reduces manual analysis by 80%
+- [ ] Git write operations enable full workflow automation
+- [ ] Cost tracking shows actual spend vs estimates
+- [ ] Static analysis JSON parsing improves code quality feedback
+- [ ] Secret detection prevents credential leaks
+- [ ] AST parsing enables intelligent refactoring suggestions
+
+### Phase 8 (Intelligence - P1)
+- [ ] Router agent correctly classifies 90%+ of tasks
 - [ ] Prompt caching reduces costs by 40%+
-- [ ] CLI interface polished
-- [ ] Session persistence working
+- [ ] Graph pattern reduces workflow steps by 30%
+- [ ] Conditional branching enables automatic error recovery
 
-### Phase 7 (Production)
-- [ ] 90%+ test coverage
-- [ ] AgentCore deployment working
-- [ ] CloudWatch monitoring active
-- [ ] Cost < $0.10 per simple task, < $1.00 per complex task
-- [ ] Can complete: "Design and implement a distributed caching system"
+### Phase 9 (Production - P2/P3)
+- [ ] Metrics dashboard provides visibility into all operations
+- [ ] Domain tools (DB, DevOps) reduce manual validation time
+- [ ] LSP integration improves code intelligence
+- [ ] Sandboxing enables safe arbitrary code execution
+- [ ] AgentCore deployment supports production scale
 
 ---
 
-## Cost Targets (from architecture doc)
+## Cost Targets
 
-- **Simple Task**: ~$0.04 (endpoint, typo fix)
-- **Medium Task**: ~$0.20 (feature implementation)
-- **Complex Task**: ~$0.57 (algorithm, architecture)
-- **Daily Development**: ~$2.54/day (mixed tasks)
-- **Monthly**: ~$50-75/developer
+**Current (with Phase 7 tools):**
+- Simple Task: ~$0.04 (endpoint, bug fix)
+- Medium Task: ~$0.20 (feature implementation)
+- Complex Task: ~$0.57 (algorithm, architecture)
+
+**After Prompt Caching (Phase 8):**
+- Simple Task: ~$0.02 (50% reduction)
+- Medium Task: ~$0.12 (40% reduction)
+- Complex Task: ~$0.34 (40% reduction)
 
 ---
 
 ## Technical Decisions Needed
 
-1. **Model Access**: Confirm availability of Nova models on Bedrock vs using Claude alternatives
-2. **Llama 3.3**: Determine if available through Bedrock or if we need alternative
-3. **LSP Integration**: Decide on LSP library/approach for code intelligence
-4. **Sandboxing**: Choose sandboxing approach for code execution (Docker, pyodide, other)
-5. **Storage**: Local filesystem vs S3 for session persistence in MVP
-6. **Testing Framework**: pytest + custom eval framework vs ADK eval approach
+1. **LSP Integration**: Which library? pylsp, pyright, jedi? Separate process or embedded?
+2. **Sandboxing**: Docker, pyodide, Lambda, or accept risk for MVP?
+3. **Router Model**: Nova Micro (when available) or use Nova Pro/Haiku?
+4. **Metrics Storage**: Local files, SQLite, or cloud database?
+5. **Session Storage**: Local filesystem for MVP or S3 from start?
+6. **Graph Pattern**: Use Strands GraphBuilder if available, or custom implementation?
 
 ---
 
 ## References
 
-- Architecture: `coding-agent-architecture.md`
-- Strands Docs: https://strandsagents.com
-- Bedrock Models: https://aws.amazon.com/bedrock/models
-- AgentCore: https://aws.amazon.com/bedrock/agentcore
+- **Architecture:** [coding-agent-architecture.md](coding-agent-architecture.md)
+- **Current Status:** [STATUS.md](STATUS.md)
+- **Recent Work:** [OPTIMIZATION_SUMMARY.md](OPTIMIZATION_SUMMARY.md)
+- **Configuration:** [FIXES.md](FIXES.md)
+- **Strands Docs:** https://strandsagents.com
+- **AWS Bedrock:** https://aws.amazon.com/bedrock/models
 
 ---
 
-**Status**: 📋 Planning Phase
-**Next Action**: Phase 1.1 - Create project structure
-**Owner**: Development Team
-**Target**: MVP (Phase 1-3) completion
+**Last Updated:** January 2025
+**Status:** 🟢 System Operational - Planning Phase 7+ Enhancements
+**Next Priority:** P0 Custom Tools (Structured Testing, Git Operations, Cost Tracking)
