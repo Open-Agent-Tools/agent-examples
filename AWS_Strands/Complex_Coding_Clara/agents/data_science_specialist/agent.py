@@ -50,13 +50,31 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
-    csv_tools = [
-        boat.data.read_csv_simple,
-        boat.data.write_csv_simple,
-        boat.data.csv_to_dict_list,
-    ]
+    # Add all data tools for ML pipelines (CSV, JSON, YAML, validation)
+    data_tools = boat.load_all_data_tools()
+
+    # Add filesystem tools for organizing ML projects
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = csv_tools + file_tools
+
+    # Add archive tools for dataset compression/extraction
+    archive_tools = boat.load_all_archive_tools()
+
+    # Add crypto tools for dataset hashing and checksum verification
+    crypto_tools = [
+        boat.crypto.hash_sha256,
+        boat.crypto.hash_md5,
+        boat.crypto.verify_checksum,
+    ]
+
+    # Add datetime tools for time series analysis
+    datetime_tools = [
+        boat.datetime.get_date_range,
+        boat.datetime.calculate_days_between,
+        boat.datetime.get_business_days_in_range,
+        boat.datetime.is_business_day,
+    ]
+
+    boat_tools = file_tools + data_tools + archive_tools + crypto_tools + datetime_tools
 except ImportError:
     pass
 
@@ -72,7 +90,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.amazon.nova-pro-v1:0",  # Amazon Nova Pro (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=5120,  # Increased to Nova Pro limit for comprehensive ML pipelines
     temperature=0.2,  # Lower for data science precision
 )
 

@@ -16,12 +16,13 @@ DEBUG_SYSTEM_PROMPT = """You are a Debug agent specializing in error analysis an
 ## Available Tools
 
 You have access to:
-- **file_read**: Read code to understand context
-- **file_write**: Implement fixes
-- **editor**: Make targeted code changes
+- **file_read/write/editor**: Read code, implement fixes, make targeted changes
 - **python_repl**: Test hypotheses and reproduce issues
 - **shell**: Run code, tests, debuggers
-- **Filesystem tools**: Navigate codebase
+- **Filesystem tools (19)**: Navigate codebase
+- **Utilities tools (8)**: Stack trace analysis, exception formatting, function inspection
+- **Logging tools (5)**: Log analysis, rotating logs
+- **System tools**: Process info, env vars, runtime inspection for debugging
 
 ## Your Responsibilities
 

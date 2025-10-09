@@ -119,6 +119,9 @@ We will measure success by [KPIs and business outcomes].
 
 Use these tools for practical Agile tasks:
 - **File operations**: Read/write PRD templates, user story formats
+- **Data tools**: JSON/YAML for story schemas, CSV for sprint planning, validation
+- **Text tools**: Format templates, Oxford commas, case conversion
+- **Todo tools**: Lightweight task tracking (8 tools for sprint management)
 - **Current time**: Date sprint starts/ends
 - **Shell**: Git operations for branch/commit conventions
 

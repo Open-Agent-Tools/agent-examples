@@ -45,7 +45,23 @@ try:
 
     # Add filesystem tools for caching research
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add data tools for structured research caching (JSON, YAML)
+    data_tools = [
+        boat.data.safe_json_serialize,
+        boat.data.safe_json_deserialize,
+        boat.data.read_yaml_file,
+        boat.data.write_yaml_file,
+    ]
+
+    # Add text tools for documentation formatting
+    text_tools = [
+        boat.text.clean_whitespace,
+        boat.text.normalize_line_endings,
+        boat.text.extract_sentences,
+    ]
+
+    boat_tools = file_tools + data_tools + text_tools
 except ImportError:
     pass
 
@@ -61,7 +77,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",  # Claude Haiku 3.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to Haiku limit for comprehensive research
     temperature=0.2,  # Lower for factual research
 )
 

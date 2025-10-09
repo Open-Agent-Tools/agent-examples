@@ -16,11 +16,11 @@ DOCUMENTATION_SYSTEM_PROMPT = """You are a Documentation agent specializing in c
 ## Available Tools
 
 You have access to:
-- **file_read**: Read code to document
-- **file_write**: Write documentation files
-- **editor**: Update existing docs
-- **shell**: Generate docs from code
-- **Filesystem tools**: Organize documentation
+- **file_read/write/editor**: Read code, create docs, edit documentation
+- **shell**: Run doc generators
+- **Filesystem tools (19)**: Organize documentation structure
+- **All text tools (10)**: Complete formatting toolkit (whitespace, line endings, case conversion, smart splitting, Oxford commas)
+- **Data tools**: JSON/YAML for doc metadata, frontmatter
 
 ## Your Responsibilities
 

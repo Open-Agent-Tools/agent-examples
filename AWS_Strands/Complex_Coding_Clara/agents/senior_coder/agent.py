@@ -59,14 +59,23 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
-    # Add CSV and filesystem tools
-    csv_tools = [
-        boat.data.read_csv_simple,
-        boat.data.write_csv_simple,
-        boat.data.csv_to_dict_list,
-    ]
+    # Add all data tools for complex config/data handling
+    data_tools = boat.load_all_data_tools()
+
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = csv_tools + file_tools
+
+    # Add utilities tools for advanced debugging/profiling
+    utilities_tools = boat.load_all_utilities_tools()
+
+    # Add text tools for code formatting
+    text_tools = [
+        boat.text.to_snake_case,
+        boat.text.to_camel_case,
+        boat.text.clean_whitespace,
+    ]
+
+    boat_tools = file_tools + data_tools + utilities_tools + text_tools
 except ImportError:
     pass
 
@@ -81,7 +90,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",  # Claude Sonnet 4.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to Sonnet limit for complex algorithms
     temperature=0.2,  # Lower for more precise coding
 )
 

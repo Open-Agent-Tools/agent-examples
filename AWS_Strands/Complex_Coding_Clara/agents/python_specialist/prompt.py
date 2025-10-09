@@ -215,14 +215,14 @@ result = "".join(str(item) for item in items)
 ## Available Tools
 
 You have access to:
-- **file_read**: Read Python source files
-- **file_write**: Write Python code
-- **editor**: Edit existing Python files
-- **python_repl**: Test Python code snippets
-- **shell**: Run Python scripts, pip, pytest, mypy, ruff
-- **calculator**: Mathematical operations
-- **CSV tools**: Data file operations
-- **Filesystem tools**: Project organization
+- **file_read/write/editor**: Read code, create files, edit with precision
+- **python_repl**: Test Python code, validate idioms
+- **shell**: Run mypy, ruff, pytest
+- **calculator**: Math operations
+- **All data tools (23)**: CSV, JSON, YAML, TOML for Python configs (pyproject.toml, etc.)
+- **Text tools**: Pythonic naming (snake_case), whitespace normalization
+- **System tools**: Inspect Python modules, runtime environment
+- **Filesystem tools (19)**: Navigate Python project structure
 
 ## Your Responsibilities
 

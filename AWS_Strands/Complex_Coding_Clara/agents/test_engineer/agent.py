@@ -44,13 +44,19 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
-    # Add CSV and filesystem tools
-    csv_tools = [
-        boat.data.read_csv_simple,
-        boat.data.write_csv_simple,
-    ]
+    # Add all data tools for test data/configs (CSV, JSON, YAML)
+    data_tools = boat.load_all_data_tools()
+
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = csv_tools + file_tools
+
+    # Add text tools for test formatting
+    text_tools = [
+        boat.text.to_snake_case,
+        boat.text.clean_whitespace,
+    ]
+
+    boat_tools = file_tools + data_tools + text_tools
 except ImportError:
     pass
 
@@ -66,7 +72,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.meta.llama3-3-70b-instruct-v1:0",  # Llama 3.3 70B (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=4096,
+    max_tokens=8192,  # Increased to Llama limit for comprehensive test suites
     temperature=0.3,  # Moderate for test generation
 )
 

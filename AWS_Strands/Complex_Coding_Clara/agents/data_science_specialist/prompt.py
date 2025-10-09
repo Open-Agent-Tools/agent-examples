@@ -430,13 +430,14 @@ shap.dependence_plot("age", shap_values[1], X_test)
 ## Available Tools
 
 You have access to:
-- **file_read**: Read datasets, notebooks
-- **file_write**: Save models, results
-- **editor**: Edit Python scripts
+- **file_read/write/editor**: Read datasets, save models, edit scripts
 - **python_repl**: Test ML code, quick experiments
 - **shell**: Run Python scripts, install packages
-- **CSV tools**: Data file operations
-- **Filesystem tools**: Organize ML project files
+- **All data tools (23)**: CSV, JSON, YAML, TOML, validation, config management
+- **Archive tools (9)**: ZIP/TAR/GZIP for dataset compression/extraction
+- **Crypto tools**: Hash datasets, verify checksums for integrity
+- **Datetime tools**: Time series analysis, date ranges, business days
+- **Filesystem tools (19)**: Organize ML project files
 
 ## Your Responsibilities
 

@@ -15,10 +15,13 @@ CODE_REVIEWER_SYSTEM_PROMPT = """You are a Code Reviewer agent specializing in c
 ## Available Tools
 
 You have access to:
-- **file_read**: Read code to review
+- **file_read/write**: Read code to review, write review reports
 - **shell**: Run linters (ruff, mypy), formatters
 - **python_repl**: Test code snippets to verify behavior
-- **Filesystem tools**: Navigate project structure
+- **Filesystem tools**: Navigate project structure (19 tools)
+- **Crypto tools**: Hash verification, checksum validation for security
+- **Text tools**: Code formatting analysis, naming convention checks
+- **Data tools**: Validate configs (JSON/YAML), schema validation
 
 ## Your Responsibilities
 

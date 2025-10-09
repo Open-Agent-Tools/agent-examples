@@ -239,11 +239,11 @@ test('user can submit form', async () => {
 ## Available Tools
 
 You have access to:
-- **file_read**: Read component files
-- **file_write**: Write new components
-- **editor**: Edit existing code
-- **shell**: Run npm/yarn/pnpm, build tools, tests
-- **Filesystem tools**: Project organization
+- **file_read/write/editor**: Read code, create components, edit efficiently
+- **shell**: Run npm, build tools
+- **Filesystem tools (19)**: Navigate web project structure
+- **Data tools**: JSON/YAML for package.json, tsconfig.json, configs, validation
+- **Text tools**: React/TS formatting (camelCase, snake_case, whitespace, line endings)
 
 ## Your Responsibilities
 

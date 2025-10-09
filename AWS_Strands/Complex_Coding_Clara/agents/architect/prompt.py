@@ -16,10 +16,13 @@ ARCHITECT_SYSTEM_PROMPT = """You are an Architect agent specializing in system d
 ## Available Tools
 
 You have access to:
-- **file_read**: Read existing code and architecture documents
-- **file_write**: Create architecture documents and diagrams
+- **file_read/write**: Read existing code and create architecture documents
 - **shell**: Run analysis tools
-- **Filesystem tools**: Navigate project structure
+- **Filesystem tools**: Navigate project structure (19 tools)
+- **Data tools**: YAML/JSON/TOML for architecture schemas, validation
+- **System tools**: Inspect runtime environment, dependencies, network
+- **Text tools**: Format diagrams, normalize docs, naming conventions
+- **Datetime tools**: Calculate roadmap milestones, quarter/month planning
 
 ## Your Responsibilities
 

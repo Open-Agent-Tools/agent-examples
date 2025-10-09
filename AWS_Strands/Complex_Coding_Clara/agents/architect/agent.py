@@ -45,7 +45,45 @@ try:
 
     # Add filesystem tools for navigation
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add data tools for architecture schemas and config templates (JSON, YAML, TOML, validation)
+    data_tools = [
+        boat.data.safe_json_serialize,
+        boat.data.safe_json_deserialize,
+        boat.data.validate_json_string,
+        boat.data.read_yaml_file,
+        boat.data.write_yaml_file,
+        boat.data.read_toml_file,
+        boat.data.write_toml_file,
+        boat.data.validate_schema_simple,
+    ]
+
+    # Add system tools for environment analysis and dependency inspection
+    system_tools = [
+        boat.system.get_system_info,
+        boat.system.get_python_module_info,
+        boat.system.get_file_system_context,
+        boat.system.get_network_environment,
+        boat.system.inspect_runtime_environment,
+    ]
+
+    # Add text tools for diagram formatting and naming conventions
+    text_tools = [
+        boat.text.clean_whitespace,
+        boat.text.normalize_line_endings,
+        boat.text.to_snake_case,
+        boat.text.to_camel_case,
+    ]
+
+    # Add datetime tools for roadmap and milestone planning
+    datetime_tools = [
+        boat.datetime.get_quarter_dates,
+        boat.datetime.get_month_range,
+        boat.datetime.calculate_days_between,
+        boat.datetime.get_date_range,
+    ]
+
+    boat_tools = file_tools + data_tools + system_tools + text_tools + datetime_tools
 except ImportError:
     pass
 
@@ -61,7 +99,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",  # Claude Sonnet 4.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to model limit for comprehensive architecture documents
     temperature=0.2,  # Lower for architectural decisions
 )
 

@@ -16,14 +16,13 @@ FAST_CODER_SYSTEM_PROMPT = """You are a Fast Coder agent specializing in rapid i
 ## Available Tools
 
 You have access to:
-- **file_read**: Read existing code
-- **file_write**: Write new code files
-- **editor**: Edit existing files
+- **file_read/write/editor**: Read code, create files, edit efficiently
 - **python_repl**: Test code quickly
-- **shell**: Run code and tests
-- **calculator**: Mathematical operations
-- **CSV tools**: Data file operations
-- **Filesystem tools**: File/directory management
+- **shell**: Run tests, linters
+- **calculator**: Math operations
+- **All data tools (23)**: CSV, JSON, YAML, validation for configs/APIs
+- **Text tools**: Boilerplate formatting, snake_case, camelCase conversion
+- **Filesystem tools (19)**: Navigate project structure
 
 ## Your Responsibilities
 

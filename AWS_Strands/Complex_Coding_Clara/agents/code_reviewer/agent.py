@@ -33,9 +33,9 @@ except ImportError:
 # Import tools
 strands_tools = []
 try:
-    from strands_tools import file_read, shell, python_repl, current_time
+    from strands_tools import file_read, file_write, shell, python_repl, current_time
 
-    strands_tools = [file_read, shell, python_repl, current_time]
+    strands_tools = [file_read, file_write, shell, python_repl, current_time]
 except ImportError:
     pass
 
@@ -45,7 +45,32 @@ try:
 
     # Add filesystem tools for navigation
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add crypto tools for security review (hashing, checksum verification)
+    crypto_tools = [
+        boat.crypto.hash_sha256,
+        boat.crypto.hash_md5,
+        boat.crypto.verify_checksum,
+        boat.crypto.generate_uuid,
+    ]
+
+    # Add text tools for code formatting analysis
+    text_tools = [
+        boat.text.clean_whitespace,
+        boat.text.normalize_line_endings,
+        boat.text.to_snake_case,
+        boat.text.to_camel_case,
+    ]
+
+    # Add data tools for config/schema validation
+    data_tools = [
+        boat.data.safe_json_deserialize,
+        boat.data.validate_json_string,
+        boat.data.read_yaml_file,
+        boat.data.validate_schema_simple,
+    ]
+
+    boat_tools = file_tools + crypto_tools + text_tools + data_tools
 except ImportError:
     pass
 
@@ -61,7 +86,7 @@ except Exception:
 model = BedrockModel(
     model_id="amazon.nova-pro-v1:0",  # Nova Pro
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=4096,
+    max_tokens=5120,  # Increased to Nova Pro limit for comprehensive reviews
     temperature=0.1,  # Very low for consistent reviews
 )
 

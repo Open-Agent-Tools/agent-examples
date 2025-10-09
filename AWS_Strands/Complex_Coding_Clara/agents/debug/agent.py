@@ -52,7 +52,24 @@ try:
 
     # Add filesystem tools for navigation
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add utilities tools for stack trace and exception analysis
+    utilities_tools = boat.load_all_utilities_tools()
+
+    # Add logging tools for log analysis
+    logging_tools = boat.load_all_logging_tools()
+
+    # Add system tools for process and environment debugging
+    system_tools = [
+        boat.system.get_current_process_info,
+        boat.system.list_running_processes,
+        boat.system.get_process_info,
+        boat.system.inspect_runtime_environment,
+        boat.system.get_env_var,
+        boat.system.list_env_vars,
+    ]
+
+    boat_tools = file_tools + utilities_tools + logging_tools + system_tools
 except ImportError:
     pass
 
@@ -68,7 +85,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",  # Claude Sonnet 4.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to Sonnet limit for detailed debugging
     temperature=0.2,  # Lower for precise debugging
 )
 

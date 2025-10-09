@@ -59,14 +59,20 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
-    # Add CSV and filesystem tools
-    csv_tools = [
-        boat.data.read_csv_simple,
-        boat.data.write_csv_simple,
-        boat.data.csv_to_dict_list,
-    ]
+    # Add all data tools for config/API handling (CSV, JSON, YAML, validation)
+    data_tools = boat.load_all_data_tools()
+
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = csv_tools + file_tools
+
+    # Add text tools for boilerplate formatting
+    text_tools = [
+        boat.text.to_snake_case,
+        boat.text.to_camel_case,
+        boat.text.clean_whitespace,
+    ]
+
+    boat_tools = file_tools + data_tools + text_tools
 except ImportError:
     pass
 
@@ -82,7 +88,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.amazon.nova-pro-v1:0",  # Nova Pro (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=4096,
+    max_tokens=5120,  # Increased to Nova Pro limit for comprehensive implementations
     temperature=0.3,  # Moderate for standard coding
 )
 

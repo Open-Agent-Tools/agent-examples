@@ -45,7 +45,17 @@ try:
 
     # Add filesystem tools for templates/PRDs
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add data tools for structured story/epic management (JSON, YAML, CSV, validation)
+    data_tools = boat.load_all_data_tools()
+
+    # Add text tools for template formatting (case conversion, whitespace, Oxford comma)
+    text_tools = boat.load_all_text_tools()
+
+    # Add todo tools for sprint task management
+    todo_tools = boat.load_all_todo_tools()
+
+    boat_tools = file_tools + data_tools + text_tools + todo_tools
 except ImportError:
     pass
 

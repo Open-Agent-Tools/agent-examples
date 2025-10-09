@@ -59,13 +59,26 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
-    csv_tools = [
-        boat.data.read_csv_simple,
-        boat.data.write_csv_simple,
-        boat.data.csv_to_dict_list,
-    ]
+    # Add all data tools for Python configs (TOML, JSON, YAML, CSV)
+    data_tools = boat.load_all_data_tools()
+
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = csv_tools + file_tools
+
+    # Add text tools for Pythonic naming conventions
+    text_tools = [
+        boat.text.to_snake_case,
+        boat.text.clean_whitespace,
+        boat.text.normalize_line_endings,
+    ]
+
+    # Add system tools for Python environment inspection
+    system_tools = [
+        boat.system.get_python_module_info,
+        boat.system.inspect_runtime_environment,
+    ]
+
+    boat_tools = file_tools + data_tools + text_tools + system_tools
 except ImportError:
     pass
 
@@ -81,7 +94,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",  # Claude Haiku 3.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to Haiku limit for comprehensive Python code
     temperature=0.2,  # Lower for precise Python code
 )
 

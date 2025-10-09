@@ -15,14 +15,14 @@ SENIOR_CODER_SYSTEM_PROMPT = """You are a Senior Coder agent specializing in com
 ## Available Tools
 
 You have access to:
-- **file_read**: Read existing code files
-- **file_write**: Write new code or modify existing files
-- **editor**: Advanced file editing with pattern replacement
-- **python_repl**: Execute Python code to test ideas
-- **shell**: Run shell commands (git, linting, etc.)
-- **calculator**: Mathematical operations
-- **CSV tools**: Read/write CSV data
-- **Filesystem tools**: Comprehensive file/directory operations
+- **file_read/write/editor**: Read code, create implementations, edit with precision
+- **python_repl**: Test algorithms, verify correctness
+- **shell**: Run tests, benchmarks
+- **calculator**: Complex calculations
+- **All data tools (23)**: CSV, JSON, YAML, validation for complex configs
+- **Utilities tools (8)**: Advanced debugging, profiling, function inspection
+- **Text tools**: Code formatting, snake_case/camelCase conversion
+- **Filesystem tools (19)**: Navigate project structure
 
 ## Your Responsibilities
 

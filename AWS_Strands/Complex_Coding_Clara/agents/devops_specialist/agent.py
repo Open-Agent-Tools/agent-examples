@@ -43,8 +43,40 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add data tools for IaC configs (YAML, TOML, JSON for Docker, K8s, Terraform)
+    data_tools = [
+        boat.data.read_yaml_file,
+        boat.data.write_yaml_file,
+        boat.data.safe_json_serialize,
+        boat.data.safe_json_deserialize,
+        boat.data.read_toml_file,
+        boat.data.write_toml_file,
+        boat.data.validate_schema_simple,
+    ]
+
+    # Add archive tools for container/deployment packaging
+    archive_tools = boat.load_all_archive_tools()
+
+    # Add system tools for environment inspection
+    system_tools = [
+        boat.system.get_system_info,
+        boat.system.inspect_runtime_environment,
+        boat.system.get_network_environment,
+        boat.system.get_env_var,
+        boat.system.list_env_vars,
+    ]
+
+    # Add crypto tools for secrets hashing
+    crypto_tools = [
+        boat.crypto.hash_sha256,
+        boat.crypto.base64_encode,
+        boat.crypto.base64_decode,
+    ]
+
+    boat_tools = file_tools + data_tools + archive_tools + system_tools + crypto_tools
 except ImportError:
     pass
 
@@ -59,7 +91,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.amazon.nova-pro-v1:0",  # Nova Pro - cost-effective for infra
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=5120,  # Increased to Nova Pro limit for comprehensive IaC
     temperature=0.2,  # Lower for infrastructure code
 )
 

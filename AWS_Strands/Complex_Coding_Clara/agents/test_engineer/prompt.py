@@ -15,12 +15,12 @@ TEST_ENGINEER_SYSTEM_PROMPT = """You are a Test Engineer agent specializing in t
 ## Available Tools
 
 You have access to:
-- **file_read**: Read code to understand what to test
-- **file_write**: Write test files
-- **python_repl**: Test your test code
-- **shell**: Run pytest, coverage tools
-- **CSV tools**: Test data in CSV format
-- **Filesystem tools**: Organize test files
+- **file_read/write**: Read code to test, create test files
+- **python_repl**: Test code behavior
+- **shell**: Run pytest, coverage
+- **All data tools (23)**: CSV, JSON, YAML for test data and configs
+- **Text tools**: Test formatting, snake_case naming
+- **Filesystem tools (19)**: Navigate test structure
 
 ## Your Responsibilities
 

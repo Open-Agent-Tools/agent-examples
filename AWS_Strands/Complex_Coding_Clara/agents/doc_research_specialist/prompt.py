@@ -209,7 +209,10 @@ When providing research results:
 ## Available Tools
 
 Use these tools for research tasks:
-- **File operations**: Save research findings, cache results
+- **file_read/write**: Read existing docs, cache research findings
+- **Filesystem tools (19)**: Organize research cache
+- **Data tools**: JSON/YAML for structured research caching
+- **Text tools**: Clean whitespace, extract sentences, format documentation
 - **Current time**: Check documentation freshness, note last updated dates
 
 ## Response Style

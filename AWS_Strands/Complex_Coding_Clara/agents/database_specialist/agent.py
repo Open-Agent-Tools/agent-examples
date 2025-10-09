@@ -50,8 +50,26 @@ boat_tools = []
 try:
     import basic_open_agent_tools as boat
 
+    # Add filesystem tools
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add all data tools for schema/config management (SQL, JSON, YAML, CSV)
+    data_tools = boat.load_all_data_tools()
+
+    # Add text tools for SQL formatting and naming conventions
+    text_tools = [
+        boat.text.clean_whitespace,
+        boat.text.normalize_line_endings,
+        boat.text.to_snake_case,
+    ]
+
+    # Add crypto tools for connection string hashing, checksums
+    crypto_tools = [
+        boat.crypto.hash_sha256,
+        boat.crypto.generate_uuid,
+    ]
+
+    boat_tools = file_tools + data_tools + text_tools + crypto_tools
 except ImportError:
     pass
 
@@ -67,7 +85,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",  # Claude Haiku 3.5 (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=8192,
+    max_tokens=16384,  # Increased to Haiku limit for comprehensive schemas
     temperature=0.2,  # Lower for precise database work
 )
 

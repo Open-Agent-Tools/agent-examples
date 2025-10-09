@@ -46,7 +46,19 @@ try:
 
     # Add filesystem tools for documentation organization
     file_tools = boat.load_all_filesystem_tools()
-    boat_tools = file_tools
+
+    # Add text tools for documentation formatting
+    text_tools = boat.load_all_text_tools()
+
+    # Add data tools for doc templates (JSON, YAML, Markdown metadata)
+    data_tools = [
+        boat.data.safe_json_serialize,
+        boat.data.safe_json_deserialize,
+        boat.data.read_yaml_file,
+        boat.data.write_yaml_file,
+    ]
+
+    boat_tools = file_tools + text_tools + data_tools
 except ImportError:
     pass
 
@@ -62,7 +74,7 @@ except Exception:
 model = BedrockModel(
     model_id="us.amazon.nova-lite-v1:0",  # Nova Lite (inference profile)
     region_name=os.getenv("AWS_REGION", "us-east-1"),
-    max_tokens=4096,
+    max_tokens=8192,  # Increased to Nova Lite limit for comprehensive docs
     temperature=0.4,  # Slightly higher for creative documentation
 )
 
