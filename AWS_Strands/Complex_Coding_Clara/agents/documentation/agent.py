@@ -147,7 +147,9 @@ def documentation(task: str) -> str:
                 continue
 
             # Final attempt failed
-            return f"Documentation Agent error after {max_retries} attempts: {error_msg}"
+            return (
+                f"Documentation Agent error after {max_retries} attempts: {error_msg}"
+            )
 
     return "Documentation Agent error: Maximum retries exceeded"
 

@@ -121,27 +121,38 @@ User Request → Clara Orchestrator
 
 ## Models
 
-All models run on **AWS Bedrock** with inference profile configuration:
+All models run on **AWS Bedrock** with inference profile configuration using a **3-tier cost-optimized distribution**:
 
-| Agent | Model | Use Case |
-|-------|-------|----------|
-| Clara (Orchestrator) | Claude Sonnet 4.5 | Planning & coordination |
-| Architect | Claude Sonnet 4.5 | System design |
-| Senior Coder | Claude Sonnet 4.5 | Complex coding |
-| Fast Coder | Nova Lite | Quick CRUD operations |
-| Test Engineer | Llama 3.3 70B | Test generation |
-| Code Reviewer | Nova Pro | Code quality review |
-| Debug | Nova Pro | Error analysis |
-| Documentation | Nova Lite | Documentation generation |
-| Python Specialist | Nova Pro | Python expertise |
-| Web Specialist | Nova Pro | Web development |
-| Database Specialist | Nova Pro | Database design |
-| DevOps Specialist | Nova Pro | DevOps practices |
-| Data Science Specialist | Nova Pro | ML/data science |
-| Agile Specialist | Nova Lite | Agile processes |
-| Doc Research Specialist | Nova Lite | Doc research |
+### Tier 1: Premium (Complex Reasoning) - Sonnet 4.5
+| Agent | Model | Cost/M | Use Case |
+|-------|-------|--------|----------|
+| Clara (Orchestrator) | Sonnet 4.5 | $3/$15 | Planning & coordination |
+| Architect | Sonnet 4.5 | $3/$15 | System design |
+| Senior Coder | Sonnet 4.5 | $3/$15 | Complex coding |
+| Debug | Sonnet 4.5 | $3/$15 | Error analysis |
 
-**Note:** All model IDs use inference profile format (e.g., `us.anthropic.claude-sonnet-4-5-20250929-v1:0`). See [FIXES.md](FIXES.md) for configuration requirements.
+### Tier 2: Mid-Tier (Specialized) - Haiku 3.5
+| Agent | Model | Cost/M | Use Case |
+|-------|-------|--------|----------|
+| Python Specialist | Haiku 3.5 | $0.80/$4 | Python expertise |
+| Web Specialist | Haiku 3.5 | $0.80/$4 | Web development |
+| Database Specialist | Haiku 3.5 | $0.80/$4 | Database design |
+| Agile Specialist | Haiku 3.5 | $0.80/$4 | Agile processes |
+| Doc Research Specialist | Haiku 3.5 | $0.80/$4 | Doc research |
+
+### Tier 3: Budget (Simple Tasks) - Nova Pro/Llama/Nova Lite
+| Agent | Model | Cost/M | Use Case |
+|-------|-------|--------|----------|
+| Fast Coder | Nova Pro | $0.80/$3.20 | Quick CRUD operations |
+| Code Reviewer | Nova Pro | $0.80/$3.20 | Code quality review |
+| DevOps Specialist | Nova Pro | $0.80/$3.20 | DevOps practices |
+| Data Science Specialist | Nova Pro | $0.80/$3.20 | ML/data science |
+| Test Engineer | Llama 3.3 70B | $0.99/$0.99 | Test generation |
+| Documentation | Nova Lite | $0.075/$0.30 | Documentation generation |
+
+**Cost Optimization:** 54% reduction vs original design ($114/M vs $248/M)
+
+**Note:** All model IDs use inference profile format (e.g., `us.anthropic.claude-sonnet-4-5-20250929-v1:0`). See [FIXES.md](FIXES.md) for configuration requirements and [STATUS.md](STATUS.md) for detailed cost breakdown.
 
 ## Tools
 
@@ -244,12 +255,19 @@ LOG_LEVEL=INFO                    # Logging level
 - ✅ Domain specialists (5): Python, Web, Database, DevOps, Data Science
 - ✅ SDLC specialists (2): Agile, Doc Research
 
-**Recent Fixes (2025-10-08):**
-- ✅ Fixed test_engineer model configuration (inference profile format)
-- ✅ Fixed documentation agent timeout handling
-- ✅ Added comprehensive error handling and retry logic
-- ✅ Created configuration validation system
-- ✅ Created agent health monitoring system
+**Recent Updates:**
+- ✅ **2025-10-09**: Phase 1 & 2 optimizations complete
+  - Added `http_request` tool to Web Specialist and Doc Research Specialist
+  - Integrated Atlassian MCP (Jira/Confluence) into Agile Specialist
+  - Integrated Context7 MCP (live library docs) into Doc Research Specialist
+  - Ran comprehensive code quality checks (ruff, mypy, pytest)
+  - Updated documentation to reflect 3-tier cost-optimized model distribution
+- ✅ **2025-10-08**: Configuration fixes and monitoring
+  - Fixed test_engineer model configuration (inference profile format)
+  - Fixed documentation agent timeout handling
+  - Added comprehensive error handling and retry logic
+  - Created configuration validation system
+  - Created agent health monitoring system
 
 **Planned Enhancements:**
 - [ ] Custom AST analysis tools

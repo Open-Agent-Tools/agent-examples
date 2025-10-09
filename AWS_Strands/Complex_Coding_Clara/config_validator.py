@@ -28,7 +28,9 @@ class ConfigValidator:
     ]
 
     @classmethod
-    def validate_model_id(cls, model_id: str, agent_name: str = "Unknown") -> Tuple[bool, str]:
+    def validate_model_id(
+        cls, model_id: str, agent_name: str = "Unknown"
+    ) -> Tuple[bool, str]:
         """
         Validate a model ID for proper configuration.
 
@@ -92,7 +94,9 @@ class ConfigValidator:
             if not is_valid:
                 all_valid = False
         else:
-            messages.append(f"{agent_name}: Warning - No model_id found in configuration")
+            messages.append(
+                f"{agent_name}: Warning - No model_id found in configuration"
+            )
             all_valid = False
 
         # Validate max_tokens
@@ -113,7 +117,11 @@ class ConfigValidator:
         # Validate temperature
         temperature = agent_config.get("temperature")
         if temperature is not None:
-            if not isinstance(temperature, (int, float)) or temperature < 0 or temperature > 1:
+            if (
+                not isinstance(temperature, (int, float))
+                or temperature < 0
+                or temperature > 1
+            ):
                 messages.append(
                     f"{agent_name}: Invalid temperature value: {temperature} (must be 0-1)"
                 )
@@ -129,7 +137,9 @@ class ConfigValidator:
                     f"common regions are: {', '.join(valid_regions)}"
                 )
         else:
-            messages.append(f"{agent_name}: Warning - No region specified, using default")
+            messages.append(
+                f"{agent_name}: Warning - No region specified, using default"
+            )
 
         return all_valid, messages
 
@@ -211,9 +221,15 @@ def validate_all_agents() -> Dict[str, Tuple[bool, List[str]]]:
                     )
                     results[agent_name] = (is_valid, messages)
                 else:
-                    results[agent_name] = (False, [f"{agent_name}: Model not found in module"])
+                    results[agent_name] = (
+                        False,
+                        [f"{agent_name}: Model not found in module"],
+                    )
         except Exception as e:
-            results[agent_name] = (False, [f"{agent_name}: Error loading module - {str(e)}"])
+            results[agent_name] = (
+                False,
+                [f"{agent_name}: Error loading module - {str(e)}"],
+            )
 
     return results
 

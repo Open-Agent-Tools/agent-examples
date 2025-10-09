@@ -2,10 +2,23 @@
 Doc Research Specialist Agent - Technical documentation research expert
 """
 
+import logging
 import os
 from pathlib import Path
 from strands import Agent, tool
 from strands.models.bedrock import BedrockModel
+
+# MCP imports for Context7 integration
+try:
+    from mcp.client.streamable_http import streamablehttp_client
+    from strands.tools.mcp.mcp_client import MCPClient
+
+    MCP_AVAILABLE = True
+except ImportError:
+    MCP_AVAILABLE = False
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 # Load environment
 try:
@@ -33,9 +46,9 @@ except ImportError:
 # Import tools
 strands_tools = []
 try:
-    from strands_tools import file_read, file_write, current_time
+    from strands_tools import file_read, file_write, current_time, http_request
 
-    strands_tools = [file_read, file_write, current_time]
+    strands_tools = [file_read, file_write, current_time, http_request]
 except ImportError:
     pass
 
@@ -65,9 +78,42 @@ try:
 except ImportError:
     pass
 
+
+# MCP tools for Context7 (live library documentation) integration
+def add_mcp_tools(base_tools: list, mcp_url: str) -> list:
+    """Add MCP tools to base tools list - handle failures gracefully."""
+    if not MCP_AVAILABLE:
+        logger.warning(
+            "MCP client not available - install mcp package for Context7 integration"
+        )
+        return base_tools
+
+    logger.info(f"Connecting to MCP server at {mcp_url}")
+
+    try:
+        mcp_client = MCPClient(lambda: streamablehttp_client(mcp_url))
+        mcp_client.start()
+        mcp_tools = list(mcp_client.list_tools_sync())
+        base_tools.extend(mcp_tools)
+
+        logger.info(f"Successfully added {len(mcp_tools)} MCP tools for Context7")
+        return base_tools
+    except Exception as e:
+        logger.warning(f"Failed to connect to MCP server at {mcp_url}: {e}")
+        logger.warning(
+            "Agent will start without MCP tools - Context7 documentation lookup unavailable"
+        )
+        return base_tools
+
+
 # Build tool list
 try:
     tools = strands_tools + boat_tools
+
+    # Add Context7 MCP tools if server is configured
+    mcp_url = os.getenv("MCP_SERVER_URL", "http://localhost:9000/mcp/")
+    if mcp_url:
+        tools = add_mcp_tools(tools, mcp_url)
 except Exception:
     tools = []
 

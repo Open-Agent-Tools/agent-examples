@@ -124,6 +124,7 @@ Use these tools for practical Agile tasks:
 - **Todo tools**: Lightweight task tracking (8 tools for sprint management)
 - **Current time**: Date sprint starts/ends
 - **Shell**: Git operations for branch/commit conventions
+- **Atlassian MCP** (if configured): Direct Jira/Confluence integration for creating issues, epics, stories, and updating boards
 
 ## Response Style
 

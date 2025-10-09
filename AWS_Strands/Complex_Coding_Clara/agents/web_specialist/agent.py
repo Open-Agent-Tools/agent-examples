@@ -33,9 +33,16 @@ except ImportError:
 # Import tools
 strands_tools = []
 try:
-    from strands_tools import file_read, file_write, editor, shell, current_time
+    from strands_tools import (
+        file_read,
+        file_write,
+        editor,
+        shell,
+        current_time,
+        http_request,
+    )
 
-    strands_tools = [file_read, file_write, editor, shell, current_time]
+    strands_tools = [file_read, file_write, editor, shell, current_time, http_request]
 except ImportError:
     pass
 

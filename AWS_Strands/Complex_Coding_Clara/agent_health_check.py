@@ -6,7 +6,7 @@ Provides health monitoring and success rate tracking.
 """
 
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 import sys
 from pathlib import Path
 
@@ -70,7 +70,9 @@ class AgentHealthMonitor:
             traceback.print_exc()
             return False
 
-    def test_agent(self, agent_name: str, agent_tool, test_task: str) -> Tuple[bool, str, float]:
+    def test_agent(
+        self, agent_name: str, agent_tool, test_task: str
+    ) -> Tuple[bool, str, float]:
         """
         Test a single agent with a simple task.
 
@@ -90,11 +92,10 @@ class AgentHealthMonitor:
 
             # Check if response indicates an error
             response_str = str(response)
-            is_error = (
-                "error" in response_str.lower()
-                and ("configuration error" in response_str.lower()
-                     or "validation" in response_str.lower()
-                     or "failed" in response_str.lower())
+            is_error = "error" in response_str.lower() and (
+                "configuration error" in response_str.lower()
+                or "validation" in response_str.lower()
+                or "failed" in response_str.lower()
             )
 
             success = not is_error and len(response_str) > 10
@@ -152,7 +153,9 @@ class AgentHealthMonitor:
             if verbose:
                 print(f"Testing {agent_name}...", end=" ", flush=True)
 
-            success, response, duration = self.test_agent(agent_name, agent_tool, test_task)
+            success, response, duration = self.test_agent(
+                agent_name, agent_tool, test_task
+            )
 
             self.results[agent_name] = {
                 "success": success,
@@ -166,7 +169,9 @@ class AgentHealthMonitor:
                 print(f"{status} ({duration:.2f}s)")
                 if not success:
                     # Print first 200 chars of error
-                    error_preview = response[:200] + ("..." if len(response) > 200 else "")
+                    error_preview = response[:200] + (
+                        "..." if len(response) > 200 else ""
+                    )
                     print(f"   Error: {error_preview}")
 
         return self.results
@@ -183,8 +188,12 @@ class AgentHealthMonitor:
         print("=" * 70)
         print()
 
-        successful = [name for name, result in self.results.items() if result["success"]]
-        failed = [name for name, result in self.results.items() if not result["success"]]
+        successful = [
+            name for name, result in self.results.items() if result["success"]
+        ]
+        failed = [
+            name for name, result in self.results.items() if not result["success"]
+        ]
 
         total = len(self.results)
         success_count = len(successful)
@@ -252,45 +261,54 @@ class AgentHealthMonitor:
         success_count = sum(1 for r in self.results.values() if r["success"])
         success_rate = (success_count / total * 100) if total > 0 else 0
 
-        report_lines.extend([
-            f"- **Total Agents:** {total}",
-            f"- **Successful:** {success_count} ({success_rate:.1f}%)",
-            f"- **Failed:** {total - success_count}",
-            "",
-            "## Detailed Results",
-            "",
-        ])
+        report_lines.extend(
+            [
+                f"- **Total Agents:** {total}",
+                f"- **Successful:** {success_count} ({success_rate:.1f}%)",
+                f"- **Failed:** {total - success_count}",
+                "",
+                "## Detailed Results",
+                "",
+            ]
+        )
 
         for agent_name in sorted(self.results.keys()):
             result = self.results[agent_name]
             status = "✅ PASS" if result["success"] else "❌ FAIL"
 
-            report_lines.extend([
-                f"### {agent_name}",
-                "",
-                f"**Status:** {status}",
-                f"**Duration:** {result['duration']:.2f}s",
-                f"**Test Task:** {result['test_task']}",
-                "",
-            ])
+            report_lines.extend(
+                [
+                    f"### {agent_name}",
+                    "",
+                    f"**Status:** {status}",
+                    f"**Duration:** {result['duration']:.2f}s",
+                    f"**Test Task:** {result['test_task']}",
+                    "",
+                ]
+            )
 
             if result["success"]:
                 response_preview = result["response"][:300]
-                report_lines.extend([
-                    "**Response Preview:**",
-                    "```",
-                    response_preview + ("..." if len(result["response"]) > 300 else ""),
-                    "```",
-                    "",
-                ])
+                report_lines.extend(
+                    [
+                        "**Response Preview:**",
+                        "```",
+                        response_preview
+                        + ("..." if len(result["response"]) > 300 else ""),
+                        "```",
+                        "",
+                    ]
+                )
             else:
-                report_lines.extend([
-                    "**Error:**",
-                    "```",
-                    result["response"],
-                    "```",
-                    "",
-                ])
+                report_lines.extend(
+                    [
+                        "**Error:**",
+                        "```",
+                        result["response"],
+                        "```",
+                        "",
+                    ]
+                )
 
         report_content = "\n".join(report_lines)
 

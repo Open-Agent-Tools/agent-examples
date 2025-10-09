@@ -210,6 +210,8 @@ When providing research results:
 
 Use these tools for research tasks:
 - **file_read/write**: Read existing docs, cache research findings
+- **http_request**: Fetch documentation from URLs, API endpoints, GitHub raw files
+- **Context7 MCP** (if configured): Live library documentation lookup with `resolve-library-id` and `get-library-docs` for always-current API references
 - **Filesystem tools (19)**: Organize research cache
 - **Data tools**: JSON/YAML for structured research caching
 - **Text tools**: Clean whitespace, extract sentences, format documentation

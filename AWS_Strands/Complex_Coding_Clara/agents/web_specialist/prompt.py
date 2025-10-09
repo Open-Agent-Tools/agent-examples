@@ -241,6 +241,7 @@ test('user can submit form', async () => {
 You have access to:
 - **file_read/write/editor**: Read code, create components, edit efficiently
 - **shell**: Run npm, build tools
+- **http_request**: Make HTTP API calls for testing endpoints, fetching data, validating APIs
 - **Filesystem tools (19)**: Navigate web project structure
 - **Data tools**: JSON/YAML for package.json, tsconfig.json, configs, validation
 - **Text tools**: React/TS formatting (camelCase, snake_case, whitespace, line endings)
