@@ -43,14 +43,21 @@ cp ../../../example_env .env
 
 **Recommended: Interactive Chat Loop**
 ```bash
-# Use the feature-rich chat interface from Basic-Agent-Chat-Loop
+# Install Basic-Agent-Chat-Loop (one-time setup)
 # https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop
 git clone https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop.git
 cd Basic-Agent-Chat-Loop
-python chat_loop.py --agent /path/to/Complex_Coding_Clara/agent.py
+pip install -e .
+
+# Run Clara with chat loop
+chat_loop /path/to/Complex_Coding_Clara/agent.py
+
+# Optional: Save alias for quick access
+chat_loop --save-alias clara /path/to/Complex_Coding_Clara/agent.py
+chat_loop clara  # Use the alias
 ```
 
-**Features:** Command history, token tracking, prompt templates, status bar, session summaries
+**Features:** Command history, token tracking, prompt templates, status bar, session summaries, multi-line input (`\`)
 
 **Direct Execution (Basic):**
 ```bash

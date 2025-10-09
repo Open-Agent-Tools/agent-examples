@@ -39,10 +39,15 @@ cd GoogleADK && adk web
 # https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop
 git clone https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop.git
 cd Basic-Agent-Chat-Loop
-python chat_loop.py --agent /path/to/agent.py
+pip install -e .  # Install the chat loop tool
+chat_loop /path/to/agent-examples/AWS_Strands/Complex_Coding_Clara/agent.py
+
+# Optional: Save aliases for quick access
+chat_loop --save-alias clara /path/to/Complex_Coding_Clara/agent.py
+chat_loop clara  # Use the alias
 
 # AWS Strands agents - Direct execution (basic)
-cd AWS_Strands/DeepResearch_Dave && python agent.py
+cd AWS_Strands/Complex_Coding_Clara && python agent.py
 ```
 
 
