@@ -182,7 +182,8 @@ atlassian-ide-plugin.xml
 # Visual Studio Code
 #  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 *.code-workspace
 .history/
 .ionide/
@@ -294,3 +295,5 @@ AWS_Strands/strands_docs_mcp-server/
 
 # Any Agent A2A deployment files
 .any_agent/
+.vscode/*
+\!.vscode/extensions.json

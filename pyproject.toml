@@ -5,10 +5,31 @@ build-backend = "hatchling.build"
 [project]
 name = "agent-examples"
 version = "0.1.0"
-description = "Google ADK Agent Examples"
+description = "Collection of AI agent examples using Google ADK, Strands, LangChain, and other frameworks"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
+keywords = ["ai", "agents", "examples", "google-adk", "strands", "langchain", "langgraph"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/Open-Agent-Tools/agent-examples"
+Repository = "https://github.com/Open-Agent-Tools/agent-examples"
+"Bug Tracker" = "https://github.com/Open-Agent-Tools/agent-examples/issues"
 dependencies = [
     "mcp>=1.1.3",
     "robin-stocks",
