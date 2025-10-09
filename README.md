@@ -14,6 +14,7 @@ Practical AI agent implementations across multiple frameworks with specialized a
 - ❌ **Stocks_Sarah** - MCP timeout issues
 
 ### AWS Strands
+- ✅ **Complex_Coding_Clara** - 14-agent coding system with specialists (Architect, Senior Coder, Python, Web, Database, DevOps, Data Science, Agile, etc.)
 - ✅ **DeepResearch_Dave** - Comprehensive research agent
 - ✅ **QuickResearch_Quinten** - Rapid research (30-90s responses)
 
@@ -34,8 +35,14 @@ cp example_env .env  # Add your API keys
 # GoogleADK web interface
 cd GoogleADK && adk web
 
-# AWS Strands agents
-cd AWS_Strands/DeepResearch_Dave && uv run python agent.py
+# AWS Strands agents - Recommended: Use Basic-Agent-Chat-Loop
+# https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop
+git clone https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop.git
+cd Basic-Agent-Chat-Loop
+python chat_loop.py --agent /path/to/agent.py
+
+# AWS Strands agents - Direct execution (basic)
+cd AWS_Strands/DeepResearch_Dave && python agent.py
 ```
 
 
