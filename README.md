@@ -37,9 +37,7 @@ cd GoogleADK && adk web
 
 # AWS Strands agents - Recommended: Use Basic-Agent-Chat-Loop
 # https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop
-git clone https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop.git
-cd Basic-Agent-Chat-Loop
-pip install -e .  # Install the chat loop tool
+pip install basic-agent-chat-loop
 chat_loop /path/to/agent-examples/AWS_Strands/Complex_Coding_Clara/agent.py
 
 # Optional: Save aliases for quick access

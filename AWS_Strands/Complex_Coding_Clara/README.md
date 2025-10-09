@@ -45,9 +45,7 @@ cp ../../../example_env .env
 ```bash
 # Install Basic-Agent-Chat-Loop (one-time setup)
 # https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop
-git clone https://github.com/Open-Agent-Tools/Basic-Agent-Chat-Loop.git
-cd Basic-Agent-Chat-Loop
-pip install -e .
+pip install basic-agent-chat-loop
 
 # Run Clara with chat loop
 chat_loop /path/to/Complex_Coding_Clara/agent.py
