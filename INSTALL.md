@@ -1,47 +1,56 @@
 # Installation Guide
 
-This repository now uses a modular dependency structure to reduce bloat and installation time.
+Choose your installation method: automated scripts (recommended) or manual installation.
 
-## Quick Install (Recommended)
+## Automated Installation (Recommended)
 
-### Core Dependencies Only
+### Using install.sh (Linux/macOS/Git Bash)
+```bash
+# Clone repository
+git clone <repository-url>
+cd agent-examples
+
+# Run installation script
+./install.sh
+```
+
+### Using install.py (Cross-platform)
+```bash
+# Clone repository
+git clone <repository-url>
+cd agent-examples
+
+# Run Python installation script
+python install.py
+# or
+python3 install.py
+```
+
+**Installation scripts will:**
+- ✅ Check Python version (3.8+ required)
+- ✅ Create virtual environment (optional, recommended)
+- ✅ Install all dependencies from requirements.txt
+- ✅ Setup .env file from example_env template
+- ✅ Verify installation
+
+## Manual Installation
+
+### Core Dependencies
 ```bash
 # Install essential packages for running agents
 pip install -r requirements.txt
 ```
 
-### Full Development Setup
-```bash
-# Install core + development tools + optional features
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
-pip install -r requirements-optional.txt
-```
-
-## Modular Installation
+## What Gets Installed
 
 ### Core Dependencies (`requirements.txt`)
-Essential packages needed to run the agents:
-- Agent frameworks (GoogleADK, Strands)
-- AI/LLM providers (Anthropic, OpenAI, LiteLLM, Ollama)
-- MCP tools and basic utilities
-- Core data processing (pandas, numpy)
-- Testing framework
-
-### Development Tools (`requirements-dev.txt`)
-Code quality and development tools:
-- Linting/formatting (black, ruff, mypy, flake8)
-- Build tools (hatchling, hatch)
-- Version control (pre-commit, commitizen)
-- Jupyter notebooks
-- FastAPI/Uvicorn for web interfaces
-
-### Optional Features (`requirements-optional.txt`)
-Advanced features for specialized use cases:
-- Web scraping (beautifulsoup4, selenium)
-- Machine learning (torch, transformers, scikit-learn)
-- Vector databases (faiss-cpu)
-- Advanced code analysis
+All essential packages needed to run agents:
+- **Agent frameworks**: GoogleADK, Strands
+- **AI/LLM providers**: Anthropic, OpenAI, LiteLLM, Ollama
+- **MCP tools**: Model Context Protocol tools and basic utilities
+- **Data processing**: pandas, numpy, openpyxl, pyyaml
+- **Testing**: pytest, pytest-asyncio
+- **Utilities**: pydantic, python-dotenv, requests, httpx, rich, click
 
 ## Framework-Specific Installation
 
@@ -57,15 +66,17 @@ pip install strands-agents strands-agents-tools
 
 ## Using UV (Faster Alternative)
 
+UV is a fast Python package installer written in Rust. The install scripts will automatically use it if available.
+
 ```bash
 # Install UV first
 pip install uv
 
-# Then install dependencies
+# Then install dependencies (much faster than pip)
 uv pip install -r requirements.txt
-uv pip install -r requirements-dev.txt    # Optional
-uv pip install -r requirements-optional.txt  # Optional
 ```
+
+The installation scripts automatically detect and use UV if installed.
 
 ## Environment Setup
 
@@ -81,11 +92,20 @@ ANTHROPIC_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
 ```
 
-## Dependency Reduction Summary
+## Installation Scripts Features
 
-The previous requirements.txt had **60+ packages**. The new structure:
-- **Core**: 25 essential packages
-- **Dev**: 15 development tools  
-- **Optional**: 10 specialized packages
+Both `install.sh` and `install.py` provide:
+- ✅ **Cross-platform**: Works on Linux, macOS, Windows (Git Bash/WSL)
+- ✅ **Interactive**: Prompts for virtual environment creation
+- ✅ **Smart detection**: Automatically uses UV if installed for faster installs
+- ✅ **Verification**: Checks Python version and verifies package installation
+- ✅ **Environment setup**: Creates .env from template
+- ✅ **Color output**: Clear, readable installation progress
 
-This reduces initial installation size by ~60% while maintaining all functionality.
+### Virtual Environment Support
+
+Both scripts offer to create a virtual environment:
+- **install.sh**: Automatically activates venv after creation
+- **install.py**: Guides you to activate venv and re-run script
+
+Recommended for clean dependency isolation.

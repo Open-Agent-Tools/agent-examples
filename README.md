@@ -19,12 +19,26 @@ Practical AI agent implementations across multiple frameworks with specialized a
 
 ## Quick Start
 
-**Install & Configure:**
+**Automated Installation (Recommended):**
 ```bash
-# Core dependencies
+# Clone repository
+git clone <repository-url>
+cd agent-examples
+
+# Run installation script
+./install.sh           # Linux/macOS/Git Bash
+# or
+python install.py      # Cross-platform Python script
+
+# Edit .env and add your API keys
+```
+
+**Manual Installation:**
+```bash
+# Install dependencies
 pip install -r requirements.txt
 
-# Environment setup
+# Setup environment
 cp example_env .env  # Add your API keys
 ```
 
