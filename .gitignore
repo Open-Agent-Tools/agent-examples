@@ -291,3 +291,6 @@ tramp
 
 # AWS Strands MCP Server (submodule/external)
 AWS_Strands/strands_docs_mcp-server/
+
+# Any Agent A2A deployment files
+.any_agent/
