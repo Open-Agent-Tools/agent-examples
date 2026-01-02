@@ -13,8 +13,8 @@ __author__ = "Deep Research Dave"
 
 __all__ = [
     "DeepResearchDave",
-    "create_agent", 
+    "create_agent",
     "ResearchSession",
     "SYSTEM_PROMPT",
-    "root_agent"
+    "root_agent",
 ]

@@ -18,6 +18,13 @@ Practical AI agent implementations across multiple frameworks with specialized a
 - ✅ **DeepResearch_Dave** - Comprehensive research agent
 - ✅ **QuickResearch_Quinten** - Rapid research (30-90s responses)
 
+### Claude Code Custom Subagents
+- ✅ **qa-testing-agent** - QA testing specialist subagent template
+- ✅ **react-typescript-mui-developer** - React/TypeScript/MUI development subagent
+- ✅ **user-story-crafter** - User story creation specialist subagent
+
+Example templates for creating custom subagents in Claude Code.
+
 ## Quick Start
 
 

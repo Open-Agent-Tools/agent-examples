@@ -13,9 +13,13 @@ This is a multi-framework AI agent examples repository showcasing specialized ag
   - Each agent follows pattern: `agent.py`, `prompts.py`, `__init__.py`, `evals/`
   - Agents use `google.adk.agents.Agent` base class
   - Tools loaded via `basic_open_agent_tools` or MCP servers
-- **AWS_Strands/**: Strands framework agents  
+- **AWS_Strands/**: Strands framework agents
   - Uses `strands.Agent` and `strands_tools`
   - Product_Pete agent demonstrates Atlassian MCP integration
+- **claude_code_subagents/**: Claude Code custom subagent templates
+  - Example templates for creating custom subagents in Claude Code
+  - Demonstrates specialized subagents for QA testing, React development, and user story creation
+  - These are intentional examples showing how to define and configure custom subagents
 
 ### Agent Pattern
 All agents follow consistent structure:

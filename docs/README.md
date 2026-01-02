@@ -12,10 +12,12 @@ Example agent implementations using alternative frameworks:
 These serve as educational examples for developers familiar with these frameworks.
 
 ### `agent_templates/`
-Agent description templates and examples:
+Agent description templates and examples (legacy location):
 - `qa-testing-agent.md` - QA testing specialist agent
 - `react-typescript-mui-developer.md` - React/TypeScript/MUI developer agent
 - `user-story-crafter.md` - User story creation specialist
+
+**Note:** Active Claude Code subagent templates are maintained in `/claude_code_subagents/` at project root.
 
 ### `prd_examples/`
 Example Product Requirement Documents:
@@ -26,5 +28,6 @@ Example Product Requirement Documents:
 For current agent implementations, see:
 - **GoogleADK/** - Google Agent Development Kit implementations
 - **AWS_Strands/** - AWS Strands framework implementations
+- **claude_code_subagents/** - Claude Code subagent template examples
 
 See [CLAUDE.md](../CLAUDE.md) for development guidelines.

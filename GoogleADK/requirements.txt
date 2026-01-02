@@ -1,19 +1,19 @@
 # Google ADK Core Requirements
-google-adk
-basic-open-agent-tools
-python-dotenv
+google-adk>=1.21.0
+basic-open-agent-tools>=0.2.0
+python-dotenv>=1.0.1
 
 # LLM Integration
-litellm
-ollama
+litellm>=1.56.0
+ollama>=0.4.6
 
 # Agent Communication
-a2a-sdk
+a2a-sdk>=0.1.0
 
 # Utilities
-pydantic
-rich
-loguru
+pydantic>=2.12.0
+rich>=14.2.0
+loguru>=0.7.3
 
 # Testing framework
 pytest
