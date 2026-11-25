@@ -10,25 +10,22 @@ from pathlib import Path
 from strands import Agent, tool
 from strands.models.anthropic import AnthropicModel
 
-# Load environment variables - search up to 3 parent folders for root .env
 try:
     from dotenv import load_dotenv
 
-    # Search up to 3 levels up (to find root .env)
     env_loaded = False
     for i in range(3):
         env_path = Path(__file__).parents[i] / ".env"
         if env_path.exists():
-            load_dotenv(env_path, override=False)  # Don't override if already set
+            load_dotenv(env_path, override=False)
             env_loaded = True
             break
 
     if not env_loaded:
-        load_dotenv(override=False)  # Try default location
+        load_dotenv(override=False)
 except ImportError:
     pass
 
-# Import prompts and tools
 try:
     from .prompts import SYSTEM_PROMPT
 except ImportError:
@@ -39,11 +36,9 @@ try:
 except ImportError:
     from subagent import root_agent as worker
 
-# Import basic open agent tools for CSV and file operations
 try:
     import basic_open_agent_tools as boat
 
-    # Load just the essential CSV and file tools
     csv_tools = [
         boat.data.read_csv_simple,
         boat.data.write_csv_simple,
@@ -52,7 +47,6 @@ try:
     file_tools = boat.load_all_filesystem_tools()
     tools = boat.helpers.merge_tool_lists(csv_tools, file_tools)
 except ImportError:
-    # Fallback to strands_tools if basic-open-agent-tools not available
     try:
         from strands_tools.file_read import file_read
         from strands_tools.file_write import file_write
@@ -62,7 +56,6 @@ except ImportError:
     except ImportError:
         tools = []
 
-# Create the Anthropic model
 model = AnthropicModel(
     client_args={
         "api_key": os.getenv("ANTHROPIC_API_KEY"),
@@ -75,7 +68,6 @@ model = AnthropicModel(
 )
 
 
-# Create individual worker agent tools using proper Strands @tool decorator
 @tool
 def worker1(task_instruction: str) -> str:
     """
@@ -172,7 +164,6 @@ all_tools = tools + [worker1, worker2, worker3, worker4, worker5]
 def create_agent() -> Agent:
     """Create Orchestrator Ollie agent with worker delegation capability."""
 
-    # Combine BOAT tools with worker delegation tool
 
     return Agent(
         name="Orchestrator Ollie",
@@ -183,7 +174,6 @@ def create_agent() -> Agent:
     )
 
 
-# Module-level agent
 root_agent = create_agent()
 
 if __name__ == "__main__":
@@ -192,7 +182,6 @@ if __name__ == "__main__":
     print(f"✓ Model: {agent.model}")
     print("✓ Orchestrator Ollie ready for task coordination and CSV processing")
 
-    # Simple test
     try:
         response = agent("Hello! What can you help me orchestrate today?")
         print(f"\nAgent Response: {response}")

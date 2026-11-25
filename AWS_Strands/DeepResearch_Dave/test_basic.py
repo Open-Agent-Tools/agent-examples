@@ -5,7 +5,6 @@ Basic test to validate Deep Research Dave agent structure.
 import sys
 import os
 
-# Add parent directories to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -33,21 +32,17 @@ def test_research_session_basic():
         assert session.research_type == "quick"
         assert session.status == "initialized"
 
-        # Test adding source
         source = {"url": "https://example.edu", "title": "Test"}
         session.add_source(source)
         assert len(session.sources) == 1
         assert session.sources[0]["credibility"] == "high"
 
-        # Test adding finding
         session.add_finding("category1", {"finding": "test finding"})
         assert "category1" in session.findings
 
-        # Test adding insight
         session.add_insight("test insight", ["source1"])
         assert len(session.insights) == 1
 
-        # Test summary
         summary = session.get_summary()
         assert summary["topic"] == "Test Topic"
         assert summary["sources_count"] == 1
@@ -65,13 +60,11 @@ def test_agent_initialization():
     try:
         from agent import DeepResearchDave
 
-        # Test initialization
         dave = DeepResearchDave()
         assert dave.model_provider == "anthropic/claude-3-5-sonnet-20241022"
         assert dave.agent is None
         assert dave.current_session is None
 
-        # Test custom model provider
         dave_custom = DeepResearchDave(model_provider="test/model")
         assert dave_custom.model_provider == "test/model"
 
@@ -88,11 +81,9 @@ def test_prompt_structure():
     try:
         from prompts import SYSTEM_PROMPT
 
-        # Check prompt is non-empty string
         assert isinstance(SYSTEM_PROMPT, str)
         assert len(SYSTEM_PROMPT) > 100
 
-        # Check for key research concepts
         key_terms = [
             "research",
             "analysis",

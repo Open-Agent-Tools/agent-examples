@@ -8,28 +8,24 @@ from strands.models.anthropic import AnthropicModel
 from mcp.client.streamable_http import streamablehttp_client
 from strands.tools.mcp.mcp_client import MCPClient
 
-# Import prompts
 try:
     from .prompts import SYSTEM_PROMPT
 except ImportError:
     from prompts import SYSTEM_PROMPT  # type: ignore
 
-# Load environment variables from .env file
 from dotenv import load_dotenv
 
-# Search for .env up to 3 levels up (to find root .env)
 env_loaded = False
 for i in range(3):
     env_path = Path(__file__).parents[i] / ".env"
     if env_path.exists():
-        load_dotenv(env_path, override=False)  # Don't override if already set
+        load_dotenv(env_path, override=False)
         env_loaded = True
         break
 
 if not env_loaded:
-    load_dotenv(override=False)  # Try default location
+    load_dotenv(override=False)
 
-# Setup simplified logging (warn/debug/error only)
 logging.basicConfig(
     level=logging.WARNING, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
@@ -37,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_mcp_tools(base_tools: list, mcp_url: str):
-    """Add MCP tools to base tools list - handle failures gracefully for containerization."""
+    """Add MCP tools to the base tools list."""
     logger.info(f"Connecting to MCP server at {mcp_url}")
 
     try:
@@ -59,11 +55,9 @@ def add_mcp_tools(base_tools: list, mcp_url: str):
 def create_agent():
     """Create Product Pete agent with MCP tools."""
     tools = []
-    # Add MCP tools - handle failures gracefully
     mcp_url = os.getenv("MCP_SERVER_URL", "http://localhost:9000/mcp/")
     tools = add_mcp_tools(tools, mcp_url)
 
-    # Create the Anthropic model with Claude Sonnet 4
     model = AnthropicModel(
         client_args={
             "api_key": os.getenv("ANTHROPIC_API_KEY"),
@@ -75,7 +69,6 @@ def create_agent():
         },
     )
 
-    # Create the agent
     return Agent(
         model=model,
         name="Product Pete",
@@ -85,11 +78,9 @@ def create_agent():
     )
 
 
-# Create the root agent
 root_agent = create_agent()
 
 
-# Simple test function for local execution
 def main():
     """Simple test function to verify Product Pete works."""
     print("Testing Product Pete...")

@@ -9,11 +9,9 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
-# Load environment variables
 try:
     from dotenv import load_dotenv
 
-    # Search current directory and up to 3 parent folders for .env
     current_path = Path(__file__).parent
     env_path = current_path / ".env"
     if env_path.exists():
@@ -27,13 +25,11 @@ try:
 except ImportError:
     pass
 
-# Core LangChain imports
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool
 from langchain import hub
 
-# Simple tools
 def get_weather(city: str) -> str:
     """Get weather for a given city."""
     return f"The weather in {city} is sunny and 72°F."
@@ -41,7 +37,6 @@ def get_weather(city: str) -> str:
 def calculate(expression: str) -> str:
     """Safely evaluate mathematical expressions."""
     try:
-        # Only allow basic math operations for safety
         allowed_chars = "0123456789+-*/.() "
         if all(c in allowed_chars for c in expression):
             result = eval(expression)
@@ -56,7 +51,6 @@ def get_time() -> str:
     from datetime import datetime
     return f"Current time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
-# Define tools list
 tools = [
     Tool(
         name="Weather",
@@ -78,20 +72,16 @@ tools = [
 def create_agent() -> AgentExecutor:
     """Create Simple Sam agent with basic tools."""
 
-    # Initialize the language model
     llm = ChatOpenAI(
         api_key=os.getenv("OPENAI_API_KEY"),
         model="gpt-4.1-mini",
         temperature=0.3
     )
 
-    # Get the ReAct prompt from hub
     prompt = hub.pull("hwchase17/react")
 
-    # Create the agent
     agent = create_react_agent(llm, tools, prompt)
 
-    # Create agent executor
     return AgentExecutor(
         agent=agent,
         tools=tools,
@@ -100,7 +90,6 @@ def create_agent() -> AgentExecutor:
         max_iterations=3
     )
 
-# Module-level agent
 root_agent = create_agent()
 
 def run_agent(query: str) -> Dict[str, Any]:
@@ -116,7 +105,6 @@ if __name__ == "__main__":
     print("✓ Tools: Weather, Calculator, Time")
     print("✓ Model: GPT-4.1-mini")
 
-    # Test interaction
     try:
         test_query = "What's the weather in San Francisco?"
         print(f"\nTest Query: {test_query}")

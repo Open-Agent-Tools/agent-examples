@@ -11,7 +11,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from agent import DeepResearchDave
 
-# Load .env file from root directory
 try:
     from dotenv import load_dotenv
 
@@ -24,7 +23,6 @@ try:
 except ImportError:
     pass
 
-# Set up logging for examples
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -39,7 +37,6 @@ async def example_quick_research():
 
     dave = DeepResearchDave()
 
-    # Quick research on a trending topic
     query = "Latest trends in AI agent frameworks and tools 2025"
     print(f"Research Query: {query}")
     print("\nConducting quick research...")
@@ -61,7 +58,6 @@ async def example_comparative_analysis():
 
     dave = DeepResearchDave()
 
-    # Compare different AI agent frameworks
     options = ["AWS Strands", "LangChain", "Crew AI", "Google ADK"]
     criteria = [
         "ease of use",
@@ -102,16 +98,13 @@ async def example_comprehensive_research_session():
     print("\nStarting comprehensive research session...")
 
     try:
-        # Phase 1: Planning
         print("\n--- Phase 1: Research Planning ---")
         planning = await dave.start_research_session(topic, research_type)
         print(planning)
 
-        # Check session status
         status = dave.get_session_status()
         print(f"\nSession Status: {status['current_phase']} - {status['status']}")
 
-        # Phase 2: Information Gathering
         print("\n--- Phase 2: Information Gathering ---")
         phase_instructions = """
         Focus on gathering information about:
@@ -127,7 +120,6 @@ async def example_comprehensive_research_session():
         findings = await dave.conduct_research_phase(phase_instructions)
         print(findings)
 
-        # Phase 3: Analysis & Synthesis
         print("\n--- Phase 3: Analysis & Synthesis ---")
         focus_areas = [
             "architecture patterns",
@@ -139,12 +131,10 @@ async def example_comprehensive_research_session():
         analysis = await dave.synthesize_findings(focus_areas)
         print(analysis)
 
-        # Phase 4: Final Report
         print("\n--- Phase 4: Research Report Generation ---")
         report = await dave.generate_research_report("comprehensive")
         print(report)
 
-        # Final session status
         final_status = dave.get_session_status()
         print("\n--- Final Session Summary ---")
         print(f"Topic: {final_status['topic']}")
@@ -167,7 +157,6 @@ async def example_technical_research():
 
     dave = DeepResearchDave()
 
-    # Technical deep dive on a specific framework
     query = """
     Analyze the AWS Strands agent framework in detail:
     
@@ -201,11 +190,9 @@ async def example_market_research():
 
     dave = DeepResearchDave()
 
-    # Start market research session
     topic = "AI agent market landscape and growth opportunities 2025"
 
     try:
-        # Quick market overview
         market_query = """
         Research the current AI agent market including:
         
@@ -236,11 +223,8 @@ async def example_multi_model_comparison():
     print("EXAMPLE 6: Multi-Model Comparison")
     print("=" * 60)
 
-    # Test different model providers if available
     models = [
         "anthropic/claude-3-5-sonnet-20241022",
-        # "openai/gpt-4",  # Uncomment if API key available
-        # "google/gemini-pro",  # Uncomment if API key available
     ]
 
     query = "Compare Python web frameworks: FastAPI vs Flask vs Django"
@@ -268,12 +252,11 @@ async def example_error_handling():
 
     dave = DeepResearchDave()
 
-    # Test with invalid/challenging inputs
     test_cases = [
-        "",  # Empty query
-        "x" * 1000,  # Very long query
-        "Research something that doesn't exist: flibbertigibbet quantum marshmallow",  # Nonsensical
-        "What is 2+2?",  # Simple math (not really research)
+        "",
+        "x" * 1000,
+        "Research something that doesn't exist: flibbertigibbet quantum marshmallow",
+        "What is 2+2?",
     ]
 
     for i, query in enumerate(test_cases):
@@ -295,7 +278,6 @@ async def main():
     print("Deep Research Dave - Usage Examples")
     print("=" * 60)
 
-    # Check for API keys and show which are available
     api_keys = {
         "ANTHROPIC_API_KEY": os.getenv("ANTHROPIC_API_KEY"),
         "OPENAI_API_KEY": os.getenv("OPENAI_API_KEY"),
@@ -319,14 +301,13 @@ async def main():
         print("Examples will use mock responses for demonstration.")
         return
 
-    # Run examples sequentially
     examples = [
         example_quick_research,
         example_comparative_analysis,
         example_technical_research,
         example_market_research,
         example_multi_model_comparison,
-        example_comprehensive_research_session,  # Longest, run near end
+        example_comprehensive_research_session,
         example_error_handling,
     ]
 
@@ -334,7 +315,6 @@ async def main():
         try:
             await example_func()
 
-            # Brief pause between examples
             await asyncio.sleep(1)
 
         except KeyboardInterrupt:
@@ -350,5 +330,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    # Run the examples
     asyncio.run(main())

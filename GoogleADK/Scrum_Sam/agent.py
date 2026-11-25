@@ -17,18 +17,15 @@ from .prompts import agent_instruction
 import basic_open_agent_tools as boat
 
 
-# Import Jira_Johnny and Story_Sage with fallback for different execution contexts
 try:
     from ..Jira_Johnny import create_agent as create_jira_agent
     from ..Story_Sage import create_agent as create_story_agent
 except ImportError:
-    # Fallback for when running via ADK eval or other contexts
     import sys
     from pathlib import Path
 
-    # Add parent directory to Python path
     current_file = Path(__file__)
-    project_root = current_file.parent.parent.parent  # Go up to agent-examples
+    project_root = current_file.parent.parent.parent
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
@@ -40,8 +37,7 @@ except ImportError:
 
 from dotenv import load_dotenv
 
-# Initialize environment and logging
-load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -58,9 +54,7 @@ def create_agent() -> Agent:
         boat.load_all_filesystem_tools(), boat.load_all_text_tools()
     )
 
-    # Create fresh sub-agent instances for this Scrum_Sam agent
     jira_johnny_agent = create_jira_agent()
-    # Create Story_Sage without Jira integration to prevent circular dependencies
     story_sage_agent = create_story_agent(include_jira=False)
 
     return Agent(
@@ -73,5 +67,4 @@ def create_agent() -> Agent:
     )
 
 
-# Configure specialized Scrum Master agent
 root_agent = create_agent()

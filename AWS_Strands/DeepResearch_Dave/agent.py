@@ -15,19 +15,17 @@ from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 from strands import Agent
 
-# Load .env file - search up to 3 parent folders for root .env
 try:
-    # Search up to 3 levels up (to find root .env)
     env_loaded = False
     for i in range(3):
         env_path = Path(__file__).parents[i] / ".env"
         if env_path.exists():
-            load_dotenv(env_path, override=False)  # Don't override if already set
+            load_dotenv(env_path, override=False)
             env_loaded = True
             break
 
     if not env_loaded:
-        load_dotenv(override=False)  # Try default location
+        load_dotenv(override=False)
 except ImportError:
     pass
 
@@ -36,7 +34,6 @@ try:
 except ImportError:
     from prompts import SYSTEM_PROMPT
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -111,7 +108,6 @@ class ResearchSession:
 
     def _assess_credibility(self, source: Dict[str, Any]) -> str:
         """Assess source credibility based on metadata."""
-        # Simple heuristic-based credibility assessment
         url = source.get("url", "").lower()
         title = source.get("title", "").lower()
 
@@ -147,18 +143,15 @@ class DeepResearchDave:
         self.model_provider = model_provider
         self.agent = None
         self.current_session = None
-        self._tavily_client = None  # Will hold MCP client reference if connected
+        self._tavily_client = None
 
     def create_agent(self) -> Agent:
         """Create and configure the research agent."""
         try:
-            # Model configuration with fallback based on available API keys
             model = self._get_model_config()
 
-            # Configure MCP tools for research
             tools = self._setup_research_tools()
 
-            # Create agent with research tools
             agent = Agent(
                 name="Deep Research Dave",
                 description="A specialized research agent for comprehensive information gathering and analysis",
@@ -180,38 +173,32 @@ class DeepResearchDave:
         """Setup research tools including Tavily MCP for web search."""
         tools = []
 
-        # Connect to Tavily HTTP MCP server for web search
         tavily_key = os.getenv("TAVILY_API_KEY")
         if tavily_key:
             try:
                 from mcp.client.streamable_http import streamablehttp_client
                 from strands.tools.mcp import MCPClient
 
-                # Create MCP client for Tavily's hosted HTTP server
-                # API key must be provided as URL query parameter
                 tavily_mcp_client = MCPClient(
                     lambda: streamablehttp_client(
                         url=f"https://mcp.tavily.com/mcp/?tavilyApiKey={tavily_key}"
                     )
                 )
 
-                # Start the MCP client and get available tools
                 tavily_mcp_client.__enter__()
                 tavily_tools = tavily_mcp_client.list_tools_sync()
 
-                # Add all Tavily tools to the agent's toolkit
                 for tool in tavily_tools:
                     tools.append(tool)
 
                 logger.info(
                     f"✓ Connected to Tavily MCP - {len(tavily_tools)} search tools added"
                 )
-                for tool in tavily_tools[:3]:  # Log first 3 tools
+                for tool in tavily_tools[:3]:
                     logger.info(
                         f"  - {tool.tool_name}: {tool.mcp_tool.description[:50]}..."
                     )
 
-                # Store client reference for cleanup
                 self._tavily_client = tavily_mcp_client
 
             except ImportError as e:
@@ -229,7 +216,6 @@ class DeepResearchDave:
 
             except Exception as e:
                 logger.error(f"Failed to connect to Tavily MCP: {e}")
-                # Fallback to generic MCP client
                 try:
                     from strands_tools.mcp_client import mcp_client
 
@@ -240,7 +226,6 @@ class DeepResearchDave:
         else:
             logger.warning("No TAVILY_API_KEY found, web search disabled")
 
-        # Add HTTP request tool for additional research capabilities
         try:
             from strands_tools.http_request import http_request
 
@@ -260,20 +245,18 @@ class DeepResearchDave:
 
     def _get_model_config(self):
         """Get model configuration based on provider and available API keys."""
-        # If user specified a specific model, try to honor it
         if self.model_provider.startswith("anthropic/") and os.getenv(
             "ANTHROPIC_API_KEY"
         ):
             try:
                 from strands.models.anthropic import AnthropicModel
 
-                # Extract model ID from provider string
                 model_id = self.model_provider.split("/", 1)[1]
 
                 model = AnthropicModel(
                     model_id=model_id,
                     max_tokens=4096,
-                    temperature=0.1,  # Lower temperature for research consistency
+                    temperature=0.1,
                 )
                 logger.info(f"Using Anthropic Direct API: {model_id}")
                 return model
@@ -288,7 +271,6 @@ class DeepResearchDave:
             try:
                 from strands.models.openai import OpenAIModel
 
-                # Extract model ID from provider string
                 model_id = self.model_provider.split("/", 1)[1]
 
                 model = OpenAIModel(
@@ -307,7 +289,6 @@ class DeepResearchDave:
             logger.info(f"Using Google model: {self.model_provider}")
             return self.model_provider
 
-        # Fallback logic based on available API keys
         if os.getenv("ANTHROPIC_API_KEY"):
             try:
                 from strands.models.anthropic import AnthropicModel
@@ -355,7 +336,6 @@ class DeepResearchDave:
             if not self.agent:
                 self.agent = self.create_agent()
 
-            # Initial research planning
             planning_prompt = f"""
             I need to conduct {research_type} research on: {topic}
             
@@ -442,8 +422,7 @@ class DeepResearchDave:
 
             response = await self.robust_agent_call(prompt)
 
-            # Update confidence level based on synthesis
-            self.current_session.update_confidence("medium")  # Default, can be refined
+            self.current_session.update_confidence("medium")
 
             return response
 
@@ -503,19 +482,15 @@ class DeepResearchDave:
     async def deep_research(self, topic: str) -> str:
         """Initiate a comprehensive deep research session."""
         try:
-            # Start comprehensive research session
             await self.start_research_session(topic, "comprehensive")
 
-            # Phase 1: Gather information
             gather_phase = await self.conduct_research_phase(
                 "Gather comprehensive information from multiple sources, "
                 "focusing on authoritative and recent content"
             )
 
-            # Phase 2: Analysis and synthesis
             synthesis = await self.synthesize_findings()
 
-            # Phase 3: Generate comprehensive report
             report = await self.generate_research_report("comprehensive")
 
             return report
@@ -543,11 +518,9 @@ class DeepResearchDave:
                     "future outlook",
                 ]
 
-            # Start research session
             topic = f"Comparative analysis of {', '.join(options)}"
             await self.start_research_session(topic, "comparative")
 
-            # Phase 1: Research each option thoroughly
             research_prompt = f"""
             Phase 1: Comprehensive Information Gathering
             
@@ -564,7 +537,6 @@ class DeepResearchDave:
             """
             await self.conduct_research_phase(research_prompt)
 
-            # Phase 2: Comparative analysis
             analysis_prompt = f"""
             Phase 2: Deep Comparative Analysis
             
@@ -580,10 +552,8 @@ class DeepResearchDave:
             """
             await self.conduct_research_phase(analysis_prompt)
 
-            # Phase 3: Synthesis and recommendations
             synthesis = await self.synthesize_findings(criteria)
 
-            # Generate comprehensive comparison report
             report = await self.generate_research_report("comparative")
 
             return report
@@ -601,7 +571,6 @@ class DeepResearchDave:
                 if not self.agent:
                     self.agent = self.create_agent()
 
-                # Strands agents work synchronously, so wrap in async
                 response = await asyncio.get_event_loop().run_in_executor(
                     None, self.agent, prompt
                 )
@@ -613,7 +582,6 @@ class DeepResearchDave:
                     logger.error(f"All agent call attempts failed: {str(e)}")
                     raise
 
-                # Wait before retry
                 await asyncio.sleep(2**attempt)
 
     def get_session_status(self) -> Optional[Dict[str, Any]]:
@@ -635,18 +603,15 @@ class DeepResearchDave:
                 self._tavily_client = None
 
 
-# Convenience function for direct usage
 def create_agent() -> Agent:
     """Create Deep Research Dave agent instance."""
     research_dave = DeepResearchDave()
     return research_dave.create_agent()
 
 
-# Root agent instance for module-level access
 root_agent = create_agent()
 
 
-# Simple test function for local execution
 def main():
     """Simple test function to verify DeepResearch_Dave works."""
     print("Testing Deep Research Dave...")

@@ -8,7 +8,6 @@ The agent is built using Google's Agent Development Kit (ADK) and uses the Gemin
 It provides tools for file operations, directory management, and text processing.
 """
 
-# Expose the root agent and create_agent function at the package level for easier imports
 from .agent import root_agent, create_agent
 from . import agent
 
