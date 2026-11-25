@@ -7,7 +7,6 @@ import sys
 import os
 from unittest.mock import patch, AsyncMock
 
-# Add parent directory to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 from AWS_Strands.DeepResearch_Dave import DeepResearchDave, ResearchSession
@@ -46,7 +45,7 @@ class TestDeepResearchDave:
 
         assert len(session.sources) == 1
         assert session.sources[0]["url"] == source["url"]
-        assert session.sources[0]["credibility"] == "high"  # .edu domain
+        assert session.sources[0]["credibility"] == "high"
         assert "added_at" in session.sources[0]
 
     def test_session_findings_management(self):
@@ -84,7 +83,6 @@ class TestDeepResearchDave:
         """Test source credibility assessment logic."""
         session = ResearchSession("Test Topic")
 
-        # High credibility sources
         high_sources = [
             {"url": "https://research.example.edu", "title": "Academic paper"},
             {"url": "https://data.gov", "title": "Government data"},
@@ -96,7 +94,6 @@ class TestDeepResearchDave:
             session.add_source(source)
             assert session.sources[-1]["credibility"] == "high"
 
-        # Medium credibility sources
         medium_sources = [
             {"url": "https://stackoverflow.com/questions", "title": "SO answer"},
             {"url": "https://github.com/repo", "title": "GitHub repository"},
@@ -107,7 +104,6 @@ class TestDeepResearchDave:
             session.add_source(source)
             assert session.sources[-1]["credibility"] == "medium"
 
-        # Sources needing verification
         unknown_source = {"url": "https://random-blog.com", "title": "Blog post"}
         session.add_source(unknown_source)
         assert session.sources[-1]["credibility"] == "needs_verification"
@@ -116,7 +112,6 @@ class TestDeepResearchDave:
         """Test session summary generation."""
         session = ResearchSession("Test Topic", "quick")
 
-        # Add some data
         session.add_source({"url": "https://example.com", "title": "Test"})
         session.add_finding("category1", {"finding": "test"})
         session.add_insight("test insight")
@@ -136,13 +131,11 @@ class TestDeepResearchDave:
 
     def test_agent_initialization(self):
         """Test agent creation and configuration."""
-        # Test default initialization
         dave = DeepResearchDave()
         assert dave.model_provider == "anthropic/claude-3-5-sonnet-20241022"
         assert dave.agent is None
         assert dave.current_session is None
 
-        # Test custom model provider
         dave_custom = DeepResearchDave(model_provider="openai/gpt-4")
         assert dave_custom.model_provider == "openai/gpt-4"
 
@@ -155,14 +148,13 @@ class TestDeepResearchDave:
         dave = DeepResearchDave()
         agent = dave.create_agent()
 
-        # Verify agent was created with correct parameters
         mock_agent_class.assert_called_once()
         call_args = mock_agent_class.call_args
 
         assert call_args[1]["name"] == "DeepResearchDave"
         assert call_args[1]["model_provider"] == dave.model_provider
         assert call_args[1]["temperature"] == 0.1
-        assert len(call_args[1]["tools"]) >= 3  # web_search, context7, atlassian
+        assert len(call_args[1]["tools"]) >= 3
 
         assert agent == mock_agent
 
@@ -174,7 +166,6 @@ class TestDeepResearchDave:
         ) as mock_call:
             mock_call.return_value = "Mocked agent response"
 
-            # Start research session
             response = await self.dave.start_research_session(
                 "Test Topic", "comprehensive"
             )
@@ -186,19 +177,16 @@ class TestDeepResearchDave:
             assert self.dave.current_session.current_phase == "planning"
             assert response == "Mocked agent response"
 
-            # Conduct research phase
             phase_response = await self.dave.conduct_research_phase("Test instructions")
             assert self.dave.current_session.current_phase == "information_gathering"
             assert phase_response == "Mocked agent response"
 
-            # Synthesize findings
             synthesis_response = await self.dave.synthesize_findings(
                 ["test", "analysis"]
             )
             assert self.dave.current_session.current_phase == "analysis_synthesis"
             assert synthesis_response == "Mocked agent response"
 
-            # Generate report
             report_response = await self.dave.generate_research_report("comprehensive")
             assert self.dave.current_session.current_phase == "documentation"
             assert self.dave.current_session.status == "completed"
@@ -217,7 +205,6 @@ class TestDeepResearchDave:
             assert result == "Quick research results"
             mock_call.assert_called_once()
 
-            # Verify prompt contains expected elements
             call_args = mock_call.call_args[0][0]
             assert "Test query" in call_args
             assert "3 most relevant sources" in call_args
@@ -239,7 +226,6 @@ class TestDeepResearchDave:
             assert result == "Comparative analysis results"
             mock_call.assert_called_once()
 
-            # Verify prompt contains expected elements
             call_args = mock_call.call_args[0][0]
             assert all(option in call_args for option in options)
             assert all(criterion in call_args for criterion in criteria)
@@ -253,32 +239,27 @@ class TestDeepResearchDave:
             mock_agent = AsyncMock()
             mock_create.return_value = mock_agent
 
-            # Test successful call
             mock_agent.run.return_value = "Success response"
             result = await self.dave.robust_agent_call("test prompt")
             assert result == "Success response"
             assert mock_agent.run.call_count == 1
 
-            # Test retry on failure then success
             mock_agent.run.side_effect = [
                 Exception("First fail"),
                 "Success after retry",
             ]
             result = await self.dave.robust_agent_call("test prompt", max_retries=2)
             assert result == "Success after retry"
-            assert mock_agent.run.call_count == 3  # 1 from previous + 2 from retry test
+            assert mock_agent.run.call_count == 3
 
-            # Test max retries exceeded
             mock_agent.run.side_effect = Exception("Persistent failure")
             with pytest.raises(Exception, match="Persistent failure"):
                 await self.dave.robust_agent_call("test prompt", max_retries=2)
 
     def test_session_status_tracking(self):
         """Test session status retrieval."""
-        # No session initially
         assert self.dave.get_session_status() is None
 
-        # Create session and check status
         session = ResearchSession("Test", "quick")
         session.add_source({"url": "test.com", "title": "Test"})
         session.add_finding("category", {"test": "finding"})
@@ -302,7 +283,6 @@ class TestResearchQuality:
         """Test comprehensive research meets quality standards."""
         session = ResearchSession("AI Frameworks Comparison", "comprehensive")
 
-        # Simulate adding diverse, high-quality sources
         sources = [
             {
                 "url": "https://arxiv.org/framework-comparison",
@@ -329,12 +309,10 @@ class TestResearchQuality:
         for source in sources:
             session.add_source(source)
 
-        # Check source diversity
         credibility_levels = [s["credibility"] for s in session.sources]
         assert "high" in credibility_levels
         assert "medium" in credibility_levels
 
-        # Should have multiple categories of findings
         session.add_finding("performance", {"metric": "speed", "value": "high"})
         session.add_finding(
             "usability", {"metric": "learning_curve", "value": "moderate"}
@@ -343,7 +321,6 @@ class TestResearchQuality:
 
         assert len(session.findings) >= 3
 
-        # Should have synthesized insights
         session.add_insight("Framework A excels in performance", ["source1", "source2"])
         session.add_insight("Framework B has better documentation", ["source3"])
 
@@ -355,7 +332,6 @@ class TestResearchQuality:
         assert summary["insights_count"] >= 2
 
 
-# Integration tests (require actual agent setup)
 class TestIntegration:
     """Integration tests for real agent interactions."""
 
@@ -363,7 +339,6 @@ class TestIntegration:
     @pytest.mark.asyncio
     async def test_real_quick_research(self):
         """Test quick research with real agent (requires API keys)."""
-        # Skip if no environment setup
         if not os.getenv("ANTHROPIC_API_KEY"):
             pytest.skip("No API key configured")
 
@@ -372,8 +347,7 @@ class TestIntegration:
         try:
             result = await dave.quick_research("Python testing frameworks comparison")
 
-            # Verify response structure
-            assert len(result) > 100  # Should be substantial
+            assert len(result) > 100
             assert "pytest" in result.lower() or "unittest" in result.lower()
 
         except Exception as e:
@@ -394,7 +368,6 @@ class TestIntegration:
                 criteria=["ease of use", "features", "community"],
             )
 
-            # Verify response contains comparison elements
             assert "pytest" in result and "unittest" in result
             assert "ease of use" in result.lower()
             assert "features" in result.lower()
@@ -404,5 +377,4 @@ class TestIntegration:
 
 
 if __name__ == "__main__":
-    # Run basic tests
     pytest.main([__file__, "-v"])

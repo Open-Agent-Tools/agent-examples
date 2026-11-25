@@ -20,8 +20,7 @@ from google.adk.tools.mcp_tool.mcp_toolset import (
 )
 from dotenv import load_dotenv
 
-# Initialize environment and logging
-load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -41,8 +40,6 @@ def create_agent() -> Agent:
             connection_params=StreamableHTTPConnectionParams(
                 url="http://localhost:9000/mcp",
             ),
-            # Optional: Filter which tools from the MCP server are exposed
-            # tool_filter=['list_directory', 'read_file']
         ),
     ]
 
@@ -55,5 +52,4 @@ def create_agent() -> Agent:
     )
 
 
-# Configure specialized Jira operations agent
 root_agent = create_agent()

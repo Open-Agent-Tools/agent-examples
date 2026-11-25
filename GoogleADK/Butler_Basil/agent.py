@@ -13,12 +13,10 @@ from google.adk.agents import Agent
 from .prompts import agent_instruction
 
 import basic_open_agent_tools as boat  # type: ignore
-# from basic_open_agent_tools import load_all_filesystem_tools
 
 from dotenv import load_dotenv
 
-# Initialize environment and logging
-load_dotenv()  # or load_dotenv(dotenv_path="/env_path")
+load_dotenv()
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
 
@@ -43,5 +41,4 @@ def create_agent() -> Agent:
     )
 
 
-# Configure agent with comprehensive file system tools
 root_agent = create_agent()

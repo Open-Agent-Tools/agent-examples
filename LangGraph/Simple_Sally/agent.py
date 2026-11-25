@@ -9,11 +9,9 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
-# Load environment variables
 try:
     from dotenv import load_dotenv
 
-    # Search current directory and up to 3 parent folders for .env
     current_path = Path(__file__).parent
     env_path = current_path / ".env"
     if env_path.exists():
@@ -27,13 +25,11 @@ try:
 except ImportError:
     pass
 
-# Core LangGraph imports
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
-# Simple tools using LangGraph @tool decorator
 @tool
 def get_weather(city: str) -> str:
     """Get weather for a given city."""
@@ -43,7 +39,6 @@ def get_weather(city: str) -> str:
 def calculate(expression: str) -> str:
     """Safely evaluate mathematical expressions."""
     try:
-        # Only allow basic math operations for safety
         allowed_chars = "0123456789+-*/.() "
         if all(c in allowed_chars for c in expression):
             result = eval(expression)
@@ -64,23 +59,19 @@ def remember_info(info: str) -> str:
     """Remember information for later use in the conversation."""
     return f"I'll remember: {info}"
 
-# Tools list
 tools = [get_weather, calculate, get_time, remember_info]
 
 def create_agent():
     """Create Simple Sally agent with LangGraph."""
 
-    # Initialize the language model
     llm = ChatOpenAI(
         api_key=os.getenv("OPENAI_API_KEY"),
         model="gpt-4.1-mini",
         temperature=0.3
     )
 
-    # Create memory saver for state persistence
     memory = MemorySaver()
 
-    # Create the LangGraph agent
     agent = create_react_agent(
         model=llm,
         tools=tools,
@@ -89,7 +80,6 @@ def create_agent():
 
     return agent
 
-# Module-level agent
 root_agent = create_agent()
 
 def run_agent(query: str, thread_id: str = "default") -> Dict[str, Any]:
@@ -98,7 +88,6 @@ def run_agent(query: str, thread_id: str = "default") -> Dict[str, Any]:
         config = {"configurable": {"thread_id": thread_id}}
         messages = [{"role": "user", "content": query}]
 
-        # Stream the response
         result = None
         for chunk in root_agent.stream({"messages": messages}, config):
             result = chunk
@@ -114,7 +103,6 @@ if __name__ == "__main__":
     print("✓ Model: GPT-4.1-mini")
     print("✓ Features: Stateful conversations with memory")
 
-    # Test interaction
     try:
         test_query = "What's the weather in Boston and remember that I live there."
         print(f"\nTest Query: {test_query}")
@@ -125,7 +113,6 @@ if __name__ == "__main__":
             config
         )
 
-        # Extract the final message
         if "messages" in response and response["messages"]:
             final_message = response["messages"][-1]
             if hasattr(final_message, 'content'):

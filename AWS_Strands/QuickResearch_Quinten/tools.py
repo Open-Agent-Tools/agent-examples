@@ -12,7 +12,6 @@ import logging
 from strands import tool
 from crawl4ai import AsyncWebCrawler, BrowserConfig
 
-# Configure logging for tools
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -42,7 +41,6 @@ def generate_search_url(engine: str, keywords: List[str]) -> str:
         logger.error("Keywords list cannot be empty")
         raise ValueError("Keywords list cannot be empty")
 
-    # Join keywords with spaces and URL encode
     query = " ".join(keywords)
     encoded_query = urllib.parse.quote_plus(query)
 
@@ -53,7 +51,6 @@ def generate_search_url(engine: str, keywords: List[str]) -> str:
     elif engine == "bing":
         url = f"https://www.bing.com/search?q={encoded_query}"
     elif engine == "google":
-        # Still available but not recommended due to bot detection
         logger.warning(
             "Google search has known bot detection issues. Consider using 'duckduckgo' instead."
         )
@@ -106,7 +103,6 @@ def process_web_content(url: str, timeout: int = 30) -> str:
     async def _crawl_with_browser():
         """Internal async function to handle Crawl4AI browser automation"""
         try:
-            # Configure browser without stealth mode due to import issues
             browser_config = BrowserConfig(
                 enable_stealth=False, headless=True, verbose=False
             )
@@ -116,7 +112,7 @@ def process_web_content(url: str, timeout: int = 30) -> str:
             async with AsyncWebCrawler(config=browser_config) as crawler:
                 result = await crawler.arun(
                     url=url,
-                    page_timeout=timeout * 1000,  # Convert to milliseconds
+                    page_timeout=timeout * 1000,
                     wait_for_images=False,
                     process_iframes=False,
                     remove_overlay_elements=True,
@@ -126,7 +122,6 @@ def process_web_content(url: str, timeout: int = 30) -> str:
                     logger.info(
                         f"Successfully crawled {url}, markdown length: {len(result.markdown)}"
                     )
-                    # Return clean markdown with basic formatting
                     markdown_result = f"**Web Content from {result.url}**\n\n"
 
                     if result.metadata and result.metadata.get("title"):
@@ -143,7 +138,6 @@ def process_web_content(url: str, timeout: int = 30) -> str:
             logger.error(f"Crawl4AI error for {url}: {str(e)}")
             return f"**Error**: Browser crawling failed for {url} - {str(e)}"
 
-    # Run the async crawling function
     try:
         return asyncio.run(_crawl_with_browser())
     except Exception as e:
@@ -172,13 +166,9 @@ def extract_urls_from_content(content: str, domain_filter: Optional[str] = None)
     )
 
     try:
-        # Multiple URL patterns to catch different formats
         url_patterns = [
-            # Standard HTTP/HTTPS URLs
             r'https?://[^\s\[\]()<>"\']+',
-            # URLs in markdown links [text](url)
             r"\]\(https?://[^\)]+\)",
-            # URLs in HTML href attributes
             r'href=["\']https?://[^"\']+["\']',
         ]
 
@@ -187,26 +177,21 @@ def extract_urls_from_content(content: str, domain_filter: Optional[str] = None)
         for pattern in url_patterns:
             matches = re.findall(pattern, content, re.IGNORECASE)
             for match in matches:
-                # Clean up the match
                 url = match
                 if url.startswith("]("):
-                    url = url[2:-1]  # Remove ]( and )
+                    url = url[2:-1]
                 elif url.startswith("href="):
-                    url = url[6:-1]  # Remove href=" and "
+                    url = url[6:-1]
 
-                # Basic URL validation
                 if url.startswith(("http://", "https://")) and "." in url:
-                    # Remove trailing punctuation
                     url = re.sub(r"[.,;!?]+$", "", url)
                     found_urls.add(url)
 
-        # Filter by domain if specified
         if domain_filter:
             found_urls = {
                 url for url in found_urls if domain_filter.lower() in url.lower()
             }
 
-        # Sort URLs for consistent output
         sorted_urls = sorted(list(found_urls))
 
         logger.info(
@@ -219,7 +204,6 @@ def extract_urls_from_content(content: str, domain_filter: Optional[str] = None)
                 f" matching filter '{domain_filter}'" if domain_filter else ""
             )
 
-        # Format output
         result = f"**Extracted {len(sorted_urls)} URLs:**\n\n"
         for i, url in enumerate(sorted_urls, 1):
             result += f"{i}. {url}\n"
@@ -256,7 +240,6 @@ def extract_contact_info(content: str) -> str:
             "social_media": set(),
         }
 
-        # Email patterns
         email_patterns = [
             r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
             r"\bmailto:[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
@@ -266,10 +249,9 @@ def extract_contact_info(content: str) -> str:
             emails = re.findall(pattern, content, re.IGNORECASE)
             for email in emails:
                 if email.startswith("mailto:"):
-                    email = email[7:]  # Remove 'mailto:'
+                    email = email[7:]
                 contact_info["emails"].add(email.lower())
 
-        # Phone number patterns
         phone_patterns = [
             r"\b(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b",
             r"\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b",
@@ -282,12 +264,10 @@ def extract_contact_info(content: str) -> str:
             for phone in phones:
                 if isinstance(phone, tuple):
                     phone = "".join(phone)
-                # Clean and format phone number
                 clean_phone = re.sub(r"[^\d+]", "", str(phone))
                 if len(clean_phone) >= 10:
                     contact_info["phones"].add(clean_phone)
 
-        # Social media patterns
         social_patterns = [
             (r"facebook\.com/[A-Za-z0-9._-]+", "Facebook"),
             (r"instagram\.com/[A-Za-z0-9._-]+", "Instagram"),
@@ -301,7 +281,6 @@ def extract_contact_info(content: str) -> str:
             for match in matches:
                 contact_info["social_media"].add(f"{platform}: {match}")
 
-        # Simple address pattern (street numbers + street names)
         address_patterns = [
             r"\d+\s+[A-Za-z\s]+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Place|Pl|Circle|Cir|Court|Ct)",
             r"\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Place|Pl|Circle|Cir|Court|Ct)[\s,]*[A-Za-z\s]*[A-Z]{2}\s+\d{5}",
@@ -309,13 +288,12 @@ def extract_contact_info(content: str) -> str:
 
         for pattern in address_patterns:
             addresses = re.findall(pattern, content, re.IGNORECASE)
-            contact_info["addresses"].extend(addresses[:3])  # Limit to first 3 matches
+            contact_info["addresses"].extend(addresses[:3])
 
         logger.info(
             f"Extracted: {len(contact_info['emails'])} emails, {len(contact_info['phones'])} phones, {len(contact_info['addresses'])} addresses, {len(contact_info['social_media'])} social"
         )
 
-        # Format output
         result = "**Contact Information Extracted:**\n\n"
 
         if contact_info["emails"]:
@@ -327,7 +305,6 @@ def extract_contact_info(content: str) -> str:
         if contact_info["phones"]:
             result += "**Phone Numbers:**\n"
             for phone in sorted(contact_info["phones"]):
-                # Format phone for display
                 if len(phone) == 10:
                     formatted = f"({phone[:3]}) {phone[3:6]}-{phone[6:]}"
                 elif len(phone) == 11 and phone.startswith("1"):
@@ -339,7 +316,7 @@ def extract_contact_info(content: str) -> str:
 
         if contact_info["addresses"]:
             result += "**Addresses:**\n"
-            for addr in contact_info["addresses"][:3]:  # Show max 3
+            for addr in contact_info["addresses"][:3]:
                 result += f"• {addr}\n"
             result += "\n"
 
@@ -366,7 +343,6 @@ def extract_contact_info(content: str) -> str:
         return f"**Error**: Contact extraction failed - {str(e)}"
 
 
-# Export custom functions
 __all__ = [
     "generate_search_url",
     "process_web_content",

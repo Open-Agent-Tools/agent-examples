@@ -9,21 +9,19 @@ from pathlib import Path
 from strands import Agent
 from strands.models.anthropic import AnthropicModel
 
-# Load .env file - search up to 3 parent folders for root .env
 try:
     from dotenv import load_dotenv
 
-    # Search up to 3 levels up (to find root .env)
     env_loaded = False
     for i in range(3):
         env_path = Path(__file__).parents[i] / ".env"
         if env_path.exists():
-            load_dotenv(env_path, override=False)  # Don't override if already set
+            load_dotenv(env_path, override=False)
             env_loaded = True
             break
 
     if not env_loaded:
-        load_dotenv(override=False)  # Try default location
+        load_dotenv(override=False)
 except ImportError:
     pass
 
@@ -47,7 +45,6 @@ except ImportError:
         extract_contact_info,
     )
 
-# Import strands_tools
 try:
     from strands_tools.file_read import file_read
     from strands_tools.file_write import file_write
@@ -63,7 +60,6 @@ try:
         extract_contact_info,
     ]
 except ImportError:
-    # Fallback without strands_tools
     tools = [
         generate_search_url,
         process_web_content,
@@ -71,7 +67,6 @@ except ImportError:
         extract_contact_info,
     ]
 
-# Create the Anthropic model
 model = AnthropicModel(
     client_args={
         "api_key": os.getenv("ANTHROPIC_API_KEY"),
@@ -95,7 +90,6 @@ def create_agent() -> Agent:
     )
 
 
-# Module-level agent
 root_agent = create_agent()
 
 if __name__ == "__main__":
@@ -103,5 +97,4 @@ if __name__ == "__main__":
     print(f"✓ Agent: {agent.name}")
     print(f"✓ Model: {agent.model}")
 
-    # Agent ready for tool integration
     print("✓ Agent ready for tool integration")

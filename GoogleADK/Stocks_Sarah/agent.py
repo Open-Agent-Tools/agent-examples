@@ -23,7 +23,6 @@ from .prompts import agent_instruction
 from basic_open_agent_tools import load_all_datetime_tools
 
 
-# Initialize environment and logging
 load_dotenv()
 logging.basicConfig(level=logging.ERROR)
 warnings.filterwarnings("ignore")
@@ -37,7 +36,6 @@ def create_agent() -> Agent:
         Agent: Configured Stocks_Sarah agent with HTTP transport to MCP server.
     """
 
-    # Use HTTP transport - server must be running separately
     http_url = os.environ.get("MCP_HTTP_URL", "http://localhost:3001/mcp")
     stock_mcp = [
         MCPToolset(
@@ -60,5 +58,4 @@ def create_agent() -> Agent:
     )
 
 
-# Configure specialized Stock Trading operations agent
 root_agent = create_agent()

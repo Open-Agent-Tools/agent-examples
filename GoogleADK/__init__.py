@@ -12,7 +12,6 @@ It includes:
 These agents demonstrate how to build and use AI agents for various tasks.
 """
 
-# Make the agent packages available at the top level
 from . import Butler_Basil
 from . import FileOps_Freddy
 from . import Jira_Johnny
